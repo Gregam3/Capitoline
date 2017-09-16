@@ -14,8 +14,6 @@ import java.io.File;
 public class PageController {
     @RequestMapping(value = "/home", method = RequestMethod.GET, produces = "text/html;charset=UTF-8")
     public String index(Model model) {
-        return "index.html";
-        //"/WebContent/WEB-INF/pages/index.html"
-        ///resources/templates/index.html
+        return "home.html";
     }
 }
