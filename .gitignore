@@ -1,1 +1,7 @@
 node_modules
+.idea/inspectionProfiles/
+src/WebContent/
+src/test/
+target/generated-sources/
+target/generated-test-sources/
+target/test-classes/

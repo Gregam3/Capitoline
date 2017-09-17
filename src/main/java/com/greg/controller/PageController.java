@@ -13,7 +13,12 @@ import java.io.File;
 @Controller
 public class PageController {
     @RequestMapping(value = "/home", method = RequestMethod.GET, produces = "text/html;charset=UTF-8")
-    public String index(Model model) {
+    public String getHomePage(Model model) {
         return "home.html";
+    }
+
+    @RequestMapping(value = "/")
+    public String redirectToHome(Model model) {
+        return getHomePage(model);
     }
 }
