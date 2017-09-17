@@ -7,10 +7,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="gs-spring-boot" />
+        <module name="portfolio-tracker" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="gs-spring-boot" target="1.8" />
+      <module name="portfolio-tracker" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

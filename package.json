@@ -3,13 +3,14 @@
   "version": "1.0.0",
   "dependencies": {
     "gulp": "*",
-    "gulp-ruby-sass": "*",
-    "gulp-util": "*",
-    "gulp-rename": "*",
-    "map-stream": "*",
-    "gulp-livereload": "*",
     "gulp-concat": "*",
+    "gulp-livereload": "*",
+    "gulp-rename": "*",
+    "gulp-ruby-sass": "*",
     "gulp-uglify": "*",
-    "gulp-watch": "*"
+    "gulp-util": "*",
+    "gulp-watch": "*",
+    "map-stream": "*",
+    "startbootstrap-sb-admin": "^3.3.7"
   }
 }
