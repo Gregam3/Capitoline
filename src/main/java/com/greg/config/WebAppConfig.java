@@ -40,31 +40,25 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements Application
         return resolver;
     }
 
-    private TemplateEngine templateEngine() {
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        super.addResourceHandlers(registry);
+        registry.addResourceHandler("/resources/**")
+                .addResourceLocations("/resources/");
+    }
+
+    @Bean
+    public TemplateEngine templateEngine() {
         SpringTemplateEngine engine = new SpringTemplateEngine();
         engine.setEnableSpringELCompiler(true);
         engine.setTemplateResolver(templateResolver());
         return engine;
     }
 
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/**")
-                .addResourceLocations("/resources/**");
-    }
-
-//    @Bean
-//    public TemplateEngine templateEngine() {
-//        SpringTemplateEngine engine = new SpringTemplateEngine();
-//        engine.setEnableSpringELCompiler(true);
-//        engine.setTemplateResolver(templateResolver());
-//        return engine;
-//    }
-
     private ITemplateResolver templateResolver() {
         SpringResourceTemplateResolver resolver = new SpringResourceTemplateResolver();
         resolver.setApplicationContext(applicationContext);
-        resolver.setPrefix("/resources/templates/");
+        resolver.setPrefix("/resources/templates/**");
         resolver.setTemplateMode(TemplateMode.HTML);
         return resolver;
     }
