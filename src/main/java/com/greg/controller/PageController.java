@@ -1,25 +1,22 @@
 package com.greg.controller;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.io.File;
+import java.util.Map;
 
 @Controller
 public class PageController {
-    @GetMapping(value = "/home", produces = "text/html;charset=UTF-8")
-    public String getHomePage(Model model) {
-        return "home.html";
+
+    // inject via application.properties
+    @Value("${portfolio-tracker.system-version}")
+    private String systemVersion;
+
+    @GetMapping("/")
+    public String welcome(Map<String, Object> model) {
+        model.put("systemVersion", systemVersion);
+        return "home";
     }
 
-    @RequestMapping(value = "/")
-    public String redirectToHome(Model model) {
-        return getHomePage(model);
-    }
 }
