@@ -18,5 +18,4 @@ public class PageController {
         model.put("systemVersion", systemVersion);
         return "home";
     }
-
 }
