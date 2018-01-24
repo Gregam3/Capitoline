@@ -18,21 +18,60 @@
 
 </head>
 <body>
+<div id="wrapper">
+    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom:0">
+        <div class="col-lg-12">
+            <a class="navbar-brand" href="">Portfolio Tracker</a>
+        </div>
+    </nav>
 
-<div class="row">
-    <div class="col-lg-12">
-        <a class="navbar-brand" href="">Portfolio Tracker</a>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs">
+                <li class=""><a href="#overview" data-toggle="tab" aria-expanded="false">Overview</a>
+                </li>
+                <li class="active"><a href="#performance" data-toggle="tab" aria-expanded="true">Performance</a>
+                </li>
+                <li><a href="#predictions" data-toggle="tab">Predictions</a>
+                </li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div class="tab-pane fade active in" id="overview">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3>Overview <span class="fa fa-line-chart"></span></h3>
+                            <div class="panel-body">
+                                <p>Overview</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="performance">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <i class="fa fa-bar-chart-o fa-fw"></i> Area Chart Example
+                            </div>
+                            <!-- /.panel-heading -->
+                            <div class="panel-body">
+                                Test
+                            </div>
+                            <!-- /.panel-body -->
+                        </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="predictions">
+                        <h4>Predictions</h4>
+                        <p></p>
+                    </div>
+                </div>
+            </div>
+            <!-- /.panel-body -->
+        </div>
     </div>
-</div>
 
-<div class="row">
-    <div class="col-lg-12">
-        <h1 class="page-header">Overview<span class="fa fa-line-chart"></span></h1>
-    </div>
-</div>
-
-
-<!--<script type="text/javascript"-->
-<!--src="webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
+    <!--<script type="text/javascript"-->
+    <!--src="webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
 </body>
 </html>
