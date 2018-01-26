@@ -42,11 +42,11 @@
             <artifactId>bootstrap</artifactId>
             <version>3.3.7</version>
         </dependency>
-
+        <!-- https://mvnrepository.com/artifact/com.mashape.unirest/unirest-java -->
         <dependency>
-            <groupId>com.yahoofinance-api</groupId>
-            <artifactId>YahooFinanceAPI</artifactId>
-            <version>3.11.0</version>
+            <groupId>com.mashape.unirest</groupId>
+            <artifactId>unirest-java</artifactId>
+            <version>1.4.9</version>
         </dependency>
     </dependencies>
 

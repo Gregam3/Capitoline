@@ -15,6 +15,7 @@
     <link rel="stylesheet" type="text/css" href="../static/css/bootstrap-grid.min.css"/>
     <link rel="stylesheet" type="text/css" href="../static/css/bootstrap-reboot.css"/>
     <link rel="stylesheet" type="text/css" href="../static/css/bootstrap-reboot.min.css"/>
+    <script type="text/javascript" src="/angular/angular.js"></script>
 
 </head>
 <body>
@@ -29,9 +30,9 @@
         <div class="panel-body">
             <!-- Nav tabs -->
             <ul class="nav nav-tabs">
-                <li class=""><a href="#overview" data-toggle="tab" aria-expanded="false">Overview</a>
+                <li class="active"><a href="#overview" data-toggle="tab" aria-expanded="false">Overview</a>
                 </li>
-                <li class="active"><a href="#performance" data-toggle="tab" aria-expanded="true">Performance</a>
+                <li class=""><a href="#performance" data-toggle="tab" aria-expanded="true">Performance</a>
                 </li>
                 <li><a href="#predictions" data-toggle="tab">Predictions</a>
                 </li>
@@ -40,38 +41,32 @@
             <!-- Tab panes -->
             <div class="tab-content">
                 <div class="tab-pane fade active in" id="overview">
+                    <div th:replace="/home/tabs/overview.html :: overview">
+                </div>
+                <div class="tab-pane fade" id="performance">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h3>Overview <span class="fa fa-line-chart"></span></h3>
-                            <div class="panel-body">
-                                <p>Overview</p>
-                            </div>
+                            <i class="fa fa-bar-chart-o fa-fw"></i> Area Chart Example
                         </div>
-                    </div>
-                    <div class="tab-pane fade" id="performance">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <i class="fa fa-bar-chart-o fa-fw"></i> Area Chart Example
-                            </div>
-                            <!-- /.panel-heading -->
-                            <div class="panel-body">
-                                Test
-                            </div>
-                            <!-- /.panel-body -->
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            Test
                         </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="predictions">
-                        <h4>Predictions</h4>
-                        <p></p>
+                        <!-- /.panel-body -->
                     </div>
                 </div>
             </div>
-            <!-- /.panel-body -->
+            <div class="tab-pane fade" id="predictions">
+                <h4>Predictions</h4>
+                <p></p>
+            </div>
         </div>
     </div>
+    <!-- /.panel-body -->
+</div>
+</div>
 
-    <!--<script type="text/javascript"-->
-    <!--src="webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
+<!--<script type="text/javascript"-->
+<!--src="webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
 </body>
 </html>
