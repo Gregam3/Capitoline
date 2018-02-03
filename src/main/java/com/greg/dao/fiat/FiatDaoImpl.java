@@ -12,5 +12,8 @@ import javax.transaction.Transactional;
  */
 @Repository
 @Transactional
-public class FiatDaoImplImpl extends AbstractDaoImpl<Fiat> implements FiatDao  {
+public class FiatDaoImpl extends AbstractDaoImpl<Fiat> implements FiatDao  {
+    public FiatDaoImpl() {
+        setThisClass(Fiat.class);
+    }
 }

@@ -1,6 +1,7 @@
 package com.greg.dao;
 
 import com.greg.controller.stock.StockController;
+import com.greg.entity.currency.Fiat;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
@@ -15,33 +16,29 @@ import java.util.List;
  */
 @Repository
 @Transactional
-public abstract class AbstractDao<T> {
+public abstract class AbstractDaoImpl<T> {
 
     private static final Logger LOG = Logger.getLogger(StockController.class);
+
+    private Class currentClass;
 
     @PersistenceContext
     protected EntityManager entityManager;
 
-    public boolean insert(T t) {
-        try {
-            entityManager.persist(t);
-            return true;
-        } catch (Exception e) {
-            LOG.error("Could not add " +t +" to database");
-            return false;
-        }
+    //
+    protected void setThisClass(Class currentClass) {
+        this.currentClass = currentClass;
     }
 
     public T get(String id) {
-        return (T) entityManager.find(toString().getClass(), id);
+        return (T) entityManager.find(currentClass, id);
     }
 
     public void delete(String id) {
         entityManager.remove(get(id));
     }
 
-    public List<T> list() {
-        throw new AssertionError("Not Implemented, must override method in inheriting classes.");
+    public void insert(T t) {
+        entityManager.persist(t);
     }
-
 }

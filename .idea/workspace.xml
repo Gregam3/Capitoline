@@ -2,27 +2,44 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3dec054c-de66-4947-9717-84ac9ee916a5" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/greg/MvcConfiguration.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/greg/controller/crypto/CryptoController.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/greg/entity/holding/crypto/Crypto.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/greg/service/crypto/CryptoPriceRetrievalService.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/greg/service/stock/StockPriceRetrievalService.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/resources/static/js/src/overview.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/resources/templates/home/tabs/overview.html" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_yahoofinance_api_YahooFinanceAPI_3_11_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/com/greg/service/StockPriceRetrievalService.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/greg/service/StockPriceRetrievalService.class" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/greg/dao/AbstractDaoImpl.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/greg/dao/Dao.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/greg/dao/fiat/FiatDao.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/greg/dao/fiat/FiatDaoImpl.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/greg/service/AbstractService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/greg/service/currency/FiatService.java" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/static/js/angular/LICENSE.md" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/static/js/angular/README.md" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/static/js/angular/angular-csp.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/static/js/angular/angular.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/static/js/angular/angular.min.js.gzip" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/static/js/angular/bower.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/static/js/angular/index.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/static/js/angular/package.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/static/js/src/overview.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/templates/home.html" afterPath="" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/greg/entity/currency/Currency.java" afterPath="$PROJECT_DIR$/src/main/java/com/greg/entity/currency/Fiat.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/greg/Application.class" afterPath="$PROJECT_DIR$/target/classes/com/greg/Application.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/greg/controller/stock/StockController.class" afterPath="$PROJECT_DIR$/target/classes/com/greg/controller/stock/StockController.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/greg/controller/PageController.class" afterPath="$PROJECT_DIR$/target/classes/com/greg/controller/PageController.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/greg/controller/crypto/CryptoController.class" afterPath="$PROJECT_DIR$/target/classes/com/greg/controller/crypto/CryptoController.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/greg/controller/fiat/FiatController.class" afterPath="$PROJECT_DIR$/target/classes/com/greg/controller/fiat/FiatController.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package-lock.json" afterPath="$PROJECT_DIR$/package-lock.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/portfolio-tracker.iml" afterPath="$PROJECT_DIR$/portfolio-tracker.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/greg/Application.java" afterPath="$PROJECT_DIR$/src/main/java/com/greg/Application.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/greg/controller/stock/StockController.java" afterPath="$PROJECT_DIR$/src/main/java/com/greg/controller/stock/StockController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/templates/home.html" afterPath="$PROJECT_DIR$/src/main/resources/templates/home.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/templates/home.html" afterPath="$PROJECT_DIR$/target/classes/templates/home.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/greg/configuration/JdbcConfiguration.java" afterPath="$PROJECT_DIR$/src/main/java/com/greg/configuration/JdbcConfiguration.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/greg/configuration/MvcConfiguration.java" afterPath="$PROJECT_DIR$/src/main/java/com/greg/configuration/MvcConfiguration.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/greg/controller/PageController.java" afterPath="$PROJECT_DIR$/src/main/java/com/greg/controller/PageController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/greg/controller/crypto/CryptoController.java" afterPath="$PROJECT_DIR$/src/main/java/com/greg/controller/crypto/CryptoController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/greg/controller/fiat/FiatController.java" afterPath="$PROJECT_DIR$/src/main/java/com/greg/controller/fiat/FiatController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/application.properties" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/static/js/overview.js" afterPath="$PROJECT_DIR$/src/main/resources/static/js/overview.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/templates/home/home.html" afterPath="$PROJECT_DIR$/src/main/resources/templates/home/home.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/templates/home/popups/settings.html" afterPath="$PROJECT_DIR$/src/main/resources/templates/home/popups/settings.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/templates/home/tabs/overview.html" afterPath="$PROJECT_DIR$/src/main/resources/templates/home/tabs/overview.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/application.properties" afterPath="$PROJECT_DIR$/target/classes/application.properties" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/templates/home/tabs/overview.html" afterPath="$PROJECT_DIR$/target/classes/templates/home/tabs/overview.html" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -45,116 +62,149 @@
     <option name="SHOW_TABLE_DETAILS" value="true" />
     <option name="SHOW_EMPTY_GROUPS" value="false" />
     <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
-    <expand />
+    <expand>
+      <path>
+        <item name="" type="eadb38e5:DatabaseStructure$Root" />
+        <item name="@localhost" type="e3449647:DbNodeDescriptor" />
+      </path>
+    </expand>
     <select />
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="PageController.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/controller/PageController.java">
+      <file leaf-file-name="console.sql" pinned="false" current-in-tab="false">
+        <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/76d5aecf-dc69-4b4e-860f-7012e46142d8/console.sql">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="51">
+              <caret line="3" column="21" lean-forward="true" selection-start-line="3" selection-start-column="21" selection-end-line="3" selection-end-column="21" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Fiat.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/entity/currency/Fiat.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="249">
+              <caret line="19" column="19" lean-forward="false" selection-start-line="19" selection-start-column="19" selection-end-line="19" selection-end-column="19" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#713#714#0" expanded="true" />
+                <element signature="e#740#741#0" expanded="true" />
+                <element signature="e#877#878#0" expanded="true" />
+                <element signature="e#915#916#0" expanded="true" />
+                <element signature="e#955#956#0" expanded="true" />
+                <element signature="e#987#988#0" expanded="true" />
+                <element signature="e#1031#1032#0" expanded="true" />
+                <element signature="e#1067#1068#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FiatController.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/controller/fiat/FiatController.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="340">
-              <caret line="20" column="1" lean-forward="true" selection-start-line="20" selection-start-column="1" selection-end-line="20" selection-end-column="1" />
+              <caret line="28" column="51" lean-forward="false" selection-start-line="28" selection-start-column="51" selection-end-line="28" selection-end-column="51" />
               <folding>
-                <element signature="imports" expanded="true" />
+                <element signature="e#767#768#0" expanded="true" />
+                <element signature="e#813#814#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MvcConfiguration.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/MvcConfiguration.java">
+      <file leaf-file-name="FiatService.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/service/currency/FiatService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="172">
-              <caret line="11" column="2" lean-forward="true" selection-start-line="11" selection-start-column="2" selection-end-line="11" selection-end-column="2" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="StockPriceRetrievalService.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/service/stock/StockPriceRetrievalService.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="8" column="0" lean-forward="false" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
+            <state relative-caret-position="390">
+              <caret line="28" column="0" lean-forward="false" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#565#566#0" expanded="true" />
+                <element signature="e#603#604#0" expanded="true" />
+                <element signature="e#700#701#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CryptoPriceRetrievalService.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/service/crypto/CryptoPriceRetrievalService.java">
+      <file leaf-file-name="AbstractService.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/service/AbstractService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="425">
-              <caret line="25" column="1" lean-forward="false" selection-start-line="25" selection-start-column="1" selection-end-line="25" selection-end-column="1" />
+            <state relative-caret-position="170">
+              <caret line="10" column="39" lean-forward="false" selection-start-line="10" selection-start-column="39" selection-end-line="10" selection-end-column="39" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FiatDaoImpl.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/dao/fiat/FiatDaoImpl.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="289">
+              <caret line="17" column="5" lean-forward="true" selection-start-line="17" selection-start-column="5" selection-end-line="17" selection-end-column="5" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#394#395#0" expanded="true" />
+                <element signature="e#434#435#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="home.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/resources/templates/home.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-408">
-              <caret line="9" column="59" lean-forward="false" selection-start-line="9" selection-start-column="59" selection-end-line="9" selection-end-column="59" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="overview.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/resources/templates/home/tabs/overview.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="11" column="6" lean-forward="false" selection-start-line="11" selection-start-column="6" selection-end-line="11" selection-end-column="6" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="overview.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/resources/static/js/src/overview.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="40" lean-forward="false" selection-start-line="0" selection-start-column="26" selection-end-line="0" selection-end-column="40" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="StockController.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/controller/stock/StockController.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="266">
-              <caret line="18" column="13" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="33" selection-end-column="1" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Application.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Application.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/Application.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
-              <caret line="17" column="5" lean-forward="false" selection-start-line="17" selection-start-column="5" selection-end-line="17" selection-end-column="5" />
+            <state relative-caret-position="272">
+              <caret line="16" column="1" lean-forward="true" selection-start-line="16" selection-start-column="1" selection-end-line="16" selection-end-column="1" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#481#482#0" expanded="true" />
+                <element signature="e#543#544#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FiatDao.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/dao/fiat/FiatDao.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="221">
+              <caret line="13" column="35" lean-forward="true" selection-start-line="13" selection-start-column="35" selection-end-line="13" selection-end-column="35" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Dao.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/dao/Dao.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="170">
+              <caret line="10" column="0" lean-forward="true" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CryptoController.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/controller/crypto/CryptoController.java">
+      <file leaf-file-name="AbstractDaoImpl.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/dao/AbstractDaoImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="460">
-              <caret line="33" column="57" lean-forward="false" selection-start-line="33" selection-start-column="57" selection-end-line="33" selection-end-column="57" />
+            <state relative-caret-position="305">
+              <caret line="32" column="55" lean-forward="false" selection-start-line="32" selection-start-column="15" selection-end-line="32" selection-end-column="55" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#714#715#0" expanded="true" />
+                <element signature="e#762#763#0" expanded="true" />
+                <element signature="e#793#794#0" expanded="true" />
+                <element signature="e#856#857#0" expanded="true" />
+                <element signature="e#893#894#0" expanded="true" />
+                <element signature="e#938#939#0" expanded="true" />
+                <element signature="e#969#970#0" expanded="true" />
+                <element signature="e#1009#1010#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -169,6 +219,7 @@
         <option value="JavaScript File" />
         <option value="HTML File" />
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -182,6 +233,17 @@
       <find>profile</find>
       <find>yahoo</find>
       <find>home</find>
+      <find>ComponentScan</find>
+      <find>jdbc</find>
+      <find>datas</find>
+      <find>jpa</find>
+      <find>unable to</find>
+      <find>ojdbc6</find>
+      <find>core</find>
+      <find>hibernate</find>
+      <find>jpaMapping</find>
+      <find>datasource</find>
+      <find>source</find>
     </findStrings>
     <replaceStrings>
       <replace>/</replace>
@@ -201,36 +263,9 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/hello/Application.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/HelloController.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/greg/HelloController.java" />
-        <option value="$PROJECT_DIR$/WEB-INF/jsp/welcome.jsp" />
-        <option value="$PROJECT_DIR$/src/main/java/com/greg/controller/HelloController.java" />
-        <option value="$PROJECT_DIR$/WEB-INF/templates/home.html" />
-        <option value="$PROJECT_DIR$/src/WebContent/WEB-INF/pages/test.html" />
-        <option value="$PROJECT_DIR$/src/main/resources/static/templates/index.html" />
-        <option value="$PROJECT_DIR$/package.json" />
-        <option value="$PROJECT_DIR$/gulp.js" />
-        <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/src/main/resources/templates/index.html" />
-        <option value="$PROJECT_DIR$/src/main/java/com/greg/config/ThymeleafConfig.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/greg/config/WebAppConfig.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/styles/style.css" />
-        <option value="$PROJECT_DIR$/src/main/resources/styles/sb-admin.css" />
-        <option value="$PROJECT_DIR$/src/main/java/com/greg/controller/WelcomeController.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/styles/main.css" />
-        <option value="$PROJECT_DIR$/src/main/java/com/greg/WelcomeController.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/greg/PageController.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/static/templates/home.html" />
-        <option value="$PROJECT_DIR$/node_modules/startbootstrap-sb-admin/css/bootstrap.css" />
-        <option value="$PROJECT_DIR$/src/main/resources/application.properties" />
-        <option value="$PROJECT_DIR$/src/main/java/com/greg/entity/User.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/greg/entity/user/User.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/greg/entity/holding/AbstractHolding.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/greg/entity/holding/stock/Stock.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/greg/entity/holding/HoldingTypes.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/greg/exceptions/HoldingNotFoundException.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/greg/controller/fiat/FiatController.java" />
         <option value="$PROJECT_DIR$/.gitattributes." />
         <option value="$PROJECT_DIR$/.gitattributes" />
         <option value="$PROJECT_DIR$/src/main/java/com/greg/controller/stock/StockController.java" />
@@ -239,18 +274,46 @@
         <option value="$PROJECT_DIR$/src/main/java/com/greg/service/stock/StockPriceRetrievalService.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/greg/entity/holding/crypto/crypto.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/greg/entity/holding/crypto/Crypto.java" />
-        <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/greg/service/crypto/CryptoPriceRetrieval.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/greg/controller/crypto/CrytoController.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/greg/controller/crypto/CryptoController.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/greg/service/crypto/CryptoPriceRetrievalService.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/static/js/src/overview.js" />
         <option value="$PROJECT_DIR$/src/main/resources/templates/home.html" />
-        <option value="$PROJECT_DIR$/src/main/resources/templates/home/tabs/overview.html" />
-        <option value="$PROJECT_DIR$/src/main/resources/templates/home/home.html" />
         <option value="$PROJECT_DIR$/src/main/java/com/greg/controller/PageController.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/greg/MvcConfiguration.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/static/js/src/overview.js" />
+        <option value="$PROJECT_DIR$/src/main/resources/templates/home/tabs/overview.html" />
+        <option value="$PROJECT_DIR$/src/main/resources/templates/home/home.html" />
+        <option value="$PROJECT_DIR$/src/main/resources/templates/home/popups/settings.html" />
+        <option value="$PROJECT_DIR$/src/main/resources/static/js/overview.js" />
+        <option value="$PROJECT_DIR$/src/main/java/com/greg/configuration/MvcConfiguration.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/db/sql/create-db.sql" />
+        <option value="$PROJECT_DIR$/src/main/java/com/greg/configuration/JdbcConfiguration.java" />
+        <option value="$APPLICATION_CONFIG_DIR$/consoles/db/76d5aecf-dc69-4b4e-860f-7012e46142d8/console.sql" />
+        <option value="$PROJECT_DIR$/src/main/java/com/greg/service/Service.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/greg/service/currency/CurrencyService.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/greg/entity/currency/Currency.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/greg/entity/currency/FiatCurrency.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/greg/service/currency/FiatCurrencyService.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/greg/controller/crypto/CryptoController.java" />
+        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/src/main/resources/application.properties" />
         <option value="$PROJECT_DIR$/src/main/java/com/greg/Application.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/greg/dao/fiat/FiatDAO.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/greg/dao/FiatDAO.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/greg/service/AbstractService.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/greg/dao/AbstractDao.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/greg/dao/FiatImplDaoImpl.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/greg/dao/FiatDaoImpl.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/greg/dao/FiatDao.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/greg/dao/FiatDaoImplImpl.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/greg/dao/fiat/FiatDaoImplImpl.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/greg/dao/fiat/FiatDao.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/greg/dao/Dao.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/greg/service/currency/FiatService.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/greg/controller/fiat/FiatController.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/greg/entity/currency/Fiat.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/greg/dao/AbstractDaoImpl.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/greg/dao/fiat/FiatDaoImpl.java" />
       </list>
     </option>
   </component>
@@ -267,12 +330,28 @@
       </MavenImportingSettings>
     </option>
   </component>
+  <component name="MavenProjectNavigator">
+    <treeState>
+      <expand>
+        <path>
+          <item name="" type="16c1761:MavenProjectsStructure$RootNode" />
+          <item name="Spring Boot Web Thymeleaf Example" type="9519ce18:MavenProjectsStructure$ProjectNode" />
+        </path>
+        <path>
+          <item name="" type="16c1761:MavenProjectsStructure$RootNode" />
+          <item name="Spring Boot Web Thymeleaf Example" type="9519ce18:MavenProjectsStructure$ProjectNode" />
+          <item name="Dependencies" type="f4be9f2a:MavenProjectsStructure$DependenciesNode" />
+        </path>
+      </expand>
+      <select />
+    </treeState>
+  </component>
   <component name="NodeModulesDirectoryManager">
     <handled-path value="$PROJECT_DIR$/node_modules" />
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="-7" />
-    <option name="width" value="1455" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="953" />
+    <option name="width" value="974" />
     <option name="height" value="1087" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
@@ -293,7 +372,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -332,7 +411,19 @@
               <item name="PortfolioTracker" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="resources" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="greg" type="462c0819:PsiDirectoryNode" />
+              <item name="dao" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="gs-spring-boot" type="b2602c69:ProjectViewProjectNode" />
+              <item name="PortfolioTracker" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="greg" type="462c0819:PsiDirectoryNode" />
+              <item name="dao" type="462c0819:PsiDirectoryNode" />
+              <item name="fiat" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="gs-spring-boot" type="b2602c69:ProjectViewProjectNode" />
@@ -340,26 +431,6 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="resources" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="gs-spring-boot" type="b2602c69:ProjectViewProjectNode" />
-              <item name="PortfolioTracker" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="resources" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-              <item name="js" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="gs-spring-boot" type="b2602c69:ProjectViewProjectNode" />
-              <item name="PortfolioTracker" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="resources" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-              <item name="js" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="gs-spring-boot" type="b2602c69:ProjectViewProjectNode" />
@@ -369,19 +440,38 @@
               <item name="resources" type="462c0819:PsiDirectoryNode" />
               <item name="templates" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="gs-spring-boot" type="b2602c69:ProjectViewProjectNode" />
+              <item name="PortfolioTracker" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
+              <item name="home" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="gs-spring-boot" type="b2602c69:ProjectViewProjectNode" />
+              <item name="PortfolioTracker" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
+              <item name="home" type="462c0819:PsiDirectoryNode" />
+              <item name="popups" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
-      <pane id="AndroidView" />
       <pane id="Scratches" />
+      <pane id="Scope" />
+      <pane id="AndroidView" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="D:/Uni/Project/currencies.csv" />
     <property name="RequestMappingsPanelWidth0" value="75" />
     <property name="RequestMappingsPanelOrder0" value="0" />
     <property name="RequestMappingsPanelWidth1" value="75" />
@@ -395,14 +485,15 @@
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="add_unversioned_files" value="$PROJECT_DIR$/node_modules/startbootstrap-sb-admin/css/bootstrap.css" />
     <property name="settings.editor.selected.configurable" value="com.google.cloud.tools.intellij.appengine.sdk.CloudSdkConfigurable" />
+    <property name="com.intellij.database.dataSource.DataSourceTemplate" value="Oracle&#10;HSQLDB (Local)" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\i7676925\IdeaProjects\PortfolioTracker\src\main\resources\templates" />
-      <recent name="C:\Users\i7676925\IdeaProjects\PortfolioTracker\src\main\resources\templates\home" />
+      <recent name="C:\Users\i7676925\IdeaProjects\PortfolioTracker\src\main\resources\static\js" />
+      <recent name="C:\Users\i7676925\IdeaProjects\PortfolioTracker\src\main\resources\static\js\src" />
       <recent name="C:\Users\i7676925\IdeaProjects\PortfolioTracker\src\main\resources\static\js\angular" />
-      <recent name="C:\Users\i7676925\IdeaProjects\PortfolioTracker\src\main\resources\static1\css" />
-      <recent name="C:\Users\i7676925\IdeaProjects\PortfolioTracker\src\main\resources\static1\templates" />
+      <recent name="C:\Users\i7676925\IdeaProjects\PortfolioTracker\src\main\resources\static\js\test" />
+      <recent name="C:\Users\i7676925\IdeaProjects\PortfolioTracker\src\main\resources\templates\home\tabs" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="resources" />
@@ -438,6 +529,8 @@
       </extension>
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.greg.Application" />
       <option name="SHOW_IN_DASHBOARD" value="true" />
+      <option name="VM_PARAMETERS" value="-Ddebug" />
+      <option name="ALTERNATIVE_JRE_PATH" />
       <module name="portfolio-tracker" />
       <envs />
     </configuration>
@@ -469,7 +562,21 @@
     <configuration name="Spring Boot" type="MavenRunConfiguration" factoryName="Maven">
       <MavenSettings>
         <option name="myGeneralSettings" />
-        <option name="myRunnerSettings" />
+        <option name="myRunnerSettings">
+          <MavenRunnerSettings>
+            <option name="environmentProperties">
+              <map />
+            </option>
+            <option name="jreName" value="#USE_PROJECT_JDK" />
+            <option name="mavenProperties">
+              <map />
+            </option>
+            <option name="passParentEnv" value="true" />
+            <option name="runMavenInBackground" value="true" />
+            <option name="skipTests" value="false" />
+            <option name="vmOptions" value="-Ddebug" />
+          </MavenRunnerSettings>
+        </option>
         <option name="myRunnerParameters">
           <MavenRunnerParameters>
             <option name="profiles">
@@ -478,6 +585,7 @@
             <option name="goals">
               <list>
                 <option value="spring-boot:run" />
+                <option value="-Ddebug" />
               </list>
             </option>
             <option name="profilesMap">
@@ -590,8 +698,8 @@
     </configuration>
     <list size="3">
       <item index="0" class="java.lang.String" itemvalue="Maven.Spring Boot" />
-      <item index="1" class="java.lang.String" itemvalue="Spring Boot.Application" />
-      <item index="2" class="java.lang.String" itemvalue="JUnit.HelloControllerIT" />
+      <item index="1" class="java.lang.String" itemvalue="JUnit.HelloControllerIT" />
+      <item index="2" class="java.lang.String" itemvalue="Spring Boot.Application" />
     </list>
     <recent_temporary>
       <list size="2">
@@ -626,7 +734,14 @@
       <workItem from="1507048606306" duration="1109000" />
       <workItem from="1516795290618" duration="3553000" />
       <workItem from="1516882764486" duration="9521000" />
-      <workItem from="1516968345183" duration="10720000" />
+      <workItem from="1516968345183" duration="11021000" />
+      <workItem from="1517049273214" duration="4145000" />
+      <workItem from="1517053459258" duration="12429000" />
+      <workItem from="1517315079351" duration="10361000" />
+      <workItem from="1517400598663" duration="10683000" />
+      <workItem from="1517483288817" duration="13453000" />
+      <workItem from="1517575371931" duration="45000" />
+      <workItem from="1517575581976" duration="10740000" />
     </task>
     <servers />
   </component>
@@ -636,34 +751,35 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="106667000" />
+    <option name="totallyTimeSpent" value="168824000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="0" width="1455" height="1087" extended-state="0" />
+    <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25746268" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32944608" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.073027715" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.42555556" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.41666666" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32916668" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Run Dashboard" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3396425" sideWeight="0.5" order="12" side_tool="false" content_ui="combo" />
+      <window_info id="Run Dashboard" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.384375" sideWeight="0.5" order="12" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3280757" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32912722" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Spring" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32708332" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3270242" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22293907" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32291666" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Database Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.328125" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15458423" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Bean Validation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32912722" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Google Cloud Storage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32932165" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -672,7 +788,43 @@
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32944608" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32912722" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
+    <layout-to-restore>
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25746268" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.073027715" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.41666666" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32916668" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run Dashboard" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.384375" sideWeight="0.5" order="12" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3280757" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32944608" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
+      <window_info id="Spring" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32708332" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32291666" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Database Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.328125" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15458423" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Bean Validation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32912722" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Google Cloud Storage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32932165" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="true" content_ui="tabs" />
+    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -689,50 +841,18 @@
           <properties />
           <option name="timeStamp" value="10" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/greg/dao/AbstractDaoImpl.java</url>
+          <line>32</line>
+          <properties />
+          <option name="timeStamp" value="30" />
+        </line-breakpoint>
       </breakpoints>
-      <option name="time" value="13" />
+      <option name="time" value="31" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_131/src.zip!/java/lang/String.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="182">
-          <caret line="110" column="19" lean-forward="false" selection-start-line="110" selection-start-column="19" selection-end-line="110" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/WebContent/WEB-INF/pages/index.html" />
-    <entry file="file://$PROJECT_DIR$/package.json" />
-    <entry file="file://$PROJECT_DIR$/gulp.js" />
-    <entry file="file://$PROJECT_DIR$/src/main/resources/templates/home.html" />
-    <entry file="file://$PROJECT_DIR$/src/main/resources/font-awesome/css/font-awesome.css" />
-    <entry file="file://$PROJECT_DIR$/src/main/resources/scss/_cards.scss" />
-    <entry file="file://$PROJECT_DIR$/src/main/resources/css/sb-admin.min.css" />
-    <entry file="file://$PROJECT_DIR$/src/main/resources/css/sb-admin.css" />
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="7" column="0" lean-forward="false" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/static/css/font-awesome.css" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/config/WebAppConfig.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/resources/styles/style.css" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/config/WebAppConfig.java" />
-    <entry file="file://$PROJECT_DIR$/src/application.properties" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/controller/PageController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="17" column="26" lean-forward="true" selection-start-line="17" selection-start-column="26" selection-end-line="17" selection-end-column="26" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/controller/WelcomeController.java" />
     <entry file="file://$PROJECT_DIR$/src/main/resources/static/css/main.css" />
     <entry file="file://$PROJECT_DIR$/src/main/resources/static/css/scss/_core.scss" />
     <entry file="file://$PROJECT_DIR$/src/main/resources/static/scss/_core.scss">
@@ -746,13 +866,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="251">
           <caret line="1413" column="1" lean-forward="true" selection-start-line="1413" selection-start-column="1" selection-end-line="1413" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/application.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" column="36" lean-forward="false" selection-start-line="2" selection-start-column="36" selection-end-line="2" selection-end-column="36" />
         </state>
       </provider>
     </entry>
@@ -783,7 +896,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="32" lean-forward="false" selection-start-line="0" selection-start-column="32" selection-end-line="0" selection-end-column="32" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -791,10 +903,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="136">
           <caret line="8" column="37" lean-forward="false" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="37" />
-          <folding>
-            <element signature="e#264#265#0" expanded="false" />
-            <element signature="e#332#333#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -803,7 +911,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="37" lean-forward="false" selection-start-line="0" selection-start-column="37" selection-end-line="0" selection-end-column="37" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -811,7 +918,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="136">
           <caret line="8" column="0" lean-forward="true" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -819,17 +925,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/controller/fiat/FiatController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="11" column="29" lean-forward="false" selection-start-line="11" selection-start-column="29" selection-end-line="11" selection-end-column="29" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -859,25 +954,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
           <caret line="15" column="29" lean-forward="false" selection-start-line="15" selection-start-column="29" selection-end-line="15" selection-end-column="29" />
-          <folding>
-            <element signature="e#348#349#0" expanded="false" />
-            <element signature="e#388#389#0" expanded="false" />
-            <element signature="e#420#421#0" expanded="false" />
-            <element signature="e#452#453#0" expanded="false" />
-            <element signature="e#480#481#0" expanded="false" />
-            <element signature="e#522#523#0" expanded="false" />
-            <element signature="e#556#557#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/service/stock/StockPriceRetrievalService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="8" column="0" lean-forward="false" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -885,103 +961,445 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
           <caret line="2" column="0" lean-forward="true" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/service/crypto/CryptoPriceRetrievalService.java">
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/js/angular/angular.js" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/service/stock/StockPriceRetrievalService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="25" column="1" lean-forward="false" selection-start-line="25" selection-start-column="1" selection-end-line="25" selection-end-column="1" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state relative-caret-position="136">
+          <caret line="8" column="0" lean-forward="false" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/static/js/angular/angular.js">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/controller/stock/StockController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="527">
-          <caret line="31" column="60" lean-forward="false" selection-start-line="31" selection-start-column="60" selection-end-line="31" selection-end-column="60" />
-          <folding />
+        <state relative-caret-position="262">
+          <caret line="17" column="26" lean-forward="true" selection-start-line="17" selection-start-column="26" selection-end-line="17" selection-end-column="26" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/static/js/src/overview.js">
+    <entry file="file://$PROJECT_DIR$/src/main/resources/templates/home/home.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="40" lean-forward="false" selection-start-line="0" selection-start-column="26" selection-end-line="0" selection-end-column="40" />
-          <folding />
+        <state relative-caret-position="391">
+          <caret line="28" column="60" lean-forward="false" selection-start-line="28" selection-start-column="29" selection-end-line="28" selection-end-column="60" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/templates/home/tabs/overview.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
-          <caret line="11" column="6" lean-forward="false" selection-start-line="11" selection-start-column="6" selection-end-line="11" selection-end-column="6" />
+          <caret line="11" column="0" lean-forward="false" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/templates/home/popups/settings.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="6" column="48" lean-forward="false" selection-start-line="6" selection-start-column="48" selection-end-line="6" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/js/overview.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="22" column="28" lean-forward="false" selection-start-line="22" selection-start-column="28" selection-end-line="22" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/controller/PageController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="18" column="21" lean-forward="false" selection-start-line="18" selection-start-column="21" selection-end-line="18" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/6e18a396-4ad8-49c1-85a4-381a5085933f/console.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/db/sql/create-db.sql" />
+    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/76d5aecf-dc69-4b4e-860f-7012e46142d8/console_1.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-core/4.3.4.RELEASE/spring-core-4.3.4.RELEASE.jar!/org/springframework/cglib/proxy/MethodProxy.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="203">
+          <caret line="120" column="0" lean-forward="false" selection-start-line="120" selection-start-column="0" selection-end-line="120" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/configuration/JdbcConfiguration.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="484">
+          <caret line="39" column="38" lean-forward="false" selection-start-line="39" selection-start-column="36" selection-end-line="39" selection-end-column="38" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/configuration/MvcConfiguration.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="79">
-          <caret line="37" column="0" lean-forward="true" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
+        <state relative-caret-position="17">
+          <caret line="14" column="0" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/service/Service.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="4" lean-forward="false" selection-start-line="7" selection-start-column="4" selection-end-line="7" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_131/jre/lib/rt.jar!/sun/reflect/generics/reflectiveObjects/NotImplementedException.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="10" column="11" lean-forward="false" selection-start-line="10" selection-start-column="11" selection-end-line="10" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/service/crypto/CryptoPriceRetrievalService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="25" column="1" lean-forward="false" selection-start-line="25" selection-start-column="1" selection-end-line="25" selection-end-column="1" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/controller/crypto/CryptoController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="460">
-          <caret line="33" column="57" lean-forward="false" selection-start-line="33" selection-start-column="57" selection-end-line="33" selection-end-column="57" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/controller/stock/StockController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="266">
-          <caret line="18" column="13" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="33" selection-end-column="1" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/templates/home.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-408">
-          <caret line="9" column="59" lean-forward="false" selection-start-line="9" selection-start-column="59" selection-end-line="9" selection-end-column="59" />
+        <state relative-caret-position="187">
+          <caret line="29" column="47" lean-forward="false" selection-start-line="29" selection-start-column="47" selection-end-line="29" selection-end-column="47" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/MvcConfiguration.java">
+    <entry file="uml://DATABASE/76d5aecf-dc69-4b4e-860f-7012e46142d8">
+      <provider selected="true" editor-type-id="UmlEditorProvider">
+        <state>
+          <ID>DATABASE</ID>
+          <OriginalElement>76d5aecf-dc69-4b4e-860f-7012e46142d8</OriginalElement>
+          <nodes>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNRC_GTLO</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.VIEW:SYSTEM.PRODUCT_PRIVS</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.VIEW:SYSTEM.MVIEW_EVALUATIONS</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_FLAVORS</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_AUDIT_COLUMN</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_SUBCOLTYPE$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_RESTART_CKPT$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_SEED$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_TAB$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGSTDBY$SCN</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_INDPART$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_SITE_OBJECTS</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_PRIORITY_GROUP</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_ERROR$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.VIEW:SYSTEM.AQ$DEF$_AQCALL</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_GT_USER_INCLUDE$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNRC_GTCS</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_CONFLICT</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_AGE_SPILL$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.VIEW:SYSTEM.AQ$_DEF$_AQCALL_F</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.MVIEW$_ADV_FILTER</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNRC_GSBA</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_SNAPGROUP</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_PARAMETER_COLUMN</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_INSTANTIATION_DDL</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_SITES_NEW</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_PROPS$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.DEF$_AQERROR</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.MVIEW$_ADV_EXCEPTIONS</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.MVIEW$_ADV_PARAMETERS</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.MVIEW$_ADV_ELIGIBLE</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGSTDBY$PARAMETERS</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_LOG$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_KEY_COLUMNS</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.MVIEW$_ADV_SQLDEPEND</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_REFCON$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_OBJECT_PARMS</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.VIEW:SYSTEM.MVIEW_FILTERINSTANCE</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.MVIEW$_ADV_TEMP</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_TEMPLATE_TYPES</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_DDL</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_OPQTYPE$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_ATTRIBUTE$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.MVIEW$_ADV_GC</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_CDEF$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.DEF$_ERROR</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.MVIEW$_ADV_INFO</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.OL$NODES</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.MVIEW$_ADV_FJG</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_GT_TAB_INCLUDE$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.AQ$_SCHEDULES</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGSTDBY$HISTORY</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_USER_AUTHORIZATIONS</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.DEF$_PUSHED_TRANSACTIONS</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.MVIEW$_ADV_JOURNAL</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_ICOL$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_INTEGRATED_SPILL$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_TS$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.VIEW:SYSTEM.MVIEW_EXCEPTIONS</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.MVIEW$_ADV_LEVEL</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_PARTOBJ$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_GENERATED</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_REPPROP</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_FILTER$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.DEF$_PROPAGATOR</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_SESSION_EVOLVE$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_OBJ$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.MVIEW$_ADV_FILTERINSTANCE</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_USER_PARM_VALUES</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.PT_CURRENCY</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_OBJECT_TYPES</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_RESOL_STATS_CONTROL</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_TABSUBPART$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.MVIEW$_ADV_LOG</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.VIEW:SYSTEM.MVIEW_LOG</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_DICTSTATE$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_LOBFRAG$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_TEMPLATE_PARMS</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_COLTYPE$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_RESOLUTION</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.VIEW:SYSTEM.MVIEW_FILTER</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGSTDBY$APPLY_PROGRESS</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.VIEW:SYSTEM.AQ$_DEF$_AQERROR_F</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_SESSION_ACTIONS$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.MVIEW$_ADV_WORKLOAD</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_USER$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_PARAMETER$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.DEF$_AQCALL</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_TEMPLATE_REFGROUPS</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_IND$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGSTDBY$EDS_TABLES</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.SQLPLUS_PRODUCT_PROFILE</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_RESTART_CKPT_TXINFO$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.DEF$_DESTINATION</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_KOPM$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_GT_XID_INCLUDE$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.MVIEW$_ADV_OUTPUT</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_TABPART$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_EXTENSION</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.MVIEW$_ADV_PRETTY</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNRP_CTAS_PART_MAP</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_INDSUBPART$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.MVIEW$_ADV_AJG</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGSTDBY$APPLY_MILESTONE</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_LOGMNR_BUILDLOG</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_GROUPED_COLUMN</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.AQ$_QUEUES</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.AQ$_INTERNET_AGENTS</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_LOB$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGSTDBY$FLASHBACK_SCN</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_COLUMN_GROUP</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_INDCOMPART$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNRT_MDDL$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.DEF$_DEFAULTDEST</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_TEMPLATE_OBJECTS</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_REPCAT</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_DICTIONARY$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_UID$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_RESOLUTION_METHOD</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.MVIEW$_ADV_BASETABLE</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_PRIORITY</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_AUDIT_ATTRIBUTE</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_RUNTIME_PARMS</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_REPCOLUMN</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_REFRESH_TEMPLATES</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_TEMPLATE_STATUS</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.VIEW:SYSTEM.MVIEW_RECOMMENDATIONS</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGSTDBY$PLSQL</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_RESOLUTION_STATISTICS</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_GLOBAL$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_REPGROUP_PRIVS</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGSTDBY$SKIP</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_REPCATLOG</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_TEMPLATE_SITES</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.DEF$_LOB</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_FLAVOR_OBJECTS</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_CCOL$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_EXCEPTIONS</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_ATTRCOL$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_REPOBJECT</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_SESSION$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_REPSCHEMA</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.VIEW:SYSTEM.AQ$DEF$_AQERROR</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.MVIEW$_ADV_PLAN</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.OL$HINTS</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.HELP</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNRC_DBNAME_UID_MAP</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.VIEW:SYSTEM.MVIEW_WORKLOAD</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.AQ$_INTERNET_AGENT_PRIVS</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_TYPE$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_TABCOMPART$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_ENC$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.DEF$_CALLDEST</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNRC_GSII</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.MVIEW$_ADV_CLIQUE</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_SPILL$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGSTDBY$EVENTS</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.MVIEW$_ADV_ROLLUP</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_PROCESSED_LOG$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.AQ$_QUEUE_TABLES</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.REPCAT$_TEMPLATE_TARGETS</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_NTAB$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.DEF$_ORIGIN</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGSTDBY$SKIP_SUPPORT</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGMNR_COL$</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.LOGSTDBY$SKIP_TRANSACTION</node>
+            <node x="" y="">76d5aecf-dc69-4b4e-860f-7012e46142d8.TABLE:SYSTEM.OL$</node>
+          </nodes>
+          <notes />
+          <edges />
+          <settings layout="Hierarchic Group" zoom="0.10563991323210412" x="2295.0" y="2459.5728952772074" />
+          <SelectedNodes />
+          <Categories>
+            <Category>Key columns</Category>
+            <Category>Columns</Category>
+          </Categories>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/application.properties">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="172">
-          <caret line="11" column="2" lean-forward="true" selection-start-line="11" selection-start-column="2" selection-end-line="11" selection-end-column="2" />
+        <state relative-caret-position="170">
+          <caret line="10" column="24" lean-forward="true" selection-start-line="10" selection-start-column="24" selection-end-line="10" selection-end-column="24" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/controller/PageController.java">
+    <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="20" column="1" lean-forward="true" selection-start-line="20" selection-start-column="1" selection-end-line="20" selection-end-column="1" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state relative-caret-position="68">
+          <caret line="25" column="32" lean-forward="true" selection-start-line="25" selection-start-column="32" selection-end-line="25" selection-end-column="32" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/Application.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="17" column="5" lean-forward="false" selection-start-line="17" selection-start-column="5" selection-end-line="17" selection-end-column="5" />
+        <state relative-caret-position="272">
+          <caret line="16" column="1" lean-forward="true" selection-start-line="16" selection-start-column="1" selection-end-line="16" selection-end-column="1" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#481#482#0" expanded="true" />
+            <element signature="e#543#544#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/service/AbstractService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="10" column="39" lean-forward="false" selection-start-line="10" selection-start-column="39" selection-end-line="10" selection-end-column="39" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/76d5aecf-dc69-4b4e-860f-7012e46142d8/console.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="3" column="21" lean-forward="true" selection-start-line="3" selection-start-column="21" selection-end-line="3" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/dao/fiat/FiatDao.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="13" column="35" lean-forward="true" selection-start-line="13" selection-start-column="35" selection-end-line="13" selection-end-column="35" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/dao/Dao.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="10" column="0" lean-forward="true" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/controller/fiat/FiatController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="28" column="51" lean-forward="false" selection-start-line="28" selection-start-column="51" selection-end-line="28" selection-end-column="51" />
+          <folding>
+            <element signature="e#767#768#0" expanded="true" />
+            <element signature="e#813#814#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/entity/currency/Fiat.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="249">
+          <caret line="19" column="19" lean-forward="false" selection-start-line="19" selection-start-column="19" selection-end-line="19" selection-end-column="19" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#713#714#0" expanded="true" />
+            <element signature="e#740#741#0" expanded="true" />
+            <element signature="e#877#878#0" expanded="true" />
+            <element signature="e#915#916#0" expanded="true" />
+            <element signature="e#955#956#0" expanded="true" />
+            <element signature="e#987#988#0" expanded="true" />
+            <element signature="e#1031#1032#0" expanded="true" />
+            <element signature="e#1067#1068#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/service/currency/FiatService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="28" column="0" lean-forward="false" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#565#566#0" expanded="true" />
+            <element signature="e#603#604#0" expanded="true" />
+            <element signature="e#700#701#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/dao/AbstractDaoImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="305">
+          <caret line="32" column="55" lean-forward="false" selection-start-line="32" selection-start-column="15" selection-end-line="32" selection-end-column="55" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#714#715#0" expanded="true" />
+            <element signature="e#762#763#0" expanded="true" />
+            <element signature="e#793#794#0" expanded="true" />
+            <element signature="e#856#857#0" expanded="true" />
+            <element signature="e#893#894#0" expanded="true" />
+            <element signature="e#938#939#0" expanded="true" />
+            <element signature="e#969#970#0" expanded="true" />
+            <element signature="e#1009#1010#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/dao/fiat/FiatDaoImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="17" column="5" lean-forward="true" selection-start-line="17" selection-start-column="5" selection-end-line="17" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#394#395#0" expanded="true" />
+            <element signature="e#434#435#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1061,5 +1479,12 @@
         </settings>
       </state>
     </states>
+  </component>
+  <component name="mavenExecuteGoalHistory">
+    <option value="$PROJECT_DIR$" />
+    <option value="install:install-file -Dfile=ojdbc6.jar -DgroupId=com.oracle -DartifactId=ojdbc6 -Dversion=11.2.0.3 -Dpackaging=jar" />
+    <option value="dependency:purge-local-repository" />
+    <option value="install:install-file -Dfile=ojdbc6.jar -DgroupId=com.oracle -DartifactId=ojdbc6 -Dversion=11.2.0.3 -Dpacking=jar" />
+    <option value="install:install-file -Dfile=ojbdc6.jar -DgroupId=com.oracle -DartifactId=ojdbc6 -Dversion=11.2.0.3 -Dpacking=jar" />
   </component>
 </project>

@@ -1,13 +1,20 @@
-<!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
-<div th:fragment="overview-tab">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3>Overview <span class="fa fa-line-chart"></span></h3>
-            <div class="panel-body">
-                <p>Overview</p>
-            </div>
-        </div>
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<body>
+<div ng-app="overview" ng-controller="basicInfoCtrl" class="panel panel-default" th:fragment="overview">
+    <div class="panel-heading">
+        <h3>Overview <span class="fa fa-line-chart"></span></h3>
+    </div>
+    <div class="panel-body">
+        <h3 class="col-lg-12">
+            {{conversion}}
+        </h3>
+
+        <input type="text" name="input" ng-model="currency"/>
+        <input type="text" name="input" ng-model="userCurrency"/>
+        <button ng-click="fetchCurrency()">Fetch</button>
+        <!--<p>{{totalValue}}</p>-->
     </div>
 </div>
+</body>
 </html>

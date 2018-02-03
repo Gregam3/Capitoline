@@ -16,6 +16,6 @@ public class PageController {
     @GetMapping("/")
     public String welcome(Map<String, Object> model) {
         model.put("systemVersion", systemVersion);
-        return "home";
+        return "home/home";
     }
 }

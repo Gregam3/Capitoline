@@ -1,7 +1,10 @@
 package com.greg.service.currency;
 
-import com.greg.entity.currency.Currency;
+import com.greg.dao.fiat.FiatDao;
+import com.greg.entity.currency.Fiat;
 import com.greg.service.AbstractService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -10,12 +13,19 @@ import java.util.List;
  * gregoryamitten@gmail.com
  */
 
-public class CurrencyService extends AbstractService{
-    
-    private final String tableName;
+@Service
+public class FiatService extends AbstractService<Fiat>{
 
-    @Override
-    public List<Currency> list() {
-        entityManager.createNamedQuery()
+    private final String tableName = "PT_CURRENCY";
+
+    private final FiatDao fiatDao;
+
+    @Autowired
+    public FiatService(FiatDao fiatDao) {
+        this.fiatDao = fiatDao;
+    }
+
+    public Fiat get(String fiatAcronym) {
+        return (Fiat) fiatDao.get(fiatAcronym);
     }
 }

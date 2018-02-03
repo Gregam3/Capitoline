@@ -7,15 +7,16 @@
     <link rel="stylesheet" type="text/css"
           href="webjars/bootstrap/3.3.7/css/bootstrap.min.css"/>
 
-    <link rel="stylesheet" type="text/css" href="../static/css/sb-admin.css"/>
-    <link rel="stylesheet" type="text/css" href="../static/css/sb-admin.min.css"/>
-    <link rel="stylesheet" type="text/css" href="../static/css/font-awesome.css"/>
-    <link rel="stylesheet" type="text/css" href="../static/css/font-awesome.min.css"/>
-    <link rel="stylesheet" type="text/css" href="../static/css/bootstrap-grid.css"/>
-    <link rel="stylesheet" type="text/css" href="../static/css/bootstrap-grid.min.css"/>
-    <link rel="stylesheet" type="text/css" href="../static/css/bootstrap-reboot.css"/>
-    <link rel="stylesheet" type="text/css" href="../static/css/bootstrap-reboot.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../../static/css/sb-admin.css"/>
+    <link rel="stylesheet" type="text/css" href="../../static/css/sb-admin.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../../static/css/font-awesome.css"/>
+    <link rel="stylesheet" type="text/css" href="../../static/css/font-awesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../../static/css/bootstrap-grid.css"/>
+    <link rel="stylesheet" type="text/css" href="../../static/css/bootstrap-grid.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../../static/css/bootstrap-reboot.css"/>
+    <link rel="stylesheet" type="text/css" href="../../static/css/bootstrap-reboot.min.css"/>
     <script type="text/javascript" src="/angular/angular.js"></script>
+    <script type="text/javascript" src="/static/js/overview.js"></script>
 
 </head>
 <body>
@@ -23,6 +24,11 @@
     <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom:0">
         <div class="col-lg-12">
             <a class="navbar-brand" href="">Portfolio Tracker</a>
+            <h3>
+                <button class="pull-right navbar-brand" ng-click="">
+                    Settings <span class="fa fa-cog"></span>
+                </button>
+            </h3>
         </div>
     </nav>
 
@@ -32,7 +38,7 @@
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#overview" data-toggle="tab" aria-expanded="false">Overview</a>
                 </li>
-                <li class=""><a href="#performance" data-toggle="tab" aria-expanded="true">Performance</a>
+                <li><a href="#performance" data-toggle="tab" aria-expanded="true">Performance</a>
                 </li>
                 <li><a href="#predictions" data-toggle="tab">Predictions</a>
                 </li>

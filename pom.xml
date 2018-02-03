@@ -23,17 +23,35 @@
     </properties>
 
     <dependencies>
-
+        <!-- Spring resources-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
 
-        <!-- hot swapping, disable cache for template, enable live reload -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <version>1.5.10.RELEASE</version>
+            <!--<exclusions>-->
+                <!--<exclusion>-->
+                    <!--<artifactId>hibernate-entitymanager</artifactId>-->
+                    <!--<groupId>org.hibernate</groupId>-->
+                <!--</exclusion>-->
+            <!--</exclusions>-->
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
-            <optional>true</optional>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- Database dependencies -->
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc6</artifactId>
+            <version>11.2.0.3</version>
         </dependency>
 
         <!-- Optional, for bootstrap -->
@@ -42,12 +60,15 @@
             <artifactId>bootstrap</artifactId>
             <version>3.3.7</version>
         </dependency>
+
         <!-- https://mvnrepository.com/artifact/com.mashape.unirest/unirest-java -->
         <dependency>
             <groupId>com.mashape.unirest</groupId>
             <artifactId>unirest-java</artifactId>
             <version>1.4.9</version>
         </dependency>
+
+
     </dependencies>
 
     <build>
