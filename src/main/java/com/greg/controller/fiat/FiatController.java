@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * @author Greg Mitten (i7676925)
  * gregoryamitten@gmail.com
@@ -27,6 +29,11 @@ public class FiatController {
     @GetMapping("{acronym}")
     public ResponseEntity<Fiat> getFiatDetails(@PathVariable("acronym") String acronym) {
         return new ResponseEntity<>(fiatService.get(acronym), HttpStatus.OK);
+    }
+
+    @GetMapping("list")
+    public ResponseEntity<List<Fiat>> getFiatList() {
+        return new ResponseEntity<>(fiatService.list(), HttpStatus.OK);
     }
 
 }

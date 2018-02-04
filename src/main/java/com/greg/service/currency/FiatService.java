@@ -14,7 +14,7 @@ import java.util.List;
  */
 
 @Service
-public class FiatService extends AbstractService<Fiat>{
+public class FiatService {
 
     private final String tableName = "PT_CURRENCY";
 
@@ -26,6 +26,10 @@ public class FiatService extends AbstractService<Fiat>{
     }
 
     public Fiat get(String fiatAcronym) {
-        return (Fiat) fiatDao.get(fiatAcronym);
+        return fiatDao.get(fiatAcronym);
+    }
+
+    public List<Fiat> list() {
+        return (List<Fiat>) fiatDao.list();
     }
 }

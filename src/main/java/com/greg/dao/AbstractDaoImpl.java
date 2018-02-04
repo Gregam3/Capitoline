@@ -1,7 +1,6 @@
 package com.greg.dao;
 
 import com.greg.controller.stock.StockController;
-import com.greg.entity.currency.Fiat;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
@@ -38,7 +37,11 @@ public abstract class AbstractDaoImpl<T> {
         entityManager.remove(get(id));
     }
 
-    public void insert(T t) {
+    public void update(T t) {
         entityManager.persist(t);
+    }
+
+    public List list(String tableName) {
+        return entityManager.createQuery("from " + tableName, currentClass).getResultList();
     }
 }

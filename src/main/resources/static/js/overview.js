@@ -1,6 +1,13 @@
-var app = angular.module("overview", []);
+var app = angular.module("overview", ['ui.bootstrap']);
 
-app.controller("basicInfoCtrl", function ($scope, $http) {
+app.value('Email', 'gregoryamitten@gmail.com');
+
+app.config(['$qProvider', function ($qProvider) {
+    //fixme
+    $qProvider.errorOnUnhandledRejections(false);
+}]);
+
+app.controller("basicInfoCtrl", ['$scope', '$http','$uibModal', function ($scope, $http, $uibModal) {
     $scope.conversion = 0;
     $scope.currency = null;
     $scope.userCurrency = null;
@@ -14,16 +21,47 @@ app.controller("basicInfoCtrl", function ($scope, $http) {
             console.log(response);
             $scope.conversion = response.data[$scope.userCurrency];
         });
-    }
-});
+    };
 
-app.controller("settingsCtrl", function ($scope, $http) {
+    $scope.openSettings = function () {
+        var modalInstance = $uibModal.open({
+            templateUrl: 'templates/home/popups/settingsModal.html',
+            controller: 'settingsCtrl',
+            resolve: {
+                items: function () {
+                    return $scope.items;
+                }
+            }
+        })
+    };
+}]);
+
+app.controller("settingsCtrl", ['$scope', '$http', '$uibModalStack', 'Email', function ($scope, $http, $uibModalStack, Email) {
+    $scope.settings = {
+        email: Email,
+        currency: null
+    };
+
+    $scope.currencies = null;
+
+    $http.get(
+        "http://localhost:8080/fiat/list"
+    ).then(function (response) {
+        console.log(response);
+        $scope.currencies = response.data;
+    });
+
     $scope.fetchCurrency = function () {
-        $http.get(
-            "localhost:8080/"
+
+    };
+
+    $scope.save = function () {
+        $http.put(
+            "localhost:8080/user/put", $scope.settings, null
         ).then(function (response) {
             console.log(response);
-            $scope.conversion = response.data[$scope.userCurrency];
+            $uibModalStack.dismissAll();
         });
+
     }
-});
+}]);

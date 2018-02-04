@@ -1,6 +1,7 @@
 package com.greg.dao.fiat;
 
 import com.greg.dao.Dao;
+import com.greg.entity.currency.Fiat;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
@@ -11,5 +12,6 @@ import javax.transaction.Transactional;
  */
 @Transactional
 @Repository
-public interface FiatDao extends Dao {
+public interface FiatDao extends Dao<Fiat> {
+
 }

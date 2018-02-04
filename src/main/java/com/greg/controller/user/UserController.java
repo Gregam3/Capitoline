@@ -1,9 +1,12 @@
 package com.greg.controller.user;
 
+import com.greg.entity.user.User;
+import com.greg.service.user.UserService;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author Greg Mitten (i7676925)
@@ -11,8 +14,25 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController("/user/")
 public class UserController {
-    @GetMapping("get")
-    public ResponseEntity getUser() {
-        return new ResponseEntity(,HttpStatus.OK);
+
+    private static final Logger LOG = Logger.getLogger(UserController.class);
+
+    private final UserService userService;
+
+    @Autowired
+    public UserController(UserService userService) {
+
+        this.userService = userService;
+    }
+
+    @GetMapping("get/{email}")
+    public ResponseEntity<User> getUser(@PathVariable("email") String email) {
+        return new ResponseEntity<>(userService.get(email),HttpStatus.OK);
+    }
+
+    @PutMapping("update")
+    public ResponseEntity<String> updateUser(@RequestParam User user) {
+        userService.update(user);
+        return new ResponseEntity<>("Updated successfully",HttpStatus.OK);
     }
 }
