@@ -37,9 +37,11 @@ app.controller("basicInfoCtrl", ['$scope', '$http','$uibModal', function ($scope
 }]);
 
 app.controller("settingsCtrl", ['$scope', '$http', '$uibModalStack', 'Email', function ($scope, $http, $uibModalStack, Email) {
-    $scope.settings = {
+    $scope.user = {
         email: Email,
-        currency: null
+        settings: {
+            currency: null
+        }
     };
 
     $scope.currencies = null;
@@ -57,7 +59,9 @@ app.controller("settingsCtrl", ['$scope', '$http', '$uibModalStack', 'Email', fu
 
     $scope.save = function () {
         $http.put(
-            "localhost:8080/user/put", $scope.settings, null
+            "http://localhost:8080/user/update",
+            $scope.user,
+            {"Content-Type": "application/json"}
         ).then(function (response) {
             console.log(response);
             $uibModalStack.dismissAll();

@@ -17,6 +17,10 @@ import java.util.List;
 public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     private String tableName = "User";
 
+    public UserDaoImpl() {
+        setThisClass(User.class);
+    }
+
     @Override
     public List list() {
         return list(tableName);

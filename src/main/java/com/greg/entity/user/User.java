@@ -3,7 +3,6 @@ package com.greg.entity.user;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.sql.Clob;
 
 /**
  * @author Greg Mitten (i7676925)
@@ -15,13 +14,13 @@ public class User {
     @Id
     private String email;
     private String encryptedPassword;
-    private Clob settings;
-    private Clob holdings;
+    private String settings;
+    private String holdings;
 
     public User() {
     }
 
-    public User(String email, String encryptedPassword, Clob settingsJson, Clob holdings) {
+    public User(String email, String encryptedPassword, String settingsJson, String holdings) {
         this.email = email;
         this.encryptedPassword = encryptedPassword;
         this.settings = settingsJson;
@@ -44,19 +43,19 @@ public class User {
         this.encryptedPassword = encryptedPassword;
     }
 
-    public Clob getSettings() {
+    public String getSettings() {
         return settings;
     }
 
-    public void setSettings(Clob settings) {
+    public void setSettings(String settings) {
         this.settings = settings;
     }
 
-    public Clob getHoldings() {
+    public String getHoldings() {
         return holdings;
     }
 
-    public void setHoldings(Clob holdings) {
+    public void setHoldings(String holdings) {
         this.holdings = holdings;
     }
 }
