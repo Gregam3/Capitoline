@@ -1,7 +1,7 @@
 package com.greg.controller.crypto;
 
 import com.greg.entity.holding.crypto.Crypto;
-import com.greg.service.crypto.CryptoPriceRetrievalService;
+import com.greg.service.crypto.CryptoService;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,21 +24,21 @@ public class CryptoController {
 
     private static final Logger LOG = Logger.getLogger(CryptoController.class);
 
-    private final CryptoPriceRetrievalService cryptoPriceRetrievalService;
+    private final CryptoService cryptoService;
 
     @Autowired
-    public CryptoController(CryptoPriceRetrievalService cryptoPriceRetrievalService) {
-        this.cryptoPriceRetrievalService = cryptoPriceRetrievalService;
+    public CryptoController(CryptoService cryptoService) {
+        this.cryptoService = cryptoService;
     }
 
     @GetMapping("/get/{cryptoId}/{userCurrency}")
     public ResponseEntity<Crypto> getStockById(@PathVariable("cryptoId") String cryptoId,
                                                @PathVariable("userCurrency") String userCurrency) throws UnirestException {
-        return new ResponseEntity<>(cryptoPriceRetrievalService.retrieveCryptoPrice(cryptoId, userCurrency), HttpStatus.OK);
+        return new ResponseEntity<>(cryptoService.retrieveCryptoPrice(cryptoId, userCurrency), HttpStatus.OK);
     }
 
-    @GetMapping("/get/currencies-list")
+    @GetMapping("/get/list")
     public ResponseEntity<List<String>> getCurrencyList() {
-        return null;
+        return new ResponseEntity<>(cryptoService.list(), HttpStatus.OK);
     }
 }

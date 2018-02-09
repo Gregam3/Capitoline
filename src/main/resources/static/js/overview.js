@@ -25,7 +25,7 @@ app.controller("basicInfoCtrl", ['$scope', '$http','$uibModal', function ($scope
 
     $scope.openSettings = function () {
         var modalInstance = $uibModal.open({
-            templateUrl: 'templates/home/popups/settingsModal.html',
+            templateUrl: 'templates/home/popups/settings-modal.html',
             controller: 'settingsCtrl',
             resolve: {
                 items: function () {
@@ -34,6 +34,16 @@ app.controller("basicInfoCtrl", ['$scope', '$http','$uibModal', function ($scope
             }
         })
     };
+}]);
+
+app.controller("holdingManagementCtrl", ['$scope', '$http','$uibModal', function ($scope, $http, $uibModal) {
+    $scope.cryptos = null;
+
+    $http.get("https://www.cryptocompare.com/api/data/coinlist/")
+        .then(function (response) {
+            console.log(response);
+            $scope.cryptos = response.data;
+    });
 }]);
 
 app.controller("settingsCtrl", ['$scope', '$http', '$uibModalStack', 'Email', function ($scope, $http, $uibModalStack, Email) {

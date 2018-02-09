@@ -36,7 +36,7 @@ public class UserController {
     public ResponseEntity<String> updateUser(@RequestBody User user) {
 //        if (user.get("email").isNull())
 //            return new ResponseEntity<>("No email provided", HttpStatus.BAD_REQUEST);
-        userService.update(userNode);
+        userService.update(user);
         return new ResponseEntity<>("Updated successfully", HttpStatus.OK);
     }
 }

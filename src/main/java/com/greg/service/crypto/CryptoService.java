@@ -3,14 +3,17 @@ package com.greg.service.crypto;
 import com.greg.entity.holding.crypto.Crypto;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author Greg Mitten (i7676925)
  * gregoryamitten@gmail.com
  */
 @Service
-public class CryptoPriceRetrievalService {
+public class CryptoService {
 
     private final static String CRYPTO_API_URL = "https://min-api.cryptocompare.com/";
 
@@ -21,6 +24,10 @@ public class CryptoPriceRetrievalService {
         if(responsePrice instanceof Double)
             return new Crypto(cryptoId, (double) responsePrice);
 
+        return null;
+    }
+
+    public List<String> list() {
         return null;
     }
 }

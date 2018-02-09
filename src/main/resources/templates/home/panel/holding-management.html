@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<body>
+<div class="panel panel-default" th:fragment="holding-management" ng-controller="holdingManagementCtrl">
+    <div class="panel-heading">
+        <h3>Holdings <span class="fa fa-list-ul"></span></h3>
+    </div>
+    <div class="panel-body">
+        <h4>Stocks</h4>
+        <table>
+            <tr ng-repeat="stock in user.holdings.stocks">
+                <td>{{stock.name}} ({{x.accronym}})</td>
+                <td>{{stock.price}}</td>
+                <td>{{stock.count}}</td>
+                <td>{{stock.totalValue}}</td>
+                <td>{{stock.totalIncrease}}</td>
+            </tr>
+        </table>
+        <h4>Forex</h4>
+        <table>
+            <tr ng-repeat="forex in user.holdings.forex">
+                <td>{{forex.name}}</td>
+                <td>{{forex.price}}</td>
+                <td>{{forex.count}}</td>
+                <td>{{forex.totalValue}}</td>
+                <td>{{forex.totalIncrease}}</td>
+            </tr>
+        </table>
+        <h4>Cryptocurrencies</h4>
+        <table>
+            <tr ng-repeat="crypto in user.holdings.cryptos">
+                <td>{{crypto.name}}</td>
+                <td>{{crypto.price}}</td>
+                <td>{{crypto.count}}</td>
+                <td>{{crypto.totalValue}}</td>
+                <td>{{crypto.totalIncrease}}</td>
+            </tr>
+        </table>
+    </div>
+</div>
+</body>
+</html>
