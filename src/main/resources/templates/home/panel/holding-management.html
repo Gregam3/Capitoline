@@ -3,7 +3,13 @@
 <body>
 <div class="panel panel-default" th:fragment="holding-management" ng-controller="holdingManagementCtrl">
     <div class="panel-heading">
-        <h3>Holdings <span class="fa fa-list-ul"></span></h3>
+        <div class="col-lg-12 row">
+            <h3>Holdings <span class="fa fa-list-ul"></span></h3>
+                <button class="pull-right" ng-click="addHolding()">
+                    Add Holding <span class="fa fa-plus"></span>
+                </button>
+        </div>
+
     </div>
     <div class="panel-body">
         <h4>Stocks</h4>
