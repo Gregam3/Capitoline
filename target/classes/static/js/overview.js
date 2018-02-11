@@ -1,6 +1,7 @@
 var app = angular.module("overview", ['ui.bootstrap']);
 
 app.value('Email', 'gregoryamitten@gmail.com');
+app.value('AlphaVantageKey', 'QVJRID55FX6HALQH');
 
 // app.config(['$qProvider', function ($qProvider) {
 //     //fixme
@@ -86,7 +87,7 @@ app.controller("settingsCtrl", ['$scope', '$http', '$uibModalStack', 'Email', fu
     }
 }]);
 
-app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', function ($scope, $http, $uibModalStack) {
+app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', 'AlphaVantageKey', function ($scope, $http, $uibModalStack, AlphaVantageKey) {
     $scope.holding = {
         name: null,
         acronym: null
@@ -100,14 +101,21 @@ app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', function 
         $http.get(
             "https://min-api.cryptocompare.com/data/all/coinlist"
         ).then(function (response) {
-            $scope.holdingList.push(response.data.Data);
+            $scope.holdingList = $scope.holdingList.concat(response.data.Data);
             console.log($scope.holdingList);
         });
 
         $http.get(
             "http://localhost:8080/fiat/list"
         ).then(function (response) {
-            $scope.holdingList.push(response.data);
+            $scope.holdingList = $scope.holdingList.concat(response.data);
+            console.log($scope.holdingList);
+        });
+
+        $http.get(
+            "http://localhost:8080/stock/list"
+        ).then(function (response) {
+            $scope.holdingList = $scope.holdingList.concat(response.data);
             console.log($scope.holdingList);
         });
     }

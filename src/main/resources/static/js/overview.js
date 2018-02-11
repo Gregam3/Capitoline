@@ -101,21 +101,21 @@ app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', 'AlphaVan
         $http.get(
             "https://min-api.cryptocompare.com/data/all/coinlist"
         ).then(function (response) {
-            $scope.holdingList.push(response.data.Data);
+            $scope.holdingList = $scope.holdingList.concat(response.data.Data);
             console.log($scope.holdingList);
         });
 
         $http.get(
             "http://localhost:8080/fiat/list"
         ).then(function (response) {
-            $scope.holdingList.push(response.data);
+            $scope.holdingList = $scope.holdingList.concat(response.data);
             console.log($scope.holdingList);
         });
 
         $http.get(
-            "http://localhost:8080/fiat/list"
+            "http://localhost:8080/stock/list"
         ).then(function (response) {
-            $scope.holdingList.push(response.data);
+            $scope.holdingList = $scope.holdingList.concat(response.data);
             console.log($scope.holdingList);
         });
     }

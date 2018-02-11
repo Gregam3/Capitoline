@@ -1,7 +1,9 @@
-package com.greg.dao.fiat;
+package com.greg.dao.stock;
 
 import com.greg.dao.AbstractDaoImpl;
+import com.greg.dao.fiat.StockDao;
 import com.greg.entity.currency.Fiat;
+import com.greg.entity.holding.stock.Stock;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
@@ -13,11 +15,11 @@ import java.util.List;
  */
 @Repository
 @Transactional
-public class FiatDaoImpl extends AbstractDaoImpl<Fiat> implements FiatDao {
-    private String tableName = "Fiat";
+public class StockDaoImpl extends AbstractDaoImpl<Stock> implements StockDao {
+    private String tableName = "Stock";
 
-    public FiatDaoImpl() {
-        setThisClass(Fiat.class);
+    public StockDaoImpl() {
+        setThisClass(Stock.class);
     }
 
     @Override
