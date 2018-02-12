@@ -27,7 +27,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("get/{email}")
+    @GetMapping("get/{email:.+}")
     public ResponseEntity<User> getUser(@PathVariable("email") String email) {
         return new ResponseEntity<>(userService.get(email), HttpStatus.OK);
     }

@@ -1,7 +1,7 @@
 package com.greg.dao.fiat;
 
 import com.greg.dao.AbstractDaoImpl;
-import com.greg.entity.currency.Fiat;
+import com.greg.entity.holding.fiat.Fiat;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;

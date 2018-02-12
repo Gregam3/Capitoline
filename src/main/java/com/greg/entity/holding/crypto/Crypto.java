@@ -1,31 +1,16 @@
 package com.greg.entity.holding.crypto;
 
+import com.greg.entity.holding.Holding;
+import com.greg.entity.holding.HoldingType;
+
 /**
  * @author Greg Mitten (i7676925)
  * gregoryamitten@gmail.com
  */
-public class Crypto {
-    private String name;
-    private double price;
+public class Crypto extends Holding{
 
-    public Crypto(String name, double price) {
-        this.name = name;
-        this.price = price;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
+    public Crypto(String acronym, String name) {
+        super(acronym, name);
+        this.setHoldingType(HoldingType.CRYPTO);
     }
 }

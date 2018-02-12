@@ -1,9 +1,10 @@
 package com.greg.entity.holding.stock;
 
 
-import javax.persistence.Column;
+import com.greg.entity.holding.Holding;
+import com.greg.entity.holding.HoldingType;
+
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
@@ -12,34 +13,15 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "PT_NASDAQ_NYSE")
-public class Stock {
-    private String acronym;
-    private String name;
-
+public class Stock extends Holding{
     public Stock() {
+        super();
+        setHoldingType(HoldingType.STOCK);
     }
 
     public Stock(String acronym, String name) {
-        this.acronym = acronym;
-        this.name = name;
+        super(acronym, name);
+        this.setHoldingType(HoldingType.STOCK);
     }
 
-    @Id
-    @Column(name = "ACRONYM")
-    public String getAcronym() {
-        return acronym;
-    }
-
-    public void setAcronym(String acronym) {
-        this.acronym = acronym;
-    }
-
-    @Column(name = "NAME")
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }

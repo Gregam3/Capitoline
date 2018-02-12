@@ -10,7 +10,7 @@ import javax.transaction.Transactional;
  * @author Greg Mitten (i7676925)
  * gregoryamitten@gmail.com
  */
-@Repository
 @Transactional
+@Repository
 public interface UserDao extends Dao<User> {
 }

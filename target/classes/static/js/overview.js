@@ -1,4 +1,10 @@
 var app = angular.module("overview", ['ui.bootstrap']);
+angular.module("overview").factory('user', function ($http) {
+    return $http.get('http://localhost:8080/user/get/gregoryamitte@gmail.com')
+        .then(function (response) {
+            return response.data;
+        })
+});
 
 app.value('Email', 'gregoryamitten@gmail.com');
 app.value('AlphaVantageKey', 'QVJRID55FX6HALQH');
@@ -87,7 +93,8 @@ app.controller("settingsCtrl", ['$scope', '$http', '$uibModalStack', 'Email', fu
     }
 }]);
 
-app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', 'AlphaVantageKey', function ($scope, $http, $uibModalStack, AlphaVantageKey) {
+app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', 'user', function ($scope, $http, $uibModalStack, user) {
+    console.log(user);
     $scope.holding = {
         name: null,
         acronym: null
@@ -99,35 +106,36 @@ app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', 'AlphaVan
     //save reloading every time
     if ($scope.holdingList.length === 0) {
         $http.get(
-            "https://min-api.cryptocompare.com/data/all/coinlist"
+            "http://localhost:8080/crypto/list"
         ).then(function (response) {
-            $scope.holdingList = $scope.holdingList.concat(response.data.Data);
-            console.log($scope.holdingList);
+            $scope.holdingList = $scope.holdingList.concat(response.data);
+            console.log(response.data);
         });
 
         $http.get(
             "http://localhost:8080/fiat/list"
         ).then(function (response) {
             $scope.holdingList = $scope.holdingList.concat(response.data);
-            console.log($scope.holdingList);
+            console.log(response.data);
         });
 
         $http.get(
             "http://localhost:8080/stock/list"
         ).then(function (response) {
             $scope.holdingList = $scope.holdingList.concat(response.data);
-            console.log($scope.holdingList);
+            console.log(response.data);
         });
     }
 
-    $scope.save = function () {
+    $scope.add = function () {
+        console.log(user);
         $http.put(
             "http://localhost:8080/user/update",
             $scope.user,
             {"Content-Type": "application/json"}
         ).then(function (response) {
             console.log(response);
-            $uibModalStack.dismissAll();
+            // $uibModalStack.dismissAll();
         });
 
     }

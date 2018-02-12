@@ -13,16 +13,14 @@ import javax.persistence.Table;
 public class User {
     @Id
     private String email;
-    private String encryptedPassword;
     private String settings;
     private String holdings;
 
     public User() {
     }
 
-    public User(String email, String encryptedPassword, String settingsJson, String holdings) {
+    public User(String email, String settingsJson, String holdings) {
         this.email = email;
-        this.encryptedPassword = encryptedPassword;
         this.settings = settingsJson;
         this.holdings = holdings;
     }
@@ -33,14 +31,6 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getEncryptedPassword() {
-        return encryptedPassword;
-    }
-
-    public void setEncryptedPassword(String encryptedPassword) {
-        this.encryptedPassword = encryptedPassword;
     }
 
     public String getSettings() {

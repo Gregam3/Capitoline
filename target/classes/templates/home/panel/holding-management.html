@@ -16,7 +16,7 @@
         <table>
             <tr ng-repeat="stock in user.holdings.stocks">
                 <td>{{stock.name}} ({{x.accronym}})</td>
-                <td>{{stock.price}}</td>
+                <td>{{stock.acronym}}</td>
                 <td>{{stock.count}}</td>
                 <td>{{stock.totalValue}}</td>
                 <td>{{stock.totalIncrease}}</td>
@@ -26,7 +26,7 @@
         <table>
             <tr ng-repeat="forex in user.holdings.forex">
                 <td>{{forex.name}}</td>
-                <td>{{forex.price}}</td>
+                <td>{{forex.acronym}}</td>
                 <td>{{forex.count}}</td>
                 <td>{{forex.totalValue}}</td>
                 <td>{{forex.totalIncrease}}</td>
@@ -36,7 +36,7 @@
         <table>
             <tr ng-repeat="crypto in user.holdings.cryptos">
                 <td>{{crypto.name}}</td>
-                <td>{{crypto.price}}</td>
+                <td>{{crypto.acronym}}</td>
                 <td>{{crypto.count}}</td>
                 <td>{{crypto.totalValue}}</td>
                 <td>{{crypto.totalIncrease}}</td>

@@ -1,8 +1,7 @@
 package com.greg.service.currency;
 
 import com.greg.dao.fiat.FiatDao;
-import com.greg.entity.currency.Fiat;
-import com.greg.service.AbstractService;
+import com.greg.entity.holding.fiat.Fiat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

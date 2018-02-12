@@ -1,4 +1,4 @@
-package com.greg.dao.fiat;
+package com.greg.dao.stock;
 
 import com.greg.dao.Dao;
 import com.greg.entity.holding.stock.Stock;
@@ -13,5 +13,4 @@ import javax.transaction.Transactional;
 @Transactional
 @Repository
 public interface StockDao extends Dao<Stock> {
-
 }

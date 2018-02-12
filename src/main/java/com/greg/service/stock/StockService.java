@@ -1,7 +1,7 @@
 package com.greg.service.stock;
 
 import com.greg.dao.fiat.FiatDao;
-import com.greg.dao.fiat.StockDao;
+import com.greg.dao.stock.StockDao;
 import com.greg.entity.holding.HoldingType;
 import com.greg.entity.holding.stock.Stock;
 import com.greg.exceptions.HoldingNotFoundException;

@@ -1,4 +1,4 @@
-package com.greg.controller.stock;
+package com.greg.controller.holding.stock;
 
 import com.greg.entity.holding.stock.Stock;
 import com.greg.service.stock.StockService;

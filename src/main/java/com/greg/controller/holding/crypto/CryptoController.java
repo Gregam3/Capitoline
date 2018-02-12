@@ -1,4 +1,4 @@
-package com.greg.controller.crypto;
+package com.greg.controller.holding.crypto;
 
 import com.greg.entity.holding.crypto.Crypto;
 import com.greg.service.crypto.CryptoService;
@@ -31,14 +31,14 @@ public class CryptoController {
         this.cryptoService = cryptoService;
     }
 
-    @GetMapping("/get/{cryptoId}/{userCurrency}")
-    public ResponseEntity<Crypto> getStockById(@PathVariable("cryptoId") String cryptoId,
-                                               @PathVariable("userCurrency") String userCurrency) throws UnirestException {
-        return new ResponseEntity<>(cryptoService.retrieveCryptoPrice(cryptoId, userCurrency), HttpStatus.OK);
-    }
+//    @GetMapping("/get/{cryptoId}/{userCurrency}")
+//    public ResponseEntity<Crypto> getStockById(@PathVariable("cryptoId") String cryptoId,
+//                                               @PathVariable("userCurrency") String userCurrency) throws UnirestException {
+//        return new ResponseEntity<>(cryptoService.retrieveCryptoPrice(cryptoId, userCurrency), HttpStatus.OK);
+//    }
 
-    @GetMapping("/get/list")
-    public ResponseEntity<List<String>> getCurrencyList() {
+    @GetMapping("/list")
+    public ResponseEntity<List<Crypto>> getCurrencyList() throws UnirestException {
         return new ResponseEntity<>(cryptoService.list(), HttpStatus.OK);
     }
 }

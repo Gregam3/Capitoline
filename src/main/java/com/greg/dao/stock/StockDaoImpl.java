@@ -1,8 +1,6 @@
 package com.greg.dao.stock;
 
 import com.greg.dao.AbstractDaoImpl;
-import com.greg.dao.fiat.StockDao;
-import com.greg.entity.currency.Fiat;
 import com.greg.entity.holding.stock.Stock;
 import org.springframework.stereotype.Repository;
 

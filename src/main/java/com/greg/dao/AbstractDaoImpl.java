@@ -1,6 +1,6 @@
 package com.greg.dao;
 
-import com.greg.controller.stock.StockController;
+import com.greg.controller.holding.stock.StockController;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
@@ -30,7 +30,7 @@ public abstract class AbstractDaoImpl<T> {
     }
 
     public T get(String id) {
-        return (T) entityManager.find(currentClass, id);
+            return (T) entityManager.find(currentClass, id);
     }
 
     public void delete(String id) {
