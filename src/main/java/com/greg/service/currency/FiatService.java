@@ -1,6 +1,7 @@
 package com.greg.service.currency;
 
 import com.greg.dao.fiat.FiatDao;
+import com.greg.entity.holding.HoldingType;
 import com.greg.entity.holding.fiat.Fiat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,9 @@ public class FiatService {
     }
 
     public List<Fiat> list() {
-        return (List<Fiat>) fiatDao.list();
+        List<Fiat> fiatList = fiatDao.list();
+        fiatList.forEach(item -> item.setHoldingType(HoldingType.FIAT));
+
+        return fiatList;
     }
 }

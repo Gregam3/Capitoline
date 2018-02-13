@@ -16,12 +16,10 @@ import javax.persistence.Table;
 public class Stock extends Holding{
     public Stock() {
         super();
-        setHoldingType(HoldingType.STOCK);
     }
 
     public Stock(String acronym, String name) {
         super(acronym, name);
-        this.setHoldingType(HoldingType.STOCK);
     }
 
 }

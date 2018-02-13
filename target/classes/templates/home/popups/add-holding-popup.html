@@ -3,8 +3,8 @@
         <h3 class="modal-title" id="modal-title">Add New Holding <span class="fa fa-plus"></span></h3>
     </div>
     <div class="modal-body" id="modal-body">
-        <h4>Holding: {{holding.name}}</h4>
-        <select ng-model="holding" ng-options="holding.name for holding in holdingList"></select>
+        <h4><b>{{(holding.holdingType) ? holding.holdingType + ':' : 'Holding:'}}</b> {{holding.name}}</h4>
+        <select ng-model="holding" ng-options="(holding.name+' - ' +holding.holdingType) for holding in holdingList | orderBy: 'name'"></select>
         <button ng-click="add()">Add <span class="fa fa-plus"></span></button>
     </div>
 </div>

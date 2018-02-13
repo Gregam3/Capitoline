@@ -1,13 +1,13 @@
 package com.greg.entity.holding;
 
-import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 
 /**
  * @author Greg Mitten (i7676925)
  * gregoryamitten@gmail.com
  */
-@Entity
+@MappedSuperclass
 public abstract class Holding {
     @Id
     private String acronym;

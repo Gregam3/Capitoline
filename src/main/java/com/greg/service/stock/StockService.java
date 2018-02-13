@@ -1,14 +1,11 @@
 package com.greg.service.stock;
 
-import com.greg.dao.fiat.FiatDao;
 import com.greg.dao.stock.StockDao;
 import com.greg.entity.holding.HoldingType;
 import com.greg.entity.holding.stock.Stock;
-import com.greg.exceptions.HoldingNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -26,6 +23,9 @@ public class StockService {
     }
 
     public List<Stock> list() {
-        return stockDao.list();
+        List<Stock> stockList = stockDao.list();
+        stockList.forEach(item -> item.setHoldingType(HoldingType.STOCK));
+
+        return stockList;
     }
 }

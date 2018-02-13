@@ -2,7 +2,12 @@ package com.greg.entity.user;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Greg Mitten (i7676925)
@@ -14,12 +19,13 @@ public class User {
     @Id
     private String email;
     private String settings;
-    private String holdings;
+    @Ele
+    private Map<String, String> holdings = new HashMap<>();
 
     public User() {
     }
 
-    public User(String email, String settingsJson, String holdings) {
+    public User(String email, String settingsJson, Map<String, String> holdings) {
         this.email = email;
         this.settings = settingsJson;
         this.holdings = holdings;
@@ -41,11 +47,11 @@ public class User {
         this.settings = settings;
     }
 
-    public String getHoldings() {
+    public Map<String, String> getHoldings() {
         return holdings;
     }
 
-    public void setHoldings(String holdings) {
+    public void setHoldings(Map<String, String> holdings) {
         this.holdings = holdings;
     }
 }

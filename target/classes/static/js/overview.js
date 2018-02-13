@@ -1,7 +1,8 @@
 var app = angular.module("overview", ['ui.bootstrap']);
 angular.module("overview").factory('user', function ($http) {
-    return $http.get('http://localhost:8080/user/get/gregoryamitte@gmail.com')
+    return $http.get('http://localhost:8080/user/get/gregoryamitten@gmail.com')
         .then(function (response) {
+            console.log(response.data);
             return response.data;
         })
 });
@@ -94,7 +95,6 @@ app.controller("settingsCtrl", ['$scope', '$http', '$uibModalStack', 'Email', fu
 }]);
 
 app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', 'user', function ($scope, $http, $uibModalStack, user) {
-    console.log(user);
     $scope.holding = {
         name: null,
         acronym: null
@@ -128,11 +128,10 @@ app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', 'user', f
     }
 
     $scope.add = function () {
-        console.log(user);
+        user.holdings.push()
         $http.put(
             "http://localhost:8080/user/update",
-            $scope.user,
-            {"Content-Type": "application/json"}
+             user
         ).then(function (response) {
             console.log(response);
             // $uibModalStack.dismissAll();
