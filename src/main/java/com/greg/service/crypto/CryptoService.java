@@ -35,7 +35,7 @@ public class CryptoService {
                     )
             );
         }
-//
+
 //        cryptos.forEach(item -> item.setHoldingType(HoldingType.CRYPTO));
 
         return cryptos;

@@ -1,13 +1,19 @@
 package com.greg.controller.user;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.greg.entity.holding.crypto.Crypto;
 import com.greg.entity.user.User;
+import com.greg.entity.user.UserHoldings;
 import com.greg.service.user.UserService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Greg Mitten (i7676925)
@@ -28,7 +34,7 @@ public class UserController {
     }
 
     @GetMapping("get/{email:.+}")
-    public ResponseEntity<User> getUser(@PathVariable("email") String email) {
+    public ResponseEntity<User> getUser(@PathVariable("email") String email) throws JsonProcessingException {
         return new ResponseEntity<>(userService.get(email), HttpStatus.OK);
     }
 

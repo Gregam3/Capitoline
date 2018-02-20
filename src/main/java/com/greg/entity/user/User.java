@@ -1,9 +1,10 @@
 package com.greg.entity.user;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.Table;
+import com.greg.entity.holding.Holding;
+import org.hibernate.annotations.Type;
+
+
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,16 +20,16 @@ public class User {
     @Id
     private String email;
     private String settings;
-    @Ele
-    private Map<String, String> holdings = new HashMap<>();
+
+    private String holdings;
 
     public User() {
     }
 
-    public User(String email, String settingsJson, Map<String, String> holdings) {
+    public User(String email, String settingsJson,  UserHoldings holdings) {
         this.email = email;
         this.settings = settingsJson;
-        this.holdings = holdings;
+        this.holdings = holdings.toString();
     }
 
     public String getEmail() {
@@ -47,11 +48,11 @@ public class User {
         this.settings = settings;
     }
 
-    public Map<String, String> getHoldings() {
+    public String getHoldings() {
         return holdings;
     }
 
-    public void setHoldings(Map<String, String> holdings) {
+    public void setHoldings(String holdings) {
         this.holdings = holdings;
     }
 }
