@@ -1,14 +1,17 @@
 package com.greg.controller.user;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.greg.entity.holding.crypto.Crypto;
 import com.greg.entity.user.User;
 import com.greg.entity.user.UserHoldings;
 import com.greg.service.user.UserService;
+import com.greg.utils.JSONUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,11 +41,9 @@ public class UserController {
         return new ResponseEntity<>(userService.get(email), HttpStatus.OK);
     }
 
-    @PutMapping("update")
-    public ResponseEntity<String> updateUser(@RequestBody User user) {
-//        if (user.get("email").isNull())
-//            return new ResponseEntity<>("No email provided", HttpStatus.BAD_REQUEST);
-        userService.update(user);
+    @PutMapping(value = "update", produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> updateUser(@RequestBody JsonNode userNode) {
+        userService.update(JSONUtils.convertToUser(userNode));
         return new ResponseEntity<>("Updated successfully", HttpStatus.OK);
     }
 }

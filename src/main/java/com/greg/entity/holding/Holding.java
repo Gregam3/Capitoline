@@ -8,7 +8,7 @@ import javax.persistence.MappedSuperclass;
  * gregoryamitten@gmail.com
  */
 @MappedSuperclass
-public abstract class Holding {
+public class Holding {
     @Id
     private String acronym;
     private String name;
@@ -17,6 +17,12 @@ public abstract class Holding {
     public Holding(String acronym, String name) {
         this.acronym = acronym;
         this.name = name;
+    }
+
+    public Holding(String acronym, String name, HoldingType holdingType) {
+        this.acronym = acronym;
+        this.name = name;
+        this.holdingType = holdingType;
     }
 
     public Holding() {
@@ -44,5 +50,11 @@ public abstract class Holding {
 
     public void setHoldingType(HoldingType holdingType) {
         this.holdingType = holdingType;
+    }
+
+    public String asJson() {
+        return "acronym:" + getAcronym() +
+                "name:" + getName() +
+                "holdingType:" + getHoldingType();
     }
 }

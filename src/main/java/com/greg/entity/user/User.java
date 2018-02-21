@@ -1,13 +1,11 @@
 package com.greg.entity.user;
 
-import com.greg.entity.holding.Holding;
-import org.hibernate.annotations.Type;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.util.Map;
 
 /**
@@ -19,17 +17,32 @@ import java.util.Map;
 public class User {
     @Id
     private String email;
+    private String name;
     private String settings;
 
-    private String holdings;
+    @Transient
+    private Map<String, Double> holdings;
+
+    @JsonIgnore
+    private String holdingsJson;
 
     public User() {
     }
 
-    public User(String email, String settingsJson,  UserHoldings holdings) {
+    public User(String email, String name, String settingsJson,  Map<String, Double> holdings) {
         this.email = email;
+        this.name = name;
         this.settings = settingsJson;
-        this.holdings = holdings.toString();
+        this.holdings = holdings;
+        this.holdingsJson = holdings.toString();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
@@ -48,11 +61,22 @@ public class User {
         this.settings = settings;
     }
 
-    public String getHoldings() {
+
+    @Transient
+    public Map<String, Double> getHoldings() {
         return holdings;
     }
 
-    public void setHoldings(String holdings) {
+    public void setHoldings(Map<String, Double> holdings) {
         this.holdings = holdings;
+    }
+
+    @JsonIgnore
+    public String getHoldingsJson() {
+        return holdingsJson;
+    }
+
+    public void setHoldings(String holdings) {
+        this.holdingsJson = holdings;
     }
 }

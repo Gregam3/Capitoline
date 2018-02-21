@@ -38,7 +38,7 @@ public abstract class AbstractDaoImpl<T> {
     }
 
     public void update(T t) {
-        entityManager.persist(t);
+        entityManager.merge(t);
     }
 
     public List list(String tableName) {

@@ -22,6 +22,10 @@ public class Fiat extends Holding {
         this.setHoldingType(HoldingType.FIAT);
     }
 
+    public Fiat(String acronym, String name) {
+        super(acronym, name);
+    }
+
     public Fiat(String acronym, String name, String symbol) {
         super(acronym, name);
         this.symbol = symbol;

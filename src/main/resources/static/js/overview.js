@@ -84,7 +84,7 @@ app.controller("settingsCtrl", ['$scope', '$http', '$uibModalStack', 'Email', fu
     $scope.save = function () {
         $http.put(
             "http://localhost:8080/user/update",
-            $scope.user,
+            JSON.stringify($scope.user),
             {"Content-Type": "application/json"}
         ).then(function (response) {
             console.log(response);
@@ -99,6 +99,15 @@ app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', 'user', f
         name: null,
         acronym: null
     };
+
+    var user1 = null;
+
+    $http.get('http://localhost:8080/user/get/gregoryamitten@gmail.com')
+            .then(function (response) {
+                console.log(response.data);
+                user1 = response.data;
+                user1.holdings = [];
+            });
 
     $scope.holdingList = [];
 
@@ -128,11 +137,14 @@ app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', 'user', f
     }
 
     $scope.add = function () {
-        user.holdings.push()
-        $http.put(
-            "http://localhost:8080/user/update",
-             user
-        ).then(function (response) {
+        console.log($scope.holding);
+        user1.holdings.push($scope.holding);
+
+        $http({
+            method: 'PUT',
+            url: "http://localhost:8080/user/update",
+            data: user1
+        }).then(function (response) {
             console.log(response);
             // $uibModalStack.dismissAll();
         });
