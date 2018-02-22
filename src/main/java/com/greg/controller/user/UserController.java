@@ -2,10 +2,7 @@ package com.greg.controller.user;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.greg.entity.holding.crypto.Crypto;
 import com.greg.entity.user.User;
-import com.greg.entity.user.UserHoldings;
 import com.greg.service.user.UserService;
 import com.greg.utils.JSONUtils;
 import org.apache.log4j.Logger;
@@ -15,8 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
 
 /**
  * @author Greg Mitten (i7676925)
@@ -38,7 +34,13 @@ public class UserController {
 
     @GetMapping("get/{email:.+}")
     public ResponseEntity<User> getUser(@PathVariable("email") String email) throws JsonProcessingException {
-        return new ResponseEntity<>(userService.get(email), HttpStatus.OK);
+        try {
+            return new ResponseEntity<>(userService.get(email), HttpStatus.OK);
+        } catch (IOException e) {
+            LOG.error(e.getMessage());
+            System.err.println(e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping(value = "update", produces = MediaType.TEXT_PLAIN_VALUE)

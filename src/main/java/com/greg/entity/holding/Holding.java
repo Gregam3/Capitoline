@@ -2,6 +2,7 @@ package com.greg.entity.holding;
 
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
 
 /**
  * @author Greg Mitten (i7676925)
@@ -13,16 +14,19 @@ public class Holding {
     private String acronym;
     private String name;
     private HoldingType holdingType;
+    @Transient
+    private double quantity;
 
     public Holding(String acronym, String name) {
         this.acronym = acronym;
         this.name = name;
     }
 
-    public Holding(String acronym, String name, HoldingType holdingType) {
+    public Holding(String acronym, String name, HoldingType holdingType, double quantity) {
         this.acronym = acronym;
         this.name = name;
         this.holdingType = holdingType;
+        this.quantity = quantity;
     }
 
     public Holding() {
@@ -52,9 +56,19 @@ public class Holding {
         this.holdingType = holdingType;
     }
 
+    @Transient
+    public double getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(double quantity) {
+        this.quantity = quantity;
+    }
+
     public String asJson() {
-        return "acronym:" + getAcronym() +
-                "name:" + getName() +
-                "holdingType:" + getHoldingType();
+        return "{\"acronym\":\"" + getAcronym() +
+                "\", \"name\":\"" + getName() +
+                "\", \"holdingType\":\"" + getHoldingType() +
+                "\", \"quantity\":\"" + getQuantity() + "\"}";
     }
 }

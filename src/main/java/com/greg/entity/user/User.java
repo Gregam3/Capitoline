@@ -1,11 +1,14 @@
 package com.greg.entity.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.greg.utils.JSONUtils;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,15 +24,14 @@ public class User {
     private String settings;
 
     @Transient
-    private Map<String, Double> holdings;
+    private List<String> holdings;
 
-    @JsonIgnore
     private String holdingsJson;
 
-    public User() {
+    public User()  {
     }
 
-    public User(String email, String name, String settingsJson,  Map<String, Double> holdings) {
+    public User(String email, String name, String settingsJson,  List<String> holdings) {
         this.email = email;
         this.name = name;
         this.settings = settingsJson;
@@ -61,22 +63,20 @@ public class User {
         this.settings = settings;
     }
 
-
     @Transient
-    public Map<String, Double> getHoldings() {
+    public List<String> getHoldings() {
         return holdings;
     }
 
-    public void setHoldings(Map<String, Double> holdings) {
+    public void setHoldings(List<String> holdings) {
         this.holdings = holdings;
     }
 
-    @JsonIgnore
     public String getHoldingsJson() {
         return holdingsJson;
     }
 
-    public void setHoldings(String holdings) {
+    public void setHoldingsJson(String holdings) {
         this.holdingsJson = holdings;
     }
 }
