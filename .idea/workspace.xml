@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3dec054c-de66-4947-9717-84ac9ee916a5" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="3dec054c-de66-4947-9717-84ac9ee916a5" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -112,11 +110,9 @@
       <file leaf-file-name="JSONUtils.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/utils/JSONUtils.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="646">
-              <caret line="38" column="72" lean-forward="false" selection-start-line="38" selection-start-column="72" selection-end-line="38" selection-end-column="72" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state relative-caret-position="119">
+              <caret line="7" column="43" lean-forward="true" selection-start-line="7" selection-start-column="43" selection-end-line="7" selection-end-column="43" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -828,7 +824,7 @@
       <workItem from="1519123306665" duration="8591000" />
       <workItem from="1519212012268" duration="16106000" />
       <workItem from="1519295360493" duration="12359000" />
-      <workItem from="1519398812317" duration="11629000" />
+      <workItem from="1519398812317" duration="11715000" />
     </task>
     <servers />
   </component>
@@ -838,7 +834,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="280864000" />
+    <option name="totallyTimeSpent" value="280950000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="0" width="1157" height="1087" extended-state="0" />
@@ -1497,11 +1493,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/utils/JSONUtils.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="646">
-          <caret line="38" column="72" lean-forward="false" selection-start-line="38" selection-start-column="72" selection-end-line="38" selection-end-column="72" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state relative-caret-position="119">
+          <caret line="7" column="43" lean-forward="true" selection-start-line="7" selection-start-column="43" selection-end-line="7" selection-end-column="43" />
+          <folding />
         </state>
       </provider>
     </entry>
