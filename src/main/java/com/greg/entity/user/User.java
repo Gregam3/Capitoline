@@ -34,7 +34,7 @@ public class User {
         this.settings = settingsJson;
         this.holdings = holdings;
         this.holdingsJson =
-                (holdings != null) ? JSONUtils.OBJECT_MAPPER.writeValueAsString(holdings) : null;
+                JSONUtils.OBJECT_MAPPER.writeValueAsString((holdings != null) ? holdings : "[]");
     }
 
     public String getName() {

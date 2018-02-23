@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * @author Greg Mitten (i7676925)
@@ -26,7 +27,8 @@ public class UserService {
         User user = userDao.get(email);
         if (user.getHoldingsJson() != null)
             user.setHoldings(JSONUtils.convertToHoldingsList(user.getHoldingsJson()));
-
+        else
+            user.setHoldings(new ArrayList<>());
         return user;
     }
 

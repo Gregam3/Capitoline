@@ -36,7 +36,7 @@ public class JSONUtils {
                     new Holding(next.get("acronym").asText(),
                             next.get("name").asText(),
                             HoldingType.valueOf(next.get("holdingType").asText()),
-                            0
+                            Double.valueOf(next.get("quantity").asText())
                     ));
 
         return new User(email, name, null, userHoldings);

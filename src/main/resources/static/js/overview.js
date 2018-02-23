@@ -98,7 +98,8 @@ app.controller("settingsCtrl", ['$scope', '$http', '$uibModalStack', 'Email', fu
 app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', 'user', function ($scope, $http, $uibModalStack, user) {
     $scope.holding = {
         name: null,
-        acronym: null
+        acronym: null,
+        quantity: 0
     };
 
     var user1 = null;

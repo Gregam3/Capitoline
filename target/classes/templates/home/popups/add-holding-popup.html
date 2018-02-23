@@ -4,7 +4,10 @@
     </div>
     <div class="modal-body" id="modal-body">
         <h4><b>{{(holding.holdingType) ? holding.holdingType + ':' : 'Holding:'}}</b> {{holding.name}}</h4>
-        <select ng-model="holding" ng-options="(holding.name+' - ' +holding.holdingType) for holding in holdingList | orderBy: 'name'"></select>
+        <select ng-model="holding"
+                ng-options="(holding.name+' - ' +holding.holdingType) for holding in holdingList | orderBy: 'name'"></select>
+        <label>Quantity</label>
+        <input type="number" name="input" ng-model="holding.quantity"/>
         <button ng-click="add()">Add <span class="fa fa-plus"></span></button>
     </div>
 </div>
