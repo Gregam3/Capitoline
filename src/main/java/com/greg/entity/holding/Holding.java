@@ -1,5 +1,8 @@
 package com.greg.entity.holding;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.greg.utils.JSONUtils;
+
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
@@ -65,10 +68,7 @@ public class Holding {
         this.quantity = quantity;
     }
 
-    public String asJson() {
-        return "{\"acronym\":\"" + getAcronym() +
-                "\", \"name\":\"" + getName() +
-                "\", \"holdingType\":\"" + getHoldingType() +
-                "\", \"quantity\":\"" + getQuantity() + "\"}";
+    public String asJson() throws JsonProcessingException {
+        return JSONUtils.OBJECT_MAPPER.writeValueAsString(this);
     }
 }

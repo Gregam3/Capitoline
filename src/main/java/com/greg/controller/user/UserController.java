@@ -32,7 +32,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("get/{email:.+}")
+    @GetMapping(value = "get/{email:.+}")
     public ResponseEntity<User> getUser(@PathVariable("email") String email) throws JsonProcessingException {
         try {
             return new ResponseEntity<>(userService.get(email), HttpStatus.OK);
@@ -45,7 +45,13 @@ public class UserController {
 
     @PutMapping(value = "update", produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<String> updateUser(@RequestBody JsonNode userNode) {
-        userService.update(JSONUtils.convertToUser(userNode));
-        return new ResponseEntity<>("Updated successfully", HttpStatus.OK);
+        try {
+            userService.update(JSONUtils.convertToUser(userNode));
+            return new ResponseEntity<>("Updated successfully", HttpStatus.OK);
+        } catch (JsonProcessingException e) {
+            LOG.error(e.getMessage());
+            System.err.println(e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 }

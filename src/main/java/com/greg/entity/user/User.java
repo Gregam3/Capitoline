@@ -1,42 +1,40 @@
 package com.greg.entity.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.greg.entity.holding.Holding;
 import com.greg.utils.JSONUtils;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import java.io.IOException;
+import javax.persistence.*;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Greg Mitten (i7676925)
  * gregoryamitten@gmail.com
  */
 @Entity
-@Table(name  = "PT_USER")
+@Table(name = "PT_USER")
 public class User {
     @Id
     private String email;
     private String name;
     private String settings;
-
-    @Transient
-    private List<String> holdings;
-
     private String holdingsJson;
 
-    public User()  {
+    @Transient
+    private List<Holding> holdings;
+
+    public User() {
+
     }
 
-    public User(String email, String name, String settingsJson,  List<String> holdings) {
+    public User(String email, String name, String settingsJson, List<Holding> holdings) throws JsonProcessingException {
         this.email = email;
         this.name = name;
         this.settings = settingsJson;
         this.holdings = holdings;
-        this.holdingsJson = holdings.toString();
+        this.holdingsJson =
+                (holdings != null) ? JSONUtils.OBJECT_MAPPER.writeValueAsString(holdings) : null;
     }
 
     public String getName() {
@@ -64,11 +62,11 @@ public class User {
     }
 
     @Transient
-    public List<String> getHoldings() {
+    public List<Holding> getHoldings() {
         return holdings;
     }
 
-    public void setHoldings(List<String> holdings) {
+    public void setHoldings(List<Holding> holdings) {
         this.holdings = holdings;
     }
 
@@ -76,7 +74,7 @@ public class User {
         return holdingsJson;
     }
 
-    public void setHoldingsJson(String holdings) {
-        this.holdingsJson = holdings;
+    public void setHoldingsJson(String holdingsJson) {
+        this.holdingsJson = holdingsJson;
     }
 }

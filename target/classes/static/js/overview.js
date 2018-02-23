@@ -1,10 +1,11 @@
 var app = angular.module("overview", ['ui.bootstrap']);
 angular.module("overview").factory('user', function ($http) {
-    return $http.get('http://localhost:8080/user/get/gregoryamitten@gmail.com')
+    return null;
+    $http.get('http://localhost:8080/user/get/gregoryamitten@gmail.com')
         .then(function (response) {
             console.log(response.data);
             return response.data;
-        })
+        });
 });
 
 app.value('Email', 'gregoryamitten@gmail.com');
@@ -106,7 +107,6 @@ app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', 'user', f
             .then(function (response) {
                 console.log(response.data);
                 user1 = response.data;
-                user1.holdings = [];
             });
 
     $scope.holdingList = [];
