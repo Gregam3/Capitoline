@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "dependencies": {
     "angular": "^1.6.8",
+    "angular-smart-table": "^2.1.11",
     "gulp": "*",
     "gulp-concat": "*",
     "gulp-livereload": "*",

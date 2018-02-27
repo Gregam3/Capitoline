@@ -3,12 +3,10 @@ package com.greg.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.greg.entity.holding.Holding;
 import com.greg.entity.holding.HoldingType;
 import com.greg.entity.user.User;
 import org.apache.log4j.Logger;
-import org.omg.CORBA.OBJ_ADAPTER;
 import org.springframework.beans.InvalidPropertyException;
 
 import java.io.IOException;

@@ -13,34 +13,61 @@
     </div>
     <div class="panel-body">
         <h4>Stocks</h4>
-        <table>
-            <tr ng-repeat="stock in user.holdings.stocks">
-                <td>{{stock.name}} ({{x.accronym}})</td>
-                <td>{{stock.acronym}}</td>
-                <td>{{stock.count}}</td>
+        <table st-table="rowCollection" class="table table-striped">
+            <thead>
+            <tr>
+                <th>Stock Name</th>
+                <th>Total Count</th>
+                <th>Price</th>
+                <th>Total Holdings</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="stock in holdings.stocks">
+                <td>{{stock.name}} ({{stock.acronym}})</td>
+                <td>{{stock.quantity}}</td>
+                <td>{{stock.currentPrice}}</td>
                 <td>{{stock.totalValue}}</td>
-                <td>{{stock.totalIncrease}}</td>
             </tr>
-        </table>
-        <h4>Forex</h4>
-        <table>
-            <tr ng-repeat="forex in user.holdings.forex">
-                <td>{{forex.name}}</td>
-                <td>{{forex.acronym}}</td>
-                <td>{{forex.count}}</td>
-                <td>{{forex.totalValue}}</td>
-                <td>{{forex.totalIncrease}}</td>
-            </tr>
+            </tbody>
         </table>
         <h4>Cryptocurrencies</h4>
-        <table>
-            <tr ng-repeat="crypto in user.holdings.cryptos">
-                <td>{{crypto.name}}</td>
-                <td>{{crypto.acronym}}</td>
-                <td>{{crypto.count}}</td>
-                <td>{{crypto.totalValue}}</td>
-                <td>{{crypto.totalIncrease}}</td>
+        <table st-table="rowCollection" class="table table-striped">
+            <thead>
+            <tr>
+                <th>Crypto Name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total Holdings</th>
             </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="crypto in holdings.cryptos">
+                <td>{{crypto.name}}({{crypto.acronym}})</td>
+                <td>{{crypto.quantity}}</td>
+                <td>{{crypto.currentPrice}}</td>
+                <td>{{crypto.totalValue}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <h4>Forex</h4>
+        <table st-table="rowCollection" class="table table-striped">
+            <thead>
+            <tr>
+                <th>Currency Name</th>
+                <th>Total Count</th>
+                <th>Price per Stock</th>
+                <th>Total Holdings</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="fiat in holdings.fiats">
+                <td>{{fiat.acronym}} - {{fiat.name}} ({{fiat.symbol}})</td>
+                <td>{{fiat.quantity}}</td>
+                <td>{{fiat.currentPrice}}</td>
+                <td>{{fiat.totalValue}}</td>
+            </tr>
+            </tbody>
         </table>
     </div>
 </div>

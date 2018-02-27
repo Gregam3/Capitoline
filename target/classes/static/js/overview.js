@@ -1,4 +1,8 @@
-var app = angular.module("overview", ['ui.bootstrap']);
+var app = angular.module("overview", ['ui.bootstrap', 'smart-table']);
+// app.config(['$qProvider', function ($qProvider) {
+//     $qProvider.errorOnUnhandledRejections(false);
+// }]);
+
 angular.module("overview").factory('user', function ($http) {
     return null;
     $http.get('http://localhost:8080/user/get/gregoryamitten@gmail.com')
@@ -10,11 +14,6 @@ angular.module("overview").factory('user', function ($http) {
 
 app.value('Email', 'gregoryamitten@gmail.com');
 app.value('AlphaVantageKey', 'QVJRID55FX6HALQH');
-
-// app.config(['$qProvider', function ($qProvider) {
-//     //fixme
-//     $qProvider.errorOnUnhandledRejections(false);
-// }]);
 
 app.controller("basicInfoCtrl", ['$scope', '$http', '$uibModal', function ($scope, $http, $uibModal) {
     $scope.conversion = 0;
@@ -45,19 +44,67 @@ app.controller("basicInfoCtrl", ['$scope', '$http', '$uibModal', function ($scop
     };
 }]);
 
-app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', function ($scope, $http, $uibModal) {
-    $scope.cryptos = null;
+app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'AlphaVantageKey', function ($scope, $http, $uibModal, $rootScope, AlphaVantageKey) {
+    $scope.user = null;
+    $scope.holdings = {
+        cryptos: [],
+        stocks: [],
+        fiats: []
+    };
 
-    $scope.addHolding = function () {
-        var modalInstance = $uibModal.open({
-            templateUrl: 'templates/home/popups/add-holding-popup.html',
-            controller: 'addHoldingCtrl',
-            resolve: {
-                items: function () {
-                    return $scope.user;
+    $http.get('http://localhost:8080/user/get/gregoryamitten@gmail.com')
+        .then(function (response) {
+            console.log(response.data);
+            $scope.user = response.data;
+
+            console.log($scope.user.holdings.length);
+
+            for (var i = 0; i < $scope.user.holdings.length; i++) {
+                var holdingType = $scope.user.holdings[i].holdingType;
+
+                console.log(holdingType);
+
+                if (holdingType === "STOCK") {
+                    $scope.holdings.stocks.push($scope.user.holdings[i]);
+                } else if (holdingType === "CRYPTO") {
+                    $scope.holdings.cryptos.push($scope.user.holdings[i]);
+                } else if (holdingType === "FIAT") {
+                    $scope.holdings.fiats.push($scope.user.holdings[i]);
                 }
             }
-        })
+
+            console.log($scope.holdings);
+        }).then(function () {
+            var stockTickers = "";
+
+            for (var i = 0; i < $scope.holdings.stocks.length; i++) {
+                if ($scope.user.holdings[i].holdingType === "STOCK") {
+                    stockTickers += $scope.user.holdings[i].acronym + ",";
+                }
+            }
+
+            //Removing trailing comma for uri format
+            stockTickers = stockTickers.substr(0, stockTickers.length - 1);
+
+            //Get all User's stock prices
+            $http.get("https://www.alphavantage.co/query?function=BATCH_STOCK_QUOTES&symbols=" + stockTickers
+                + "&apikey=" + AlphaVantageKey).then(function (response) {
+                console.log(response.data);
+                for (var i = 0; i < $scope.holdings.stocks.length; i++) {
+                    console.log(response.data["Stock Quotes"][i]["2. price"]);
+                    $scope.holdings.stocks[i].price = response.data["Stock Quotes"][i]["2. price"];
+                }
+                console.log($scope.holdings);
+            })
+        }
+    );
+
+    $scope.addHolding = function () {
+        $rootScope.addHoldingModal = $uibModal.open({
+            templateUrl: 'templates/home/popups/add-holding-popup.html',
+            controller: 'addHoldingCtrl'
+        }).result.then(function (user) {
+        });
     };
 }]);
 
@@ -95,7 +142,7 @@ app.controller("settingsCtrl", ['$scope', '$http', '$uibModalStack', 'Email', fu
     }
 }]);
 
-app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', 'user', function ($scope, $http, $uibModalStack, user) {
+app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', 'user', '$rootScope', function ($scope, $http, $uibModalStack, user, $rootScope) {
     $scope.holding = {
         name: null,
         acronym: null,
@@ -105,10 +152,10 @@ app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', 'user', f
     var user1 = null;
 
     $http.get('http://localhost:8080/user/get/gregoryamitten@gmail.com')
-            .then(function (response) {
-                console.log(response.data);
-                user1 = response.data;
-            });
+        .then(function (response) {
+            console.log(response.data);
+            user1 = response.data;
+        });
 
     $scope.holdingList = [];
 
@@ -147,8 +194,7 @@ app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', 'user', f
             data: user1
         }).then(function (response) {
             console.log(response);
-            // $uibModalStack.dismissAll();
+            $uibModalStack.dismissAll();
         });
-
     }
 }]);
