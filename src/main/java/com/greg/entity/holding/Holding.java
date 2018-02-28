@@ -17,6 +17,7 @@ public class Holding {
     private String acronym;
     private String name;
     private HoldingType holdingType;
+    private double acquisitionCost;
     @Transient
     private double quantity;
 
@@ -32,7 +33,23 @@ public class Holding {
         this.quantity = quantity;
     }
 
+    public Holding(String acronym, String name, HoldingType holdingType, double quantity, double acquisitionCost) {
+        this.acronym = acronym;
+        this.name = name;
+        this.holdingType = holdingType;
+        this.quantity = quantity;
+        this.acquisitionCost = acquisitionCost;
+    }
+
     public Holding() {
+    }
+
+    public double getAcquisitionCost() {
+        return acquisitionCost;
+    }
+
+    public void setAcquisitionCost(double acquisitionCost) {
+        this.acquisitionCost = acquisitionCost;
     }
 
     public String getAcronym() {

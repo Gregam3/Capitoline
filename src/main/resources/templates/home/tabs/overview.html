@@ -6,14 +6,8 @@
         <h3>Overview <span class="fa fa-line-chart"></span></h3>
     </div>
     <div class="panel-body">
-        <h3 class="col-lg-12">
-            {{conversion}}
-        </h3>
-
-        <input type="text" name="input" ng-model="currency"/>
-        <input type="text" name="input" ng-model="userCurrency"/>
-        <button ng-click="fetchCurrency()">Fetch</button>
-        <!--<p>{{totalValue}}</p>-->
+        Total Value: {{totalValue | currency}}
+        <button ng-click="calculateTotalValue()">Calculate Values</button>
     </div>
 </div>
 </body>

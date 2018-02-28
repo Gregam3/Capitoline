@@ -1,4 +1,4 @@
-var app = angular.module("overview", ['ui.bootstrap', 'smart-table']);
+var app = angular.module("\overview", ['ui.bootstrap', 'smart-table']);
 // app.config(['$qProvider', function ($qProvider) {
 //     $qProvider.errorOnUnhandledRejections(false);
 // }]);
@@ -15,21 +15,20 @@ angular.module("overview").factory('user', function ($http) {
 app.value('Email', 'gregoryamitten@gmail.com');
 app.value('AlphaVantageKey', 'QVJRID55FX6HALQH');
 
-app.controller("basicInfoCtrl", ['$scope', '$http', '$uibModal', function ($scope, $http, $uibModal) {
-    $scope.conversion = 0;
-    $scope.currency = null;
-    $scope.userCurrency = null;
+app.controller("basicInfoCtrl", ['$scope', '$http', '$uibModal', '$rootScope', function ($scope, $http, $uibModal, $rootScope) {
+    $scope.totalValue = 0.0;
 
-    $scope.fetchCurrency = function () {
-        $http.get(
-            "https://min-api.cryptocompare.com/data/price?" +
-            "fsym=" + $scope.currency +
-            "&tsyms=" + $scope.userCurrency
-        ).then(function (response) {
-            console.log(response);
-            $scope.conversion = response.data[$scope.userCurrency];
-        });
+    $scope.calculateTotalValue = function () {
+        $scope.totalValue = null;
+
+        for (var holdingList in $rootScope.holdings) {
+            for (var holding in $rootScope.holdings[holdingList]) {
+                $scope.totalValue += ($rootScope.holdings[holdingList][holding].price *
+                    $rootScope.holdings[holdingList][holding].quantity);
+            }
+        }
     };
+
 
     $scope.openSettings = function () {
         var modalInstance = $uibModal.open({
@@ -46,10 +45,10 @@ app.controller("basicInfoCtrl", ['$scope', '$http', '$uibModal', function ($scop
 
 app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'AlphaVantageKey', function ($scope, $http, $uibModal, $rootScope, AlphaVantageKey) {
     $scope.user = null;
-    $scope.holdings = {
-        cryptos: [],
-        stocks: [],
-        fiats: []
+    $rootScope.holdings = {
+        cryptos: {},
+        stocks: {},
+        fiats: {}
     };
 
     $http.get('http://localhost:8080/user/get/gregoryamitten@gmail.com')
@@ -62,40 +61,69 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
             for (var i = 0; i < $scope.user.holdings.length; i++) {
                 var holdingType = $scope.user.holdings[i].holdingType;
 
-                console.log(holdingType);
-
                 if (holdingType === "STOCK") {
-                    $scope.holdings.stocks.push($scope.user.holdings[i]);
+                    $rootScope.holdings.stocks[$scope.user.holdings[i].acronym] = $scope.user.holdings[i];
                 } else if (holdingType === "CRYPTO") {
-                    $scope.holdings.cryptos.push($scope.user.holdings[i]);
+                    $rootScope.holdings.cryptos[$scope.user.holdings[i].acronym] = $scope.user.holdings[i];
                 } else if (holdingType === "FIAT") {
-                    $scope.holdings.fiats.push($scope.user.holdings[i]);
+                    $rootScope.holdings.fiats[$scope.user.holdings[i].acronym] = $scope.user.holdings[i];
                 }
             }
 
-            console.log($scope.holdings);
+            console.log($rootScope.holdings);
         }).then(function () {
-            var stockTickers = "";
+            $http.get(
+                "https://min-api.cryptocompare.com/data/pricemulti?fsyms="
+                + $scope.convertHoldingsToUriVariables($rootScope.holdings.cryptos) + ","
+                + $scope.convertHoldingsToUriVariables($rootScope.holdings.fiats)
+                + "&tsyms=USD"
+            ).then(function (response) {
+                console.log(response.data);
+                for (var holding in $rootScope.holdings.cryptos) {
+                    $rootScope.holdings.cryptos[holding].price =
+                        (response.data[holding]) ? response.data[holding]["USD"] : null;
+                }
 
-            for (var i = 0; i < $scope.holdings.stocks.length; i++) {
-                    stockTickers += $scope.user.holdings[i].acronym + ",";
-            }
+                for (var holding in $rootScope.holdings.fiats) {
+                    $rootScope.holdings.fiats[holding].price =
+                        (response.data[holding]) ? response.data[holding]["USD"] : null;
+                }
 
-            //Removing trailing comma for uri format
-            stockTickers = stockTickers.substr(0, stockTickers.length - 1);
+                console.log($rootScope.holdings.cryptos);
+                console.log($rootScope.holdings.fiats);
+            });
+
 
             //Get all User's stock prices
-            $http.get("https://www.alphavantage.co/query?function=BATCH_STOCK_QUOTES&symbols=" + stockTickers
+            $http.get("https://www.alphavantage.co/query?function=BATCH_STOCK_QUOTES&symbols=" + $scope.convertHoldingsToUriVariables($scope.holdings.stocks)
                 + "&apikey=" + AlphaVantageKey).then(function (response) {
                 console.log(response.data);
-                for (var i = 0; i < $scope.holdings.stocks.length; i++) {
-                    console.log(response.data["Stock Quotes"][i]["2. price"]);
-                    $scope.holdings.stocks[i].price = response.data["Stock Quotes"][i]["2. price"];
+                console.log($rootScope.holdings.stocks);
+
+                var i = 0;
+
+                for (var holding in $rootScope.holdings.stocks) {
+                    $rootScope.holdings.stocks[holding].price =
+                        (response.data["Stock Quotes"][i]["2. price"]) ?
+                            response.data["Stock Quotes"][i]["2. price"] : null;
+                    i++;
                 }
-                console.log($scope.holdings);
-            })
+
+                console.log($rootScope.holdings.stocks);
+            });
         }
     );
+
+    $scope.convertHoldingsToUriVariables = function (currentHoldingsList) {
+        var tickers = "";
+
+        for (var holding in currentHoldingsList) {
+            tickers += currentHoldingsList[holding].acronym + ",";
+        }
+
+        //Removing trailing comma for uri format
+        return tickers.substr(0, tickers.length - 1);
+    };
 
     $scope.addHolding = function () {
         $rootScope.addHoldingModal = $uibModal.open({
@@ -144,7 +172,8 @@ app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', 'user', '
     $scope.holding = {
         name: null,
         acronym: null,
-        quantity: 0
+        quantity: 0,
+        acquisitionCost: 0
     };
 
     var user1 = null;
@@ -157,6 +186,8 @@ app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', 'user', '
 
     $scope.holdingList = [];
 
+
+    $scope.getCurrentlySelectedPrice
 
     //save reloading every time
     if ($scope.holdingList.length === 0) {
