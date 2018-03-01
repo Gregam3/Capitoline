@@ -172,7 +172,8 @@ app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', 'user', '
     $scope.holding = {
         name: null,
         acronym: null,
-        quantity: 0
+        quantity: 0,
+        acquisitionCost: 0
     };
 
     var user1 = null;
@@ -184,7 +185,6 @@ app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', 'user', '
         });
 
     $scope.holdingList = [];
-
 
     //save reloading every time
     if ($scope.holdingList.length === 0) {

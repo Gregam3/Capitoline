@@ -186,9 +186,6 @@ app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', 'user', '
 
     $scope.holdingList = [];
 
-
-    $scope.getCurrentlySelectedPrice
-
     //save reloading every time
     if ($scope.holdingList.length === 0) {
         $http.get(

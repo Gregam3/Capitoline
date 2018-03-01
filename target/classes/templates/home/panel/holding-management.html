@@ -29,9 +29,9 @@
                     <tbody>
                     <tr ng-repeat="stock in holdings.stocks">
                         <td>{{stock.name}} ({{stock.acronym}})</td>
-                        <td>{{stock.quantity}}</td>
+                        <td>{{stock.totalQuantity}}</td>
                         <td>{{stock.price | currency}}</td>
-                        <td>{{(stock.quantity * stock.price) | currency}}</td>
+                        <td>{{(stock.totalQuantity * stock.price) | currency}}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -54,9 +54,9 @@
                     <tbody>
                     <tr ng-repeat="crypto in holdings.cryptos">
                         <td>{{crypto.name}}({{crypto.acronym}})</td>
-                        <td>{{(crypto.quantity !== 0 ) ? crypto.quantity : "Watch only"}}</td>
+                        <td>{{(crypto.totalQuantity !== 0 ) ? crypto.totalQuantity : "Watch only"}}</td>
                         <td>{{crypto.price | currency}}</td>
-                        <td>{{(crypto.quantity * crypto.price) | currency}}</td>
+                        <td>{{(crypto.totalQuantity * crypto.price) | currency}}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -79,9 +79,9 @@
                     <tbody>
                     <tr ng-repeat="fiat in holdings.fiats">
                         <td>{{fiat.acronym}} - {{fiat.name}} ({{fiat.symbol}})</td>
-                        <td>{{fiat.quantity}}</td>
+                        <td>{{fiat.totalQuantity}}</td>
                         <td>{{fiat.price | currency}}</td>
-                        <td>{{(fiat.quantity * fiat.price) | currency}}</td>
+                        <td>{{(fiat.totalQuantity * fiat.price) | currency}}</td>
                     </tr>
                     </tbody>
                 </table>

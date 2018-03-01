@@ -22,18 +22,20 @@ public class UserService {
 
     private UserDao userDao;
     private StockService stockService;
+    private JSONUtils jsonUtils;
 
     @Autowired
-    public UserService(UserDao userDao, StockService stockService) {
+    public UserService(UserDao userDao, StockService stockService, JSONUtils jsonUtils) {
         this.userDao = userDao;
         this.stockService = stockService;
+        this.jsonUtils = jsonUtils;
     }
 
     public User get(String email) throws IOException {
 
         User user = userDao.get(email);
         if (user.getHoldingsJson() != null) {
-            user.setHoldings(JSONUtils.convertToHoldingsList(user.getHoldingsJson()));
+            user.setHoldings(jsonUtils.convertToHoldingsList(user.getHoldingsJson()));
         } else  user.setHoldings(new ArrayList<>());
         return user;
     }

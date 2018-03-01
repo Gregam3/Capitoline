@@ -6,6 +6,9 @@ import com.greg.utils.JSONUtils;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Greg Mitten (i7676925)
@@ -17,39 +20,47 @@ public class Holding {
     private String acronym;
     private String name;
     private HoldingType holdingType;
-    private double acquisitionCost;
     @Transient
-    private double quantity;
+    private String transactionsJson;
+
+    @Transient
+    private List<Transaction> transactions;
+    @Transient
+    private Double totalQuantity;
 
     public Holding(String acronym, String name) {
         this.acronym = acronym;
         this.name = name;
     }
 
-    public Holding(String acronym, String name, HoldingType holdingType, double quantity) {
+    public Holding(String acronym, String name, HoldingType holdingType, Transaction transaction) throws JsonProcessingException {
         this.acronym = acronym;
         this.name = name;
         this.holdingType = holdingType;
-        this.quantity = quantity;
-    }
-
-    public Holding(String acronym, String name, HoldingType holdingType, double quantity, double acquisitionCost) {
-        this.acronym = acronym;
-        this.name = name;
-        this.holdingType = holdingType;
-        this.quantity = quantity;
-        this.acquisitionCost = acquisitionCost;
+        if (transactions == null) transactions = new ArrayList<>();
+        this.transactions.add(transaction);
+        this.totalQuantity = getTotalQuantity();
+        this.transactionsJson =
+                JSONUtils.OBJECT_MAPPER.writeValueAsString((transactions != null) ? transactions : "[]");
     }
 
     public Holding() {
     }
 
-    public double getAcquisitionCost() {
-        return acquisitionCost;
+    public List<Transaction> getTransactions() {
+        return transactions;
     }
 
-    public void setAcquisitionCost(double acquisitionCost) {
-        this.acquisitionCost = acquisitionCost;
+    public void setTransactions(List<Transaction> transactions) {
+        this.transactions = transactions;
+    }
+
+    public String getTransactionsJson() {
+        return transactionsJson;
+    }
+
+    public void setTransactionsJson(String transactionsJson) {
+        this.transactionsJson = transactionsJson;
     }
 
     public String getAcronym() {
@@ -77,15 +88,26 @@ public class Holding {
     }
 
     @Transient
-    public double getQuantity() {
-        return quantity;
+    public double getTotalQuantity() {
+        double totalQuantity = 0;
+        if (transactions != null)
+            for (Transaction transaction : transactions)
+                totalQuantity += transaction.getQuantity();
+
+        this.totalQuantity = totalQuantity;
+
+        return this.totalQuantity;
     }
 
-    public void setQuantity(double quantity) {
-        this.quantity = quantity;
+    public void setTotalQuantity(double totalQuantity) {
+        this.totalQuantity = totalQuantity;
     }
 
     public String asJson() throws JsonProcessingException {
         return JSONUtils.OBJECT_MAPPER.writeValueAsString(this);
+    }
+
+    public void setAcquisitionPrice(double price) {
+        transactions.get(transactions.size() - 1).setPrice(price);
     }
 }

@@ -77,4 +77,9 @@ public class User {
     public void setHoldingsJson(String holdingsJson) {
         this.holdingsJson = holdingsJson;
     }
+
+    public void setMostRecentlyAddedHoldingPrice(double price) {
+        if(holdings.size() != 0)
+            holdings.get(holdings.size() - 1).setAcquisitionPrice(price);
+    }
 }

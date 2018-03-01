@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.greg.entity.user.User;
 import com.greg.service.user.UserService;
 import com.greg.utils.JSONUtils;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,11 +26,12 @@ public class UserController {
     private static final Logger LOG = Logger.getLogger(UserController.class);
 
     private final UserService userService;
+    private final JSONUtils jsonUtils;
 
     @Autowired
-    public UserController(UserService userService) {
-
+    public UserController(UserService userService, JSONUtils jsonUtils) {
         this.userService = userService;
+        this.jsonUtils = jsonUtils;
     }
 
     @GetMapping(value = "get/{email:.+}")
@@ -46,9 +48,9 @@ public class UserController {
     @PutMapping(value = "update", produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<String> updateUser(@RequestBody JsonNode userNode) {
         try {
-            userService.update(JSONUtils.convertToUser(userNode));
+            userService.update(jsonUtils.convertToUserWithNewHolding(userNode));
             return new ResponseEntity<>("Updated successfully", HttpStatus.OK);
-        } catch (JsonProcessingException e) {
+        } catch (JsonProcessingException | UnirestException e) {
             LOG.error(e.getMessage());
             System.err.println(e);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

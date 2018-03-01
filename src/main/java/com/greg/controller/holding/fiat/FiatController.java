@@ -2,6 +2,7 @@ package com.greg.controller.holding.fiat;
 
 import com.greg.entity.holding.fiat.Fiat;
 import com.greg.service.currency.FiatService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,8 @@ import java.util.List;
 public class FiatController {
     private FiatService fiatService;
 
+
+    private static final Logger LOG = Logger.getLogger(FiatController.class);
     @Autowired
     public FiatController(FiatService fiatService) {
         this.fiatService = fiatService;
@@ -33,7 +36,13 @@ public class FiatController {
 
     @GetMapping("list")
     public ResponseEntity<List<Fiat>> getFiatList() {
-        return new ResponseEntity<>(fiatService.list(), HttpStatus.OK);
+        try {
+            return new ResponseEntity<>(fiatService.list(), HttpStatus.OK);
+        } catch (Exception e) {
+            LOG.error(e);
+            System.err.println(e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
 }
