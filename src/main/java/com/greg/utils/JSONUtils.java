@@ -10,6 +10,7 @@ import com.greg.entity.user.User;
 import com.greg.service.crypto.CryptoService;
 import com.greg.service.currency.FiatService;
 import com.greg.service.stock.StockService;
+import com.greg.service.user.UserService;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.InvalidPropertyException;
@@ -33,34 +34,40 @@ public class JSONUtils {
     private StockService stockService;
     private CryptoService cryptoService;
     private FiatService fiatService;
+    private UserService userService;
 
     @Autowired
-    public JSONUtils(StockService stockService, CryptoService cryptoService, FiatService fiatService) {
+    public JSONUtils(StockService stockService, CryptoService cryptoService, FiatService fiatService, UserService userService) {
         this.stockService = stockService;
         this.cryptoService = cryptoService;
         this.fiatService = fiatService;
+        this.userService = userService;
     }
 
-    public User convertToUserWithNewHolding(JsonNode jsonNode) throws UnirestException, JsonProcessingException {
+    public Holding convertToHolding(JsonNode jsonNode) throws UnirestException, IOException {
         double price = 0;
+        String acronym = "";
+        JsonNode holdingNode = jsonNode.get("holdingType");
 
-        //jsonNode.get("acronym").asText() does not need to be declared as a local variable as even though
-        //it is written multiple times it will only be accessed once
-        switch (HoldingType.valueOf(jsonNode.get("holdings")
-                .get(jsonNode.size() - 1).get("holdingType").asText())) {
+        switch (HoldingType.valueOf(holdingNode.get("holdingType").asText())) {
             case STOCK:
-                price = stockService.getStockPrice(jsonNode.get("holdings").get(jsonNode.size() - 1).get("acronym").asText());
+                price = stockService.getStockPrice(acronym);
                 break;
             case FIAT:
             case CRYPTO:
-                price = cryptoService.getCryptoPrice(jsonNode.get("holdings").get(jsonNode.size() - 1).get("acronym").asText());
+                price = cryptoService.getCryptoPrice(acronym);
                 break;
         }
 
-        User user = convertToUser(jsonNode);
-        user.setMostRecentlyAddedHoldingPrice(price);
+        return new Holding(holdingNode.get("acronym").asText(),
+                holdingNode.get("name").asText(),
+                holdingNode.get("holdingType"))
 
-        return user;
+        return new Transaction(
+                holdingNode.get("totalQuantity").asDouble(),
+                price,
+                new Date()
+        );
     }
 
 
@@ -73,26 +80,33 @@ public class JSONUtils {
         String name = (userNode.get("name") != null) ? userNode.asText() : null;
 
         for (JsonNode next : userNode.get("holdings")) {
-            JsonNode transactionNode = next.get("transaction");
-
             userHoldings.add(
                     new Holding(next.get("acronym").asText(),
                             next.get("name").asText(),
                             HoldingType.valueOf(next.get("holdingType").asText()),
-                            new Transaction(
-                                    transactionNode.get("quantity").asDouble(),
-                                    transactionNode.get("price").asDouble(),
-                                    new Date()
-                            )
+                            convertToTransactionList(next.get("transactions"))
                     ));
         }
 
         return new User(email, name, null, userHoldings);
     }
 
-    public ArrayList convertToHoldingsList(String holdingsJson) throws IOException {
-        String[] split = holdingsJson.split("\\|");
-        return OBJECT_MAPPER.readValue(split[0], ArrayList.class);
+    public List<Transaction> convertToTransactionList(JsonNode holdingsNode) {
+        List<Transaction> transactions = new ArrayList<>();
+
+        for (JsonNode holdingNode : holdingsNode) {
+            transactions.add(new Transaction(
+                            holdingNode.get("quantity").asDouble(),
+                            holdingNode.get("price").asDouble(),
+                            new Date() //fixme
+                    )
+            );
+        }
+
+        return transactions;
     }
 
+    public ArrayList convertToHoldingsList(String holdingsJson) throws IOException {
+        return OBJECT_MAPPER.readValue(holdingsJson, ArrayList.class);
+    }
 }

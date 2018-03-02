@@ -1,6 +1,7 @@
 package com.greg.service.user;
 
 import com.greg.dao.user.UserDao;
+import com.greg.entity.holding.Transaction;
 import com.greg.entity.user.User;
 import com.greg.service.stock.StockService;
 import com.greg.utils.JSONUtils;
@@ -42,5 +43,9 @@ public class UserService {
 
     public void update(User user) {
         userDao.update(user);
+    }
+
+    public void addTransaction(String email, Transaction transaction) {
+
     }
 }

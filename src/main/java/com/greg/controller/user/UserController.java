@@ -45,12 +45,12 @@ public class UserController {
         }
     }
 
-    @PutMapping(value = "update", produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<String> updateUser(@RequestBody JsonNode userNode) {
+    @PutMapping(value = "add-holding", produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> updateUser(@RequestBody JsonNode holdingNode) {
         try {
-            userService.update(jsonUtils.convertToUserWithNewHolding(userNode));
+            userService.addTransaction(holdingNode.get("email").asText(), jsonUtils.convertToHolding(holdingNode));
             return new ResponseEntity<>("Updated successfully", HttpStatus.OK);
-        } catch (JsonProcessingException | UnirestException e) {
+        } catch (UnirestException | IOException e) {
             LOG.error(e.getMessage());
             System.err.println(e);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

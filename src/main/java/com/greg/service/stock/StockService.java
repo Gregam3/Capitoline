@@ -3,8 +3,6 @@ package com.greg.service.stock;
 import com.greg.dao.stock.StockDao;
 import com.greg.entity.holding.HoldingType;
 import com.greg.entity.holding.stock.Stock;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.json.JSONArray;
@@ -39,8 +37,10 @@ public class StockService {
     }
 
     public double getStockPrice(String acronym) throws UnirestException {
+        //Get Response
         JSONObject object = Unirest.get(ALPHA_VANTAGE_BATCH_QUOTE_URL + acronym + "&apikey=" + ALPHA_VANTAGE_API_KEY).asJson().getBody().getObject();
 
+        //Casting necessary in order to access JSON elements
         return ((JSONObject)(((JSONArray) object.get("Stock Quotes")).get(0))).getDouble("2. price");
     }
 }

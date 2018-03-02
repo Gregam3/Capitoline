@@ -33,26 +33,17 @@ public class Holding {
         this.name = name;
     }
 
-    public Holding(String acronym, String name, HoldingType holdingType, Transaction transaction) throws JsonProcessingException {
+    public Holding(String acronym, String name, HoldingType holdingType, List<Transaction> transactions) throws JsonProcessingException {
         this.acronym = acronym;
         this.name = name;
         this.holdingType = holdingType;
-        if (transactions == null) transactions = new ArrayList<>();
-        this.transactions.add(transaction);
-        this.totalQuantity = getTotalQuantity();
+        this.transactions = transactions;
         this.transactionsJson =
                 JSONUtils.OBJECT_MAPPER.writeValueAsString((transactions != null) ? transactions : "[]");
+        this.totalQuantity = getTotalQuantity();
     }
 
     public Holding() {
-    }
-
-    public List<Transaction> getTransactions() {
-        return transactions;
-    }
-
-    public void setTransactions(List<Transaction> transactions) {
-        this.transactions = transactions;
     }
 
     public String getTransactionsJson() {
@@ -61,6 +52,18 @@ public class Holding {
 
     public void setTransactionsJson(String transactionsJson) {
         this.transactionsJson = transactionsJson;
+    }
+
+    public void setTotalQuantity(Double totalQuantity) {
+        this.totalQuantity = totalQuantity;
+    }
+
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(List<Transaction> transactions) {
+        this.transactions = transactions;
     }
 
     public String getAcronym() {
@@ -99,15 +102,13 @@ public class Holding {
         return this.totalQuantity;
     }
 
-    public void setTotalQuantity(double totalQuantity) {
-        this.totalQuantity = totalQuantity;
-    }
-
     public String asJson() throws JsonProcessingException {
         return JSONUtils.OBJECT_MAPPER.writeValueAsString(this);
     }
 
-    public void setAcquisitionPrice(double price) {
-        transactions.get(transactions.size() - 1).setPrice(price);
+    public void addTransaction(Transaction transaction) throws JsonProcessingException {
+        transactions.add(transaction);
+        this.transactionsJson =
+                JSONUtils.OBJECT_MAPPER.writeValueAsString(transactions);
     }
 }

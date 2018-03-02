@@ -1,4 +1,4 @@
-var app = angular.module("\overview", ['ui.bootstrap', 'smart-table']);
+var app = angular.module("overview", ['ui.bootstrap', 'smart-table']);
 // app.config(['$qProvider', function ($qProvider) {
 //     $qProvider.errorOnUnhandledRejections(false);
 // }]);
@@ -29,9 +29,17 @@ app.controller("basicInfoCtrl", ['$scope', '$http', '$uibModal', '$rootScope', f
         }
     };
 
+    $rootScope.user = null;
+
+    $http.get('http://localhost:8080/user/get/gregoryamitten@gmail.com')
+        .then(function (response) {
+            console.log(response.data);
+            $rootScope.user = response.data;
+        });
+
 
     $scope.openSettings = function () {
-        var modalInstance = $uibModal.open({
+        $uibModal.open({
             templateUrl: 'templates/home/popups/settings-popup.html',
             controller: 'settingsCtrl',
             resolve: {
@@ -53,10 +61,7 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
 
     $http.get('http://localhost:8080/user/get/gregoryamitten@gmail.com')
         .then(function (response) {
-            console.log(response.data);
             $scope.user = response.data;
-
-            console.log($scope.user.holdings.length);
 
             for (var i = 0; i < $scope.user.holdings.length; i++) {
                 var holdingType = $scope.user.holdings[i].holdingType;
@@ -69,8 +74,6 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
                     $rootScope.holdings.fiats[$scope.user.holdings[i].acronym] = $scope.user.holdings[i];
                 }
             }
-
-            console.log($rootScope.holdings);
         }).then(function () {
             $http.get(
                 "https://min-api.cryptocompare.com/data/pricemulti?fsyms="
@@ -78,7 +81,6 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
                 + $scope.convertHoldingsToUriVariables($rootScope.holdings.fiats)
                 + "&tsyms=USD"
             ).then(function (response) {
-                console.log(response.data);
                 for (var holding in $rootScope.holdings.cryptos) {
                     $rootScope.holdings.cryptos[holding].price =
                         (response.data[holding]) ? response.data[holding]["USD"] : null;
@@ -88,17 +90,12 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
                     $rootScope.holdings.fiats[holding].price =
                         (response.data[holding]) ? response.data[holding]["USD"] : null;
                 }
-
-                console.log($rootScope.holdings.cryptos);
-                console.log($rootScope.holdings.fiats);
             });
 
 
             //Get all User's stock prices
             $http.get("https://www.alphavantage.co/query?function=BATCH_STOCK_QUOTES&symbols=" + $scope.convertHoldingsToUriVariables($scope.holdings.stocks)
                 + "&apikey=" + AlphaVantageKey).then(function (response) {
-                console.log(response.data);
-                console.log($rootScope.holdings.stocks);
 
                 var i = 0;
 
@@ -108,8 +105,6 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
                             response.data["Stock Quotes"][i]["2. price"] : null;
                     i++;
                 }
-
-                console.log($rootScope.holdings.stocks);
             });
         }
     );
@@ -170,19 +165,15 @@ app.controller("settingsCtrl", ['$scope', '$http', '$uibModalStack', 'Email', fu
 
 app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', 'user', '$rootScope', function ($scope, $http, $uibModalStack, user, $rootScope) {
     $scope.holding = {
+        email: $rootScope.user.email,
         name: null,
         acronym: null,
-        quantity: 0,
-        acquisitionCost: 0
+        transaction: {
+            quantity: -1,
+            price: -1,
+            date: null
+        }
     };
-
-    var user1 = null;
-
-    $http.get('http://localhost:8080/user/get/gregoryamitten@gmail.com')
-        .then(function (response) {
-            console.log(response.data);
-            user1 = response.data;
-        });
 
     $scope.holdingList = [];
 
@@ -192,32 +183,31 @@ app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', 'user', '
             "http://localhost:8080/crypto/list"
         ).then(function (response) {
             $scope.holdingList = $scope.holdingList.concat(response.data);
-            console.log(response.data);
         });
 
         $http.get(
             "http://localhost:8080/fiat/list"
         ).then(function (response) {
             $scope.holdingList = $scope.holdingList.concat(response.data);
-            console.log(response.data);
         });
 
         $http.get(
             "http://localhost:8080/stock/list"
         ).then(function (response) {
             $scope.holdingList = $scope.holdingList.concat(response.data);
-            console.log(response.data);
         });
     }
 
     $scope.add = function () {
         console.log($scope.holding);
-        user1.holdings.push($scope.holding);
+        $rootScope.user.holdings.push($scope.holding);
+        $rootScope.user.newTransaction = $scope.holding.acronym;
+        console.log($rootScope.user);
 
         $http({
             method: 'PUT',
-            url: "http://localhost:8080/user/update",
-            data: user1
+            url: "http://localhost:8080/user/add-holding",
+            data: $scope.holding
         }).then(function (response) {
             console.log(response);
             $uibModalStack.dismissAll();

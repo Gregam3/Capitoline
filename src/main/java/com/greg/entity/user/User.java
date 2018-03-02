@@ -2,7 +2,9 @@ package com.greg.entity.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.greg.entity.holding.Holding;
+import com.greg.entity.holding.Transaction;
 import com.greg.utils.JSONUtils;
 
 import javax.persistence.*;
@@ -78,8 +80,11 @@ public class User {
         this.holdingsJson = holdingsJson;
     }
 
-    public void setMostRecentlyAddedHoldingPrice(double price) {
-        if(holdings.size() != 0)
-            holdings.get(holdings.size() - 1).setAcquisitionPrice(price);
+    public void addTransaction(String acronym, Transaction transaction) throws JsonProcessingException {
+        for (Holding holding : holdings)
+            if (holding.getAcronym().equals(acronym)) {
+                holding.addTransaction(transaction);
+                break;
+            }
     }
 }

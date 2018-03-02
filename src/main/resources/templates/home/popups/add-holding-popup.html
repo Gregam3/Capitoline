@@ -7,7 +7,7 @@
         <select ng-model="holding"
                 ng-options="(holding.name+' - ' +holding.holdingType) for holding in holdingList | orderBy: 'name'"></select>
         <label>Quantity</label>
-        <input type="number" name="input" ng-model="holding.totalQuantity"/>
+        <input type="number" name="input" ng-model="holding.transaction.quantity"/>
         <button ng-click="add()">Add <span class="fa fa-plus"></span></button>
     </div>
 </div>
