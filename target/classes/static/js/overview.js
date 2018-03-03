@@ -164,16 +164,15 @@ app.controller("settingsCtrl", ['$scope', '$http', '$uibModalStack', 'Email', fu
 }]);
 
 app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', 'user', '$rootScope', function ($scope, $http, $uibModalStack, user, $rootScope) {
-    $scope.holding = {
+    var newHolding = {
         email: $rootScope.user.email,
         name: null,
         acronym: null,
-        transaction: {
-            quantity: -1,
-            price: -1,
-            date: null
-        }
+        holdingType: null,
+        quantity: -1
     };
+
+    console.log(newHolding);
 
     $scope.holdingList = [];
 
@@ -199,15 +198,17 @@ app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', 'user', '
     }
 
     $scope.add = function () {
-        console.log($scope.holding);
-        $rootScope.user.holdings.push($scope.holding);
-        $rootScope.user.newTransaction = $scope.holding.acronym;
-        console.log($rootScope.user);
+        newHolding.acronym = $scope.holding.acronym;
+        newHolding.name = $scope.holding.name;
+        newHolding.holdingType = $scope.holding.holdingType;
+        newHolding.quantity = $scope.quantity;
+
+        console.log(newHolding);
 
         $http({
             method: 'PUT',
             url: "http://localhost:8080/user/add-holding",
-            data: $scope.holding
+            data: newHolding
         }).then(function (response) {
             console.log(response);
             $uibModalStack.dismissAll();

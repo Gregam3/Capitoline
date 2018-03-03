@@ -1,9 +1,9 @@
 package com.greg.entity.holding.fiat;
 
 import com.greg.entity.holding.Holding;
+import com.greg.entity.holding.UserHolding;
 import com.greg.entity.holding.HoldingType;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 

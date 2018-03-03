@@ -48,7 +48,7 @@ public class UserController {
     @PutMapping(value = "add-holding", produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<String> updateUser(@RequestBody JsonNode holdingNode) {
         try {
-            userService.addTransaction(holdingNode.get("email").asText(), jsonUtils.convertToHolding(holdingNode));
+            userService.addTransaction(holdingNode);
             return new ResponseEntity<>("Updated successfully", HttpStatus.OK);
         } catch (UnirestException | IOException e) {
             LOG.error(e.getMessage());

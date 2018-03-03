@@ -1,13 +1,11 @@
 package com.greg.entity.user;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.greg.entity.holding.Holding;
-import com.greg.entity.holding.Transaction;
+import com.greg.entity.holding.UserHolding;
 import com.greg.utils.JSONUtils;
 
 import javax.persistence.*;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -24,19 +22,18 @@ public class User {
     private String holdingsJson;
 
     @Transient
-    private List<Holding> holdings;
+    private List<UserHolding> holdings;
 
     public User() {
-
     }
 
-    public User(String email, String name, String settingsJson, List<Holding> holdings) throws JsonProcessingException {
+    public User(String email, String name, String settingsJson, List<UserHolding> userHoldings) throws JsonProcessingException {
         this.email = email;
         this.name = name;
         this.settings = settingsJson;
-        this.holdings = holdings;
+        this.holdings = userHoldings;
         this.holdingsJson =
-                JSONUtils.OBJECT_MAPPER.writeValueAsString((holdings != null) ? holdings : "[]");
+                convertHoldings(userHoldings);
     }
 
     public String getName() {
@@ -64,12 +61,14 @@ public class User {
     }
 
     @Transient
-    public List<Holding> getHoldings() {
-        return holdings;
+    public List<UserHolding> getUserHoldings() throws IOException {
+        holdings = JSONUtils.convertToHoldingList(holdingsJson);
+        return this.holdings;
     }
 
-    public void setHoldings(List<Holding> holdings) {
-        this.holdings = holdings;
+    public void setUserHoldings(List<UserHolding> userHoldings) throws JsonProcessingException {
+        this.holdings = userHoldings;
+        this.holdingsJson = convertHoldings(userHoldings);
     }
 
     public String getHoldingsJson() {
@@ -77,14 +76,11 @@ public class User {
     }
 
     public void setHoldingsJson(String holdingsJson) {
+
         this.holdingsJson = holdingsJson;
     }
 
-    public void addTransaction(String acronym, Transaction transaction) throws JsonProcessingException {
-        for (Holding holding : holdings)
-            if (holding.getAcronym().equals(acronym)) {
-                holding.addTransaction(transaction);
-                break;
-            }
+    private String convertHoldings(List<UserHolding> userHoldings) throws JsonProcessingException {
+        return JSONUtils.OBJECT_MAPPER.writeValueAsString((userHoldings != null) ? userHoldings : "[]");
     }
 }

@@ -1,7 +1,7 @@
 //package com.greg.entity.user;
 //
 //import com.fasterxml.jackson.core.JsonProcessingException;
-//import com.greg.entity.holding.Holding;
+//import com.greg.entity.holding.UserHolding;
 //import com.greg.entity.holding.HoldingType;
 //import com.greg.entity.holding.crypto.Crypto;
 //import com.greg.entity.holding.fiat.Fiat;
@@ -38,7 +38,7 @@
 //    }
 //
 //
-//    public void addHolding(Holding holding, double quantity) {
+//    public void addHolding(UserHolding holding, double quantity) {
 //        cryptoList.put(holding.asJson(), quantity);
 //    }
 //

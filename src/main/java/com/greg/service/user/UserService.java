@@ -1,18 +1,22 @@
 package com.greg.service.user;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.greg.dao.user.UserDao;
+import com.greg.entity.holding.UserHolding;
+import com.greg.entity.holding.HoldingType;
 import com.greg.entity.holding.Transaction;
 import com.greg.entity.user.User;
+import com.greg.service.crypto.CryptoService;
 import com.greg.service.stock.StockService;
 import com.greg.utils.JSONUtils;
-import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.concurrent.Future;
 
 /**
  * @author Greg Mitten (i7676925)
@@ -23,21 +27,23 @@ public class UserService {
 
     private UserDao userDao;
     private StockService stockService;
+    private CryptoService cryptoService;
     private JSONUtils jsonUtils;
 
     @Autowired
-    public UserService(UserDao userDao, StockService stockService, JSONUtils jsonUtils) {
+    public UserService(UserDao userDao, StockService stockService, CryptoService cryptoService, JSONUtils jsonUtils) {
         this.userDao = userDao;
         this.stockService = stockService;
         this.jsonUtils = jsonUtils;
+        this.cryptoService = cryptoService;
     }
 
     public User get(String email) throws IOException {
-
         User user = userDao.get(email);
-        if (user.getHoldingsJson() != null) {
-            user.setHoldings(jsonUtils.convertToHoldingsList(user.getHoldingsJson()));
-        } else  user.setHoldings(new ArrayList<>());
+        if (user.getHoldingsJson() != null)
+            user.setUserHoldings(jsonUtils.convertToHoldingList(user.getHoldingsJson()));
+        else user.setUserHoldings(new ArrayList<>());
+
         return user;
     }
 
@@ -45,7 +51,41 @@ public class UserService {
         userDao.update(user);
     }
 
-    public void addTransaction(String email, Transaction transaction) {
+    public void addTransaction(JsonNode holdingNode) throws UnirestException, IOException {
+        double price = 0;
+        String email = holdingNode.get("email").asText();
+        String acronym = holdingNode.get("acronym").asText();
+
+        switch (HoldingType.valueOf(holdingNode.get("holdingType").asText())) {
+            case STOCK:
+                price = stockService.getStockPrice(acronym);
+                break;
+            case FIAT:
+            case CRYPTO:
+                price = cryptoService.getCryptoPrice(acronym);
+                break;
+        }
+
+        Transaction transaction = new Transaction(
+                holdingNode.get("quantity").asDouble(),
+                price,
+                new Date()
+        );
+
+
+        int holdingIndex = userDao.indexOfHolding(email, acronym);
+
+        if (holdingIndex >= 0)
+            userDao.appendTransaction(email, holdingIndex, transaction);
+        else {
+            List<Transaction> transactions = new ArrayList<>();
+            transactions.add(transaction);
+            userDao.addHolding(email, new UserHolding(holdingNode.get("acronym").asText(),
+                    holdingNode.get("name").asText(),
+                    HoldingType.valueOf(holdingNode.get("holdingType").asText()),
+                    transactions
+                    ));
+        }
 
     }
 }

@@ -3,6 +3,7 @@ package com.greg.entity.holding.stock;
 
 import com.greg.entity.holding.Holding;
 import com.greg.entity.holding.HoldingType;
+import com.greg.entity.holding.UserHolding;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -13,13 +14,14 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "PT_NASDAQ_NYSE")
-public class Stock extends Holding{
+public class Stock extends Holding {
     public Stock() {
         super();
     }
 
     public Stock(String acronym, String name) {
         super(acronym, name);
+        setHoldingType(HoldingType.STOCK);
     }
 
 }
