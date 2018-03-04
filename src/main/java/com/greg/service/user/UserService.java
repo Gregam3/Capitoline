@@ -2,9 +2,9 @@ package com.greg.service.user;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.greg.dao.user.UserDao;
-import com.greg.entity.holding.UserHolding;
 import com.greg.entity.holding.HoldingType;
-import com.greg.entity.holding.Transaction;
+import com.greg.entity.user.Transaction;
+import com.greg.entity.user.UserHolding;
 import com.greg.entity.user.User;
 import com.greg.service.crypto.CryptoService;
 import com.greg.service.stock.StockService;
@@ -64,7 +64,7 @@ public class UserService {
         Transaction transaction = new Transaction(
                 holdingNode.get("quantity").asDouble(),
                 price,
-                new Date()
+                new java.sql.Date(new Date().getTime())
         );
 
 

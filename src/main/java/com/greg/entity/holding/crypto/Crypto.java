@@ -1,7 +1,6 @@
 package com.greg.entity.holding.crypto;
 
 import com.greg.entity.holding.Holding;
-import com.greg.entity.holding.UserHolding;
 import com.greg.entity.holding.HoldingType;
 
 /**

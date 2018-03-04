@@ -1,9 +1,7 @@
 package com.greg.entity.holding;
 
-import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.Table;
 
 /**
  * @author Greg Mitten (i7676925)
@@ -29,6 +27,7 @@ public class Holding {
         this.name = name;
         this.holdingType = holdingType;
     }
+
 
     public String getAcronym() {
         return acronym;

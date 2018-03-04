@@ -1,12 +1,18 @@
-package com.greg.entity.holding;
+package com.greg.entity.user;
 
-import java.util.Date;
+import javax.persistence.*;
+import java.sql.Date;
 
 /**
  * @author Greg Mitten (i7676925)
  * gregoryamitten@gmail.com
  */
+@Entity
+@Table(name = "PT_TRANSACTION")
 public class Transaction {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int transactionNumber;
     private double quantity;
     private double price;
     private Date date;
@@ -15,6 +21,14 @@ public class Transaction {
         this.quantity = quantity;
         this.price = price;
         this.date = date;
+    }
+
+    public int getTransactionNumber() {
+        return transactionNumber;
+    }
+
+    public void setTransactionNumber(int transactionNumber) {
+        this.transactionNumber = transactionNumber;
     }
 
     public double getQuantity() {

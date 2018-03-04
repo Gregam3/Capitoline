@@ -1,7 +1,7 @@
 //package com.greg.entity.user;
 //
 //import com.fasterxml.jackson.core.JsonProcessingException;
-//import com.greg.entity.holding.UserHolding;
+//import com.greg.entity.user.UserHolding;
 //import com.greg.entity.holding.HoldingType;
 //import com.greg.entity.holding.crypto.Crypto;
 //import com.greg.entity.holding.fiat.Fiat;

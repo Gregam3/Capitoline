@@ -1,7 +1,6 @@
 package com.greg.entity.user;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.greg.entity.holding.UserHolding;
 import com.greg.utils.JSONUtils;
 
 import javax.persistence.*;

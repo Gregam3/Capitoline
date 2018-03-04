@@ -3,7 +3,6 @@ package com.greg.entity.holding.stock;
 
 import com.greg.entity.holding.Holding;
 import com.greg.entity.holding.HoldingType;
-import com.greg.entity.holding.UserHolding;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;

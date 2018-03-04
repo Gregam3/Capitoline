@@ -1,8 +1,8 @@
 package com.greg.dao.user;
 
 import com.greg.dao.AbstractDaoImpl;
-import com.greg.entity.holding.UserHolding;
-import com.greg.entity.holding.Transaction;
+import com.greg.entity.user.UserHolding;
+import com.greg.entity.user.Transaction;
 import com.greg.entity.user.User;
 import org.springframework.stereotype.Repository;
 

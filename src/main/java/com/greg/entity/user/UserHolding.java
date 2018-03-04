@@ -1,13 +1,13 @@
-package com.greg.entity.holding;
+package com.greg.entity.user;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.greg.entity.holding.Holding;
+import com.greg.entity.holding.HoldingType;
 import com.greg.utils.JSONUtils;
 
 import javax.persistence.*;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Greg Mitten (i7676925)
@@ -16,7 +16,14 @@ import java.util.Map;
 @Entity
 @Table(name = "PT_HOLDING")
 public class UserHolding extends Holding {
-    @Transient
+
+    @EmbeddedId
+    private HoldingId holdingId;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "PT_HOLDING_TRANSACTION",
+            joinColumns = {@JoinColumn(name = "ACRONYM")},
+            inverseJoinColumns = {@JoinColumn(name = "TRANSACTION_NUMBER")})
     private List<Transaction> transactions;
     @Transient
     private Double totalQuantity;
