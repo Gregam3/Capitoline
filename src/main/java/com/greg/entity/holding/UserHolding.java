@@ -3,9 +3,7 @@ package com.greg.entity.holding;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.greg.utils.JSONUtils;
 
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +13,9 @@ import java.util.Map;
  * @author Greg Mitten (i7676925)
  * gregoryamitten@gmail.com
  */
+@Entity
+@Table(name = "PT_HOLDING")
 public class UserHolding extends Holding {
-    @Transient
-    private String transactionsJson;
-
     @Transient
     private List<Transaction> transactions;
     @Transient
@@ -31,8 +28,6 @@ public class UserHolding extends Holding {
     public UserHolding(String acronym, String name, HoldingType holdingType, List<Transaction> transactions) throws IOException {
         super(acronym, name, holdingType);
         this.transactions = transactions;
-        this.transactionsJson =
-                JSONUtils.OBJECT_MAPPER.writeValueAsString((this.transactions != null) ? this.transactions : "[]");
         this.totalQuantity = getTotalQuantity();
     }
 
@@ -40,21 +35,10 @@ public class UserHolding extends Holding {
         super();
     }
 
-    public String getTransactionsJson() {
-        return transactionsJson;
-    }
 
-    public void setTransactionsJson(String transactionsJson) {
-        this.transactionsJson = transactionsJson;
-    }
 
     public void setTotalQuantity(Double totalQuantity) {
         this.totalQuantity = totalQuantity;
-    }
-
-    public List<Transaction> getTransactions() throws IOException {
-        this.transactions = JSONUtils.convertToTransactionList(transactionsJson);
-        return transactions;
     }
 
     public void setTransactions(List<Transaction> transactions) {
@@ -65,7 +49,7 @@ public class UserHolding extends Holding {
     public double getTotalQuantity() throws IOException {
         double totalQuantity = 0;
         if (transactions != null)
-            for (Transaction transaction : getTransactions())
+            for (Transaction transaction : transactions)
                 totalQuantity += transaction.getQuantity();
 
         this.totalQuantity = totalQuantity;
@@ -79,7 +63,5 @@ public class UserHolding extends Holding {
 
     public void addTransaction(Transaction transaction) throws JsonProcessingException {
         transactions.add(transaction);
-        this.transactionsJson =
-                JSONUtils.OBJECT_MAPPER.writeValueAsString(transactions);
     }
 }

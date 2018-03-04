@@ -39,12 +39,7 @@ public class UserService {
     }
 
     public User get(String email) throws IOException {
-        User user = userDao.get(email);
-        if (user.getHoldingsJson() != null)
-            user.setUserHoldings(jsonUtils.convertToHoldingList(user.getHoldingsJson()));
-        else user.setUserHoldings(new ArrayList<>());
-
-        return user;
+        return userDao.get(email);
     }
 
     public void update(User user) {
@@ -74,6 +69,7 @@ public class UserService {
 
 
         int holdingIndex = userDao.indexOfHolding(email, acronym);
+
 
         if (holdingIndex >= 0)
             userDao.appendTransaction(email, holdingIndex, transaction);

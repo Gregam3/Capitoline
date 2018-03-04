@@ -5,7 +5,6 @@ import com.greg.entity.holding.UserHolding;
 import com.greg.utils.JSONUtils;
 
 import javax.persistence.*;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -19,21 +18,21 @@ public class User {
     private String email;
     private String name;
     private String settings;
-    private String holdingsJson;
 
-    @Transient
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "PT_USER_HOLDINGS",
+            joinColumns = {@JoinColumn(name = "EMAIL")},
+            inverseJoinColumns = {@JoinColumn(name = "ACRONYM")})
     private List<UserHolding> holdings;
 
     public User() {
     }
 
-    public User(String email, String name, String settingsJson, List<UserHolding> userHoldings) throws JsonProcessingException {
+    public User(String email, String name, String settingsJson, List<UserHolding> holdings) throws JsonProcessingException {
         this.email = email;
         this.name = name;
         this.settings = settingsJson;
-        this.holdings = userHoldings;
-        this.holdingsJson =
-                convertHoldings(userHoldings);
+        this.holdings = holdings;
     }
 
     public String getName() {
@@ -60,24 +59,12 @@ public class User {
         this.settings = settings;
     }
 
-    @Transient
-    public List<UserHolding> getUserHoldings() throws IOException {
-        holdings = JSONUtils.convertToHoldingList(holdingsJson);
-        return this.holdings;
+    public List<UserHolding> getHoldings() {
+        return holdings;
     }
 
-    public void setUserHoldings(List<UserHolding> userHoldings) throws JsonProcessingException {
-        this.holdings = userHoldings;
-        this.holdingsJson = convertHoldings(userHoldings);
-    }
-
-    public String getHoldingsJson() {
-        return holdingsJson;
-    }
-
-    public void setHoldingsJson(String holdingsJson) {
-
-        this.holdingsJson = holdingsJson;
+    public void setHoldings(List<UserHolding> holdings) {
+        this.holdings = holdings;
     }
 
     private String convertHoldings(List<UserHolding> userHoldings) throws JsonProcessingException {

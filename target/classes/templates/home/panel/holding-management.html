@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <body>
-<div class="panel panel-default" th:fragment="userHolding-management" ng-controller="holdingManagementCtrl">
+<div class="panel panel-default" th:fragment="holding-management" ng-controller="holdingManagementCtrl">
     <div class="panel-heading">
         <div class="col-lg-12 row">
             <h3>Holdings <span class="fa fa-list-ul"></span></h3>
@@ -27,7 +27,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="stock in userHoldings.stocks">
+                    <tr ng-repeat="stock in holdings.stocks">
                         <td>{{stock.name}} ({{stock.acronym}})</td>
                         <td>{{stock.totalQuantity}}</td>
                         <td>{{stock.price | currency}}</td>
@@ -52,7 +52,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="crypto in userHoldings.cryptos">
+                    <tr ng-repeat="crypto in holdings.cryptos">
                         <td>{{crypto.name}}({{crypto.acronym}})</td>
                         <td>{{(crypto.totalQuantity !== 0 ) ? crypto.totalQuantity : "Watch only"}}</td>
                         <td>{{crypto.price | currency}}</td>
@@ -77,7 +77,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="fiat in userHoldings.fiats">
+                    <tr ng-repeat="fiat in holdings.fiats">
                         <td>{{fiat.acronym}} - {{fiat.name}} ({{fiat.symbol}})</td>
                         <td>{{fiat.totalQuantity}}</td>
                         <td>{{fiat.price | currency}}</td>
@@ -85,7 +85,7 @@
                     </tr>
                     </tbody>
                 </table>
-                <!--{{userHoldings.cryptos.price in userHoldings.cryptos }}-->
+                <!--{{holdings.cryptos.price in holdings.cryptos }}-->
             </div>
         </div>
     </div>

@@ -29,18 +29,13 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     }
 
     @Override
-    public User get(String id) {
-        return entityManager.find(User.class, id);
-    }
-
-    @Override
     public void addTransaction(String email, String holdingName, Transaction transaction) {
 
     }
 
     @Override
     public int indexOfHolding(String email, String acronym) throws IOException {
-        List<UserHolding> userHoldings = get(email).getUserHoldings();
+        List<UserHolding> userHoldings = get(email).getHoldings();
         for (int i = 0; i < userHoldings.size(); i++)
             if (userHoldings.get(i).getAcronym().equals(acronym))
                 return i;
@@ -53,15 +48,15 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
                                   Transaction transaction
     ) throws IOException {
         User user = get(email);
-        user.getUserHoldings().get(holdingIndex).addTransaction(transaction);
+        user.getHoldings().get(holdingIndex).addTransaction(transaction);
         update(user);
     }
 
     public void addHolding(String email, UserHolding userHolding) throws IOException {
         User user = get(email);
-        List<UserHolding> userHoldings = user.getUserHoldings();
+        List<UserHolding> userHoldings = user.getHoldings();
         userHoldings.add(userHolding);
-        user.setUserHoldings(userHoldings);
+        user.setHoldings(userHoldings);
         update(user);
     }
 }

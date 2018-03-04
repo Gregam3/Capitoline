@@ -38,7 +38,7 @@ public class UserController {
     public ResponseEntity<User> getUser(@PathVariable("email") String email) throws JsonProcessingException {
         try {
             return new ResponseEntity<>(userService.get(email), HttpStatus.OK);
-        } catch (IOException e) {
+        } catch (Exception e) {
             LOG.error(e.getMessage());
             System.err.println(e);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

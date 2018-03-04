@@ -3,9 +3,9 @@
         <h3 class="modal-title" id="modal-title">Add New Holding <span class="fa fa-plus"></span></h3>
     </div>
     <div class="modal-body" id="modal-body">
-        <h4><b>{{(userHolding.holdingType) ? userHolding.holdingType + ':' : 'Holding:'}}</b> {{userHolding.name}}</h4>
-        <select ng-model="userHolding"
-                ng-options="(userHolding.name+' - ' +userHolding.holdingType) for userHolding in holdingList | orderBy: 'name'"></select>
+        <h4><b>{{(holding.holdingType) ? holding.holdingType + ':' : 'Holding:'}}</b> {{holding.name}}</h4>
+        <select ng-model="holding"
+                ng-options="(holding.name+' - ' +holding.holdingType) for holding in holdingList | orderBy: 'name'"></select>
         <label>Quantity</label>
         <input type="number" name="input" ng-model="quantity"/>
         <button ng-click="add()">Add <span class="fa fa-plus"></span></button>

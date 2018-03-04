@@ -62,6 +62,7 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
     $http.get('http://localhost:8080/user/get/gregoryamitten@gmail.com')
         .then(function (response) {
             $scope.user = response.data;
+            console.log(response.data);
 
             for (var i = 0; i < $scope.user.holdings.length; i++) {
                 var holdingType = $scope.user.holdings[i].holdingType;
