@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import java.util.List;
  */
 @Repository
 @Transactional
+@PersistenceContext(type = PersistenceContextType.EXTENDED)
 public abstract class AbstractDaoImpl<T> {
 
     private static final Logger LOG = Logger.getLogger(StockController.class);
@@ -24,13 +26,12 @@ public abstract class AbstractDaoImpl<T> {
     @PersistenceContext
     protected EntityManager entityManager;
 
-    //
     protected void setThisClass(Class currentClass) {
         this.currentClass = currentClass;
     }
 
     public T get(String id) {
-            return (T) entityManager.find(currentClass, id);
+        return (T) entityManager.find(currentClass, id);
     }
 
     public void delete(String id) {

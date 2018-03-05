@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.greg.dao.user.UserDao;
 import com.greg.entity.holding.HoldingType;
 import com.greg.entity.user.Transaction;
-import com.greg.entity.user.UserHolding;
 import com.greg.entity.user.User;
+import com.greg.entity.user.UserHolding;
 import com.greg.service.crypto.CryptoService;
 import com.greg.service.stock.StockService;
 import com.greg.utils.JSONUtils;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -64,22 +63,22 @@ public class UserService {
         Transaction transaction = new Transaction(
                 holdingNode.get("quantity").asDouble(),
                 price,
-                new java.sql.Date(new Date().getTime())
+                null//new java.sql.Date(new Date().getTime())
         );
 
-
         int holdingIndex = userDao.indexOfHolding(email, acronym);
-
 
         if (holdingIndex >= 0)
             userDao.appendTransaction(email, holdingIndex, transaction);
         else {
             List<Transaction> transactions = new ArrayList<>();
             transactions.add(transaction);
-            userDao.addHolding(email, new UserHolding(holdingNode.get("acronym").asText(),
-                    holdingNode.get("name").asText(),
-                    HoldingType.valueOf(holdingNode.get("holdingType").asText()),
-                    transactions
+            userDao.addHolding(email,
+                    new UserHolding(
+                            holdingNode.get("acronym").asText(),
+                            holdingNode.get("name").asText(),
+                            HoldingType.valueOf(holdingNode.get("holdingType").asText()),
+                            transactions
                     ));
         }
 

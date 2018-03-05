@@ -4,6 +4,7 @@ import com.greg.entity.holding.Holding;
 import com.greg.entity.holding.HoldingType;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
@@ -29,6 +30,12 @@ public class Fiat extends Holding {
         super(acronym, name);
         this.symbol = symbol;
         this.setHoldingType(HoldingType.FIAT);
+    }
+
+    @Id
+    @Override
+    public String getAcronym() {
+        return this.acronym;
     }
 
     public String getSymbol() {

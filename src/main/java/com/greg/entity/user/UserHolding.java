@@ -1,5 +1,6 @@
 package com.greg.entity.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.greg.entity.holding.Holding;
 import com.greg.entity.holding.HoldingType;
@@ -17,14 +18,18 @@ import java.util.List;
 @Table(name = "PT_HOLDING")
 public class UserHolding extends Holding {
 
-    @EmbeddedId
-    private HoldingId holdingId;
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "email", nullable = false)
+    private User user;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "PT_HOLDING_TRANSACTION",
-            joinColumns = {@JoinColumn(name = "ACRONYM")},
-            inverseJoinColumns = {@JoinColumn(name = "TRANSACTION_NUMBER")})
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long holdingId;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Transaction> transactions;
+
     @Transient
     private Double totalQuantity;
 
@@ -41,8 +46,6 @@ public class UserHolding extends Holding {
     public UserHolding() {
         super();
     }
-
-
 
     public void setTotalQuantity(Double totalQuantity) {
         this.totalQuantity = totalQuantity;

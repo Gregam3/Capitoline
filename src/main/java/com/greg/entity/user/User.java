@@ -19,9 +19,6 @@ public class User {
     private String settings;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "PT_USER_HOLDINGS",
-            joinColumns = {@JoinColumn(name = "EMAIL")},
-            inverseJoinColumns = {@JoinColumn(name = "ACRONYM")})
     private List<UserHolding> holdings;
 
     public User() {

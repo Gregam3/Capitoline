@@ -1,16 +1,14 @@
 package com.greg.service.crypto;
 
-        import com.greg.entity.holding.HoldingType;
-        import com.greg.entity.holding.crypto.Crypto;
-        import com.mashape.unirest.http.Unirest;
-        import com.mashape.unirest.http.exceptions.UnirestException;
-        import org.json.JSONObject;
-        import org.springframework.http.ResponseEntity;
-        import org.springframework.stereotype.Service;
+import com.greg.entity.holding.crypto.Crypto;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
+import org.json.JSONObject;
+import org.springframework.stereotype.Service;
 
-        import java.util.ArrayList;
-        import java.util.Iterator;
-        import java.util.List;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author Greg Mitten (i7676925)
@@ -41,7 +39,9 @@ public class CryptoService {
 
 
     public double getCryptoPrice(String acronym) throws UnirestException {
-        return Unirest.get(CRYPTO_API_URL + "/data/price?fsym=" + acronym + "&tsyms=USD")
-                .asJson().getBody().getObject().getDouble("USD");
+        JSONObject response = Unirest.get(CRYPTO_API_URL + "/data/price?fsym=" + acronym + "&tsyms=USD")
+                .asJson().getBody().getObject();
+
+        return (response.length() == 1) ? response.getDouble("USD") : -1;
     }
 }

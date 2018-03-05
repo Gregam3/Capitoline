@@ -1,5 +1,7 @@
 package com.greg.entity.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.sql.Date;
 
@@ -12,24 +14,42 @@ import java.sql.Date;
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int transactionNumber;
+    private long transactionId;
+
+    @JsonIgnore
+    @ManyToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name = "holding_id", nullable = false)
+    private UserHolding UserHolding;
     private double quantity;
     private double price;
-    private Date date;
+    private Date dateBought;
 
-    public Transaction(double quantity, double price, Date date) {
+    public Transaction(double quantity, double price, Date dateBought) {
         this.quantity = quantity;
         this.price = price;
-        this.date = date;
+        this.dateBought = dateBought;
     }
 
-    public int getTransactionNumber() {
-        return transactionNumber;
+    public Transaction() {
     }
 
-    public void setTransactionNumber(int transactionNumber) {
-        this.transactionNumber = transactionNumber;
+    public UserHolding getUserHolding() {
+        return UserHolding;
     }
+
+    public void setUserHolding(UserHolding UserHolding) {
+        this.UserHolding = UserHolding;
+    }
+
+    public long getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(long transactionId) {
+        this.transactionId = transactionId;
+    }
+
+
 
     public double getQuantity() {
         return quantity;
@@ -48,10 +68,10 @@ public class Transaction {
     }
 
     public Date getDate() {
-        return date;
+        return dateBought;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setDate(Date dateBought) {
+        this.dateBought = dateBought;
     }
 }
