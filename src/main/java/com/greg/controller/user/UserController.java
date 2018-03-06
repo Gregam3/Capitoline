@@ -53,7 +53,7 @@ public class UserController {
         } catch (UnirestException | IOException e) {
             LOG.error(e.getMessage());
             System.err.println(e);
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }

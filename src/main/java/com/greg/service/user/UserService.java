@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -63,7 +64,7 @@ public class UserService {
         Transaction transaction = new Transaction(
                 holdingNode.get("quantity").asDouble(),
                 price,
-                null//new java.sql.Date(new Date().getTime())
+                new java.sql.Date(new Date().getTime())
         );
 
         int holdingIndex = userDao.indexOfHolding(email, acronym);

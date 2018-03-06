@@ -49,9 +49,8 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     ) throws IOException {
         User user = get(email);
         user.getHoldings().get(holdingIndex).addTransaction(transaction);
-        this.entityManager.getTransaction().begin();
+        user.configureChildren();
         update(user);
-        this.entityManager.getTransaction().commit();
     }
 
     public void addHolding(String email, UserHolding userHolding) throws IOException {
@@ -59,7 +58,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
         List<UserHolding> userHoldings = user.getHoldings();
         userHoldings.add(userHolding);
         user.setHoldings(userHoldings);
-        user.setName("test");
+        user.configureChildren();
         update(user);
     }
 }

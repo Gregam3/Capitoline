@@ -5,7 +5,6 @@ import com.greg.entity.holding.Holding;
 import com.greg.entity.holding.HoldingType;
 
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
@@ -22,12 +21,6 @@ public class Stock extends Holding {
     public Stock(String acronym, String name) {
         super(acronym, name);
         setHoldingType(HoldingType.STOCK);
-    }
-
-    @Id
-    @Override
-    public String getAcronym() {
-        return this.acronym;
     }
 
 }

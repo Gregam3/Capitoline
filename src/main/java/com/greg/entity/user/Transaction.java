@@ -18,8 +18,8 @@ public class Transaction {
 
     @JsonIgnore
     @ManyToOne(cascade=CascadeType.ALL)
-    @JoinColumn(name = "holding_id", nullable = false)
-    private UserHolding UserHolding;
+    @JoinColumn(name = "HOLDING_ID", nullable = false)
+    private UserHolding userHolding;
     private double quantity;
     private double price;
     private Date dateBought;
@@ -34,11 +34,11 @@ public class Transaction {
     }
 
     public UserHolding getUserHolding() {
-        return UserHolding;
+        return userHolding;
     }
 
     public void setUserHolding(UserHolding UserHolding) {
-        this.UserHolding = UserHolding;
+        this.userHolding = UserHolding;
     }
 
     public long getTransactionId() {
@@ -48,8 +48,6 @@ public class Transaction {
     public void setTransactionId(long transactionId) {
         this.transactionId = transactionId;
     }
-
-
 
     public double getQuantity() {
         return quantity;

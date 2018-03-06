@@ -1,10 +1,15 @@
 package com.greg.entity.holding;
 
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
+
 /**
  * @author Greg Mitten (i7676925)
  * gregoryamitten@gmail.com
  */
+@MappedSuperclass
 public class Holding {
+    @Id
     protected String acronym;
     private String name;
     private HoldingType holdingType;

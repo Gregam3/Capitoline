@@ -3,7 +3,10 @@ package com.greg.entity.user;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.greg.utils.JSONUtils;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.List;
 
 /**
@@ -18,7 +21,7 @@ public class User {
     private String name;
     private String settings;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user")
     private List<UserHolding> holdings;
 
     public User() {
@@ -65,5 +68,12 @@ public class User {
 
     private String convertHoldings(List<UserHolding> userHoldings) throws JsonProcessingException {
         return JSONUtils.OBJECT_MAPPER.writeValueAsString((userHoldings != null) ? userHoldings : "[]");
+    }
+
+    public void configureChildren() {
+        for (UserHolding holding : this.holdings) {
+            holding.setUser(this);
+            holding.configureChildren();
+        }
     }
 }

@@ -14,22 +14,22 @@ import java.util.List;
  * @author Greg Mitten (i7676925)
  * gregoryamitten@gmail.com
  */
-@Repository
 @Transactional
-@PersistenceContext(type = PersistenceContextType.EXTENDED)
-public abstract class AbstractDaoImpl<T> {
+@Repository
+public abstract class AbstractDaoImpl<T> implements Dao<T> {
 
     private static final Logger LOG = Logger.getLogger(StockController.class);
 
     private Class currentClass;
 
-    @PersistenceContext
+    @PersistenceContext(type = PersistenceContextType.EXTENDED)
     protected EntityManager entityManager;
 
     protected void setThisClass(Class currentClass) {
         this.currentClass = currentClass;
     }
 
+    @SuppressWarnings("unchecked")
     public T get(String id) {
         return (T) entityManager.find(currentClass, id);
     }
@@ -40,8 +40,10 @@ public abstract class AbstractDaoImpl<T> {
 
     public void update(T t) {
         entityManager.merge(t);
+        entityManager.flush();
     }
 
+    @SuppressWarnings("unchecked")
     public List list(String tableName) {
         return entityManager.createQuery("from " + tableName, currentClass).getResultList();
     }

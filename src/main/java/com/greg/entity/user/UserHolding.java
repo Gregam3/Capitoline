@@ -2,7 +2,6 @@ package com.greg.entity.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.greg.entity.holding.Holding;
 import com.greg.entity.holding.HoldingType;
 import com.greg.utils.JSONUtils;
 
@@ -16,35 +15,79 @@ import java.util.List;
  */
 @Entity
 @Table(name = "PT_HOLDING")
-public class UserHolding extends Holding {
-
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "email", nullable = false)
-    private User user;
-
+public class UserHolding {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long holdingId;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private String acronym;
+    private String name;
+    private HoldingType holdingType;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "EMAIL", nullable = false)
+    private User user;
+
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Transaction> transactions;
 
     @Transient
     private Double totalQuantity;
 
-    public UserHolding(String acronym, String name) {
-        super(acronym, name);
-    }
-
     public UserHolding(String acronym, String name, HoldingType holdingType, List<Transaction> transactions) throws IOException {
-        super(acronym, name, holdingType);
+        this.acronym = acronym;
+        this.name = name;
+        this.holdingType = holdingType;
         this.transactions = transactions;
         this.totalQuantity = getTotalQuantity();
     }
 
     public UserHolding() {
-        super();
+    }
+
+    public String getAcronym() {
+        return acronym;
+    }
+
+    public void setAcronym(String acronym) {
+        this.acronym = acronym;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public HoldingType getHoldingType() {
+        return holdingType;
+    }
+
+    public void setHoldingType(HoldingType holdingType) {
+        this.holdingType = holdingType;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public long getHoldingId() {
+        return holdingId;
+    }
+
+    public void setHoldingId(long holdingId) {
+        this.holdingId = holdingId;
+    }
+
+    public List<Transaction> getTransactions() {
+        return transactions;
     }
 
     public void setTotalQuantity(Double totalQuantity) {
@@ -73,5 +116,11 @@ public class UserHolding extends Holding {
 
     public void addTransaction(Transaction transaction) throws JsonProcessingException {
         transactions.add(transaction);
+    }
+
+    public void configureChildren() {
+        for (Transaction transaction : transactions) {
+            transaction.setUserHolding(this);
+        }
     }
 }
