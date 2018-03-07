@@ -61,10 +61,14 @@ public class UserService {
                 break;
         }
 
+        JsonNode dateBought = holdingNode.get("dateBought");
+
         Transaction transaction = new Transaction(
                 holdingNode.get("quantity").asDouble(),
                 price,
-                new java.sql.Date(new Date().getTime())
+                new java.sql.Date(
+                        (dateBought != null) ? dateBought.asLong() * 1000 : new Date().getTime()
+                )
         );
 
         int holdingIndex = userDao.indexOfHolding(email, acronym);

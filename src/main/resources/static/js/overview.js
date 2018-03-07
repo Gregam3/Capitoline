@@ -170,7 +170,8 @@ app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', 'user', '
         name: null,
         acronym: null,
         holdingType: null,
-        quantity: -1
+        quantity: -1,
+        dateBought: null
     };
 
     console.log(newHolding);
@@ -203,6 +204,7 @@ app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', 'user', '
         newHolding.name = $scope.holding.name;
         newHolding.holdingType = $scope.holding.holdingType;
         newHolding.quantity = $scope.quantity;
+        newHolding.dateBought = $scope.holding.dateBought / 1000;
 
         console.log(newHolding);
 

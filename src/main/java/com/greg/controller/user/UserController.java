@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.greg.entity.user.User;
 import com.greg.service.user.UserService;
-import com.greg.utils.JSONUtils;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +25,10 @@ public class UserController {
     private static final Logger LOG = Logger.getLogger(UserController.class);
 
     private final UserService userService;
-    private final JSONUtils jsonUtils;
 
     @Autowired
-    public UserController(UserService userService, JSONUtils jsonUtils) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.jsonUtils = jsonUtils;
     }
 
     @GetMapping(value = "get/{email:.+}")
