@@ -1,55 +1,42 @@
 var app = angular.module("overview", ['ui.bootstrap', 'smart-table']);
-// app.config(['$qProvider', function ($qProvider) {
-//     $qProvider.errorOnUnhandledRejections(false);
-// }]);
 
-angular.module("overview").factory('user', function ($http) {
-    return null;
-    $http.get('http://localhost:8080/user/get/gregoryamitten@gmail.com')
-        .then(function (response) {
-            console.log(response.data);
-            return response.data;
-        });
-});
-
-app.value('Email', 'gregoryamitten@gmail.com');
 app.value('AlphaVantageKey', 'QVJRID55FX6HALQH');
 
 app.controller("basicInfoCtrl", ['$scope', '$http', '$uibModal', '$rootScope', function ($scope, $http, $uibModal, $rootScope) {
     $scope.totalValue = 0.0;
 
-    $scope.calculateTotalValue = function () {
-        $scope.totalValue = null;
+    $scope.$watch("holdings", function () {
+        $scope.calculateTotalValue();
+});
 
-        for (var holdingList in $rootScope.holdings) {
-            for (var holding in $rootScope.holdings[holdingList]) {
-                $scope.totalValue += ($rootScope.holdings[holdingList][holding].price *
-                    $rootScope.holdings[holdingList][holding].quantity);
+$scope.calculateTotalValue = function () {
+    $scope.totalValue = null;
+
+    console.log($rootScope.holdings);
+
+};
+
+$rootScope.user = null;
+
+$http.get('http://localhost:8080/user/get/gregoryamitten@gmail.com')
+    .then(function (response) {
+        $rootScope.user = response.data;
+    });
+
+
+$scope.openSettings = function () {
+    $uibModal.open({
+        templateUrl: 'templates/home/popups/settings-popup.html',
+        controller: 'settingsCtrl',
+        resolve: {
+            items: function () {
+                return $scope.user;
             }
         }
-    };
-
-    $rootScope.user = null;
-
-    $http.get('http://localhost:8080/user/get/gregoryamitten@gmail.com')
-        .then(function (response) {
-            console.log(response.data);
-            $rootScope.user = response.data;
-        });
-
-
-    $scope.openSettings = function () {
-        $uibModal.open({
-            templateUrl: 'templates/home/popups/settings-popup.html',
-            controller: 'settingsCtrl',
-            resolve: {
-                items: function () {
-                    return $scope.user;
-                }
-            }
-        })
-    };
-}]);
+    })
+};
+}])
+;
 
 app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'AlphaVantageKey', function ($scope, $http, $uibModal, $rootScope, AlphaVantageKey) {
     $scope.user = null;
@@ -64,8 +51,9 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
             $scope.user = response.data;
             console.log(response.data);
 
-            for (var i = 0; i < $scope.user.holdings.length; i++) {
-                var holdingType = $scope.user.holdings[i].holdingType;
+            for (let i = 0; i < $scope.user.holdings.length; i++) {
+                const holdingType = $scope.user.holdings[i].holdingType;
+                const acronym = $scope.user.holdings[i].acronym;
 
                 if (holdingType === "STOCK") {
                     $rootScope.holdings.stocks[$scope.user.holdings[i].acronym] = $scope.user.holdings[i];
@@ -82,12 +70,13 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
                 + $scope.convertHoldingsToUriVariables($rootScope.holdings.fiats)
                 + "&tsyms=USD"
             ).then(function (response) {
-                for (var holding in $rootScope.holdings.cryptos) {
+                let holding;
+                for (holding in $rootScope.holdings.cryptos) {
                     $rootScope.holdings.cryptos[holding].price =
                         (response.data[holding]) ? response.data[holding]["USD"] : null;
                 }
 
-                for (var holding in $rootScope.holdings.fiats) {
+                for (holding in $rootScope.holdings.fiats) {
                     $rootScope.holdings.fiats[holding].price =
                         (response.data[holding]) ? response.data[holding]["USD"] : null;
                 }
