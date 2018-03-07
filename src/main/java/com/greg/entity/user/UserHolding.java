@@ -25,7 +25,7 @@ public class UserHolding {
     private HoldingType holdingType;
 
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.ALL)
     @JoinColumn(name = "EMAIL", nullable = false)
     private User user;
 

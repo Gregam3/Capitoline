@@ -3,10 +3,7 @@ package com.greg.entity.user;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.greg.utils.JSONUtils;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.List;
 
 /**
@@ -21,7 +18,7 @@ public class User {
     private String name;
     private String settings;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade= CascadeType.ALL)
     private List<UserHolding> holdings;
 
     public User() {

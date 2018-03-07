@@ -1,12 +1,12 @@
 package com.greg.dao.user;
 
 import com.greg.dao.AbstractDaoImpl;
-import com.greg.entity.user.UserHolding;
 import com.greg.entity.user.Transaction;
 import com.greg.entity.user.User;
+import com.greg.entity.user.UserHolding;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.List;
 
@@ -14,8 +14,8 @@ import java.util.List;
  * @author Greg Mitten (i7676925)
  * gregoryamitten@gmail.com
  */
-@Transactional
 @Repository
+@Transactional
 public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     private String tableName = "User";
 
@@ -26,11 +26,6 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     @Override
     public List list() {
         return list(tableName);
-    }
-
-    @Override
-    public void addTransaction(String email, String holdingName, Transaction transaction) {
-
     }
 
     @Override

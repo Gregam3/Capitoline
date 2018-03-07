@@ -16,7 +16,6 @@ import java.io.IOException;
 @Transactional
 @Repository
 public interface UserDao extends Dao<User> {
-    public void addTransaction(String email, String holdingName, Transaction transaction);
 
     int indexOfHolding(String email, String acronym) throws IOException;
 

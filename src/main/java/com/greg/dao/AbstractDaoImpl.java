@@ -3,20 +3,21 @@ package com.greg.dao;
 import com.greg.controller.holding.stock.StockController;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
-import javax.transaction.Transactional;
 import java.util.List;
 
 /**
  * @author Greg Mitten (i7676925)
  * gregoryamitten@gmail.com
  */
-@Transactional
+
 @Repository
-public abstract class AbstractDaoImpl<T> implements Dao<T> {
+@Transactional
+public abstract class AbstractDaoImpl<T>  {
 
     private static final Logger LOG = Logger.getLogger(StockController.class);
 
@@ -31,6 +32,7 @@ public abstract class AbstractDaoImpl<T> implements Dao<T> {
 
     @SuppressWarnings("unchecked")
     public T get(String id) {
+
         return (T) entityManager.find(currentClass, id);
     }
 
@@ -39,7 +41,8 @@ public abstract class AbstractDaoImpl<T> implements Dao<T> {
     }
 
     public void update(T t) {
-        entityManager.merge(t);
+        entityManager.flush();
+        entityManager.persist(t);
         entityManager.flush();
     }
 
@@ -48,3 +51,4 @@ public abstract class AbstractDaoImpl<T> implements Dao<T> {
         return entityManager.createQuery("from " + tableName, currentClass).getResultList();
     }
 }
+
