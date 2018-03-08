@@ -13,6 +13,7 @@
     "gulp-util": "*",
     "gulp-watch": "*",
     "map-stream": "*",
+    "n3-charts": "^2.0.28",
     "startbootstrap-sb-admin": "^3.3.7"
   }
 }

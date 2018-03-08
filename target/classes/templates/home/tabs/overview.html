@@ -6,7 +6,19 @@
         <h3>Overview <span class="fa fa-line-chart"></span></h3>
     </div>
     <div class="panel-body">
-        Total Value: {{totalValue | currency}}
+        <div class="col-lg-12">
+            <h3>Total Value: {{totalValue | currency}}</h3>
+        </div>
+        <div class="col-lg-12">
+            <h3>Acquisition Value: {{acquisitionCost | currency}}</h3>
+        </div>
+        <div class="col-lg-12">
+            <h3>Total Change (%): {{(totalValue > acquisitionCost) ? "▲" : "▼" }}{{totalValue/acquisitionCost}}%</h3>
+        </div>
+
+        <!--temp-->
+        <button class="pull-right" ng-click="generateGraph()">gen</button>
+
     </div>
 </div>
 </body>

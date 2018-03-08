@@ -4,10 +4,12 @@
     </div>
     <div class="modal-body" id="modal-body">
         <h4><b>{{(holding.holdingType) ? holding.holdingType + ':' : 'Holding:'}}</b> {{holding.name}}</h4>
-        <select ng-model="holding"
-                ng-options="(holding.name+' - ' +holding.holdingType) for holding in holdingList | orderBy: 'name'"></select>
-        <label>Quantity</label>
-        <input type="number" name="input" ng-model="quantity"/>
+        <div class="col-lg-12">
+            <select ng-model="holding"
+                    ng-options="(holding.name+' - ' +holding.holdingType) for holding in holdingList | orderBy: 'name'"></select>
+            <label>Quantity</label>
+            <input type="number" name="input" ng-model="quantity"/>
+        </div>
         <label>Date Bought</label>
         <div uib-datepicker ng-model="holding.dateBought" class="well well-sm" datepicker-options="options"></div>
         <button ng-click="add()">Add <span class="fa fa-plus"></span></button>

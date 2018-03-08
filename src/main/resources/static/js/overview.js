@@ -1,42 +1,67 @@
-var app = angular.module("overview", ['ui.bootstrap', 'smart-table']);
+var app = angular.module("overview", ['ui.bootstrap', 'smart-table', 'n3-line-chart']);
+angular.module("overview").factory('user', function ($http) {
+    return null;
+    $http.get('http://localhost:8080/user/get/gregoryamitten@gmail.com')
+        .then(function (response) {
+            console.log(response.data);
+            return response.data;
+        });
+});
 
+app.value('Email', 'gregoryamitten@gmail.com');
 app.value('AlphaVantageKey', 'QVJRID55FX6HALQH');
 
 app.controller("basicInfoCtrl", ['$scope', '$http', '$uibModal', '$rootScope', function ($scope, $http, $uibModal, $rootScope) {
-    $scope.totalValue = 0.0;
+    $rootScope.totalValue = 0.0;
+    $rootScope.acquisitionCost = 0.0;
+    $rootScope.historicalPortfolio = {dataSet: []};
 
-    $scope.$watch("holdings", function () {
-        $scope.calculateTotalValue();
-});
+    $rootScope.user = null;
 
-$scope.calculateTotalValue = function () {
-    $scope.totalValue = null;
+    $http.get('http://localhost:8080/user/get/gregoryamitten@gmail.com')
+        .then(function (response) {
+            $rootScope.user = response.data;
+        });
 
-    console.log($rootScope.holdings);
-
-};
-
-$rootScope.user = null;
-
-$http.get('http://localhost:8080/user/get/gregoryamitten@gmail.com')
-    .then(function (response) {
-        $rootScope.user = response.data;
-    });
-
-
-$scope.openSettings = function () {
-    $uibModal.open({
-        templateUrl: 'templates/home/popups/settings-popup.html',
-        controller: 'settingsCtrl',
-        resolve: {
-            items: function () {
-                return $scope.user;
+    $scope.options = {
+        series: [
+            {
+                axis: "y",
+                dataset: "dataset0",
+                key: "val_0",
+                label: "An area series",
+                color: "#1f77b4",
+                type: ['line', 'dot', 'area'],
+                id: 'mySeries0'
             }
+        ],
+        axes: {x: {key: "x"}}
+    };
+
+    //Fetch and process graph data
+    $scope.generateGraph = function () {
+        for (const crypto in $rootScope.holdings.cryptos) {
+            //1825 days in 5 years
+            console.log('https://min-api.cryptocompare.com/data/histoday?fsym=' + crypto + '&tsym=USD&limit=1825&aggregate=3&e=CCCAGG');
+            $http.get('https://min-api.cryptocompare.com/data/histoday?fsym=' + crypto + '&tsym=USD&limit=1825&aggregate=3&e=CCCAGG')
+                .then(function (response) {
+                    console.log(response.data.Data);
+                    const currentCryptoHistory = response.data.Data;
+                    for (let i = 0; i < currentCryptoHistory.length; i++) {
+                        const day = currentCryptoHistory[i];
+                        $rootScope.historicalPortfolio.dataSet.push(
+                            {
+                                time: day["time"],
+                                price: day["close"]
+                            }
+                        );
+                    }
+
+                    console.log($rootScope.historicalPortfolio);
+                });
         }
-    })
-};
-}])
-;
+    }
+}]);
 
 app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'AlphaVantageKey', function ($scope, $http, $uibModal, $rootScope, AlphaVantageKey) {
     $scope.user = null;
@@ -52,15 +77,20 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
             console.log(response.data);
 
             for (let i = 0; i < $scope.user.holdings.length; i++) {
-                const holdingType = $scope.user.holdings[i].holdingType;
-                const acronym = $scope.user.holdings[i].acronym;
+                const currentHolding = $scope.user.holdings[i];
 
-                if (holdingType === "STOCK") {
-                    $rootScope.holdings.stocks[$scope.user.holdings[i].acronym] = $scope.user.holdings[i];
-                } else if (holdingType === "CRYPTO") {
-                    $rootScope.holdings.cryptos[$scope.user.holdings[i].acronym] = $scope.user.holdings[i];
-                } else if (holdingType === "FIAT") {
-                    $rootScope.holdings.fiats[$scope.user.holdings[i].acronym] = $scope.user.holdings[i];
+
+                if (currentHolding.holdingType === "STOCK") {
+                    $rootScope.holdings.stocks[currentHolding.acronym] = currentHolding;
+                } else if (currentHolding.holdingType === "CRYPTO") {
+                    $rootScope.holdings.cryptos[currentHolding.acronym] = currentHolding;
+                } else if (currentHolding.holdingType === "FIAT") {
+                    $rootScope.holdings.fiats[currentHolding.acronym] = currentHolding;
+                }
+
+                for (let i = 0; i < currentHolding.transactions.length; i++) {
+                    $rootScope.acquisitionCost +=
+                        currentHolding.transactions[i].price * currentHolding.transactions[i].quantity;
                 }
             }
         }).then(function () {
@@ -74,11 +104,17 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
                 for (holding in $rootScope.holdings.cryptos) {
                     $rootScope.holdings.cryptos[holding].price =
                         (response.data[holding]) ? response.data[holding]["USD"] : null;
+                    console.log($rootScope.holdings.cryptos[holding].price)
+                    $rootScope.totalValue +=
+                        $rootScope.holdings.cryptos[holding].price * $rootScope.holdings.cryptos[holding].totalQuantity;
                 }
 
                 for (holding in $rootScope.holdings.fiats) {
                     $rootScope.holdings.fiats[holding].price =
                         (response.data[holding]) ? response.data[holding]["USD"] : null;
+                    console.log($rootScope.holdings.fiats[holding].price);
+                    $rootScope.totalValue +=
+                        $rootScope.holdings.fiats[holding].price * $rootScope.holdings.fiats[holding].totalQuantity;
                 }
             });
 
@@ -93,6 +129,8 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
                     $rootScope.holdings.stocks[holding].price =
                         (response.data["Stock Quotes"][i]["2. price"]) ?
                             response.data["Stock Quotes"][i]["2. price"] : null;
+                    $rootScope.totalValue +=
+                        $rootScope.holdings.stocks[holding].price * $rootScope.holdings.stocks[holding].totalQuantity;
                     i++;
                 }
             });
