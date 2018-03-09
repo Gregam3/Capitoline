@@ -27,39 +27,54 @@ app.controller("basicInfoCtrl", ['$scope', '$http', '$uibModal', '$rootScope', f
         series: [
             {
                 axis: "y",
-                dataset: "dataset0",
-                key: "val_0",
+                dataset: "dataSet",
+                key: "value",
                 label: "An area series",
-                color: "#1f77b4",
-                type: ['line', 'dot', 'area'],
-                id: 'mySeries0'
+                color: "#00ff00",
+                type: ['line'],
+                id: 'mySeries0',
             }
         ],
-        axes: {x: {key: "x"}}
+        axes: {
+            x: {
+                key: "time",
+            },
+            y: {}
+        }
     };
+
+
+    let firstList = true;
 
     //Fetch and process graph data
     $scope.generateGraph = function () {
         for (const crypto in $rootScope.holdings.cryptos) {
+            let totalQuantity = $rootScope.holdings.cryptos[crypto].totalQuantity;
+            console.log(totalQuantity);
             //1825 days in 5 years
-            console.log('https://min-api.cryptocompare.com/data/histoday?fsym=' + crypto + '&tsym=USD&limit=1825&aggregate=3&e=CCCAGG');
             $http.get('https://min-api.cryptocompare.com/data/histoday?fsym=' + crypto + '&tsym=USD&limit=1825&aggregate=3&e=CCCAGG')
                 .then(function (response) {
-                    console.log(response.data.Data);
                     const currentCryptoHistory = response.data.Data;
                     for (let i = 0; i < currentCryptoHistory.length; i++) {
                         const day = currentCryptoHistory[i];
-                        $rootScope.historicalPortfolio.dataSet.push(
-                            {
-                                time: day["time"],
-                                price: day["close"]
+                        if (day["close"] > 0) {
+                            if (firstList) {
+                                $rootScope.historicalPortfolio.dataSet[i] =
+                                    {
+                                        time: new Date(day["time"]),
+                                        value: day["close"] * totalQuantity
+                                    };
+                            } else {
+                                $rootScope.historicalPortfolio.dataSet[i].value +=
+                                    day["close"] * totalQuantity;
                             }
-                        );
+                        }
                     }
+                    firstList = false;
 
-                    console.log($rootScope.historicalPortfolio);
                 });
         }
+        console.log($rootScope.historicalPortfolio);
     }
 }]);
 

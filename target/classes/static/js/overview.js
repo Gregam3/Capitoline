@@ -1,4 +1,4 @@
-var app = angular.module("overview", ['ui.bootstrap', 'smart-table']);
+var app = angular.module("overview", ['ui.bootstrap', 'smart-table', 'n3-line-chart']);
 angular.module("overview").factory('user', function ($http) {
     return null;
     $http.get('http://localhost:8080/user/get/gregoryamitten@gmail.com')
@@ -14,7 +14,7 @@ app.value('AlphaVantageKey', 'QVJRID55FX6HALQH');
 app.controller("basicInfoCtrl", ['$scope', '$http', '$uibModal', '$rootScope', function ($scope, $http, $uibModal, $rootScope) {
     $rootScope.totalValue = 0.0;
     $rootScope.acquisitionCost = 0.0;
-    $rootScope.historicalPortfolio = [];
+    $rootScope.historicalPortfolio = {dataSet: []};
 
     $rootScope.user = null;
 
@@ -23,28 +23,58 @@ app.controller("basicInfoCtrl", ['$scope', '$http', '$uibModal', '$rootScope', f
             $rootScope.user = response.data;
         });
 
+    $scope.options = {
+        series: [
+            {
+                axis: "y",
+                dataset: "dataSet",
+                key: "value",
+                label: "An area series",
+                color: "#00ff00",
+                type: ['line'],
+                id: 'mySeries0',
+            }
+        ],
+        axes: {
+            x: {
+                key: "time",
+            },
+            y: {}
+        }
+    };
+
+
+    let firstList = true;
+
     //Fetch and process graph data
     $scope.generateGraph = function () {
         for (const crypto in $rootScope.holdings.cryptos) {
+            let totalQuantity = $rootScope.holdings.cryptos[crypto].totalQuantity;
+            console.log(totalQuantity);
             //1825 days in 5 years
-            console.log('https://min-api.cryptocompare.com/data/histoday?fsym=' + crypto + '&tsym=USD&limit=1825&aggregate=3&e=CCCAGG');
             $http.get('https://min-api.cryptocompare.com/data/histoday?fsym=' + crypto + '&tsym=USD&limit=1825&aggregate=3&e=CCCAGG')
                 .then(function (response) {
-                    console.log(response.data.Data);
                     const currentCryptoHistory = response.data.Data;
                     for (let i = 0; i < currentCryptoHistory.length; i++) {
                         const day = currentCryptoHistory[i];
-                        $rootScope.historicalPortfolio.push(
-                            {
-                                time: day["time"],
-                                price: day["close"]
+                        if (day["close"] > 0) {
+                            if (firstList) {
+                                $rootScope.historicalPortfolio.dataSet[i] =
+                                    {
+                                        time: new Date(day["time"]),
+                                        value: day["close"] * totalQuantity
+                                    };
+                            } else {
+                                $rootScope.historicalPortfolio.dataSet[i].value +=
+                                    day["close"] * totalQuantity;
                             }
-                        );
+                        }
                     }
+                    firstList = false;
 
-                    console.log($rootScope.historicalPortfolio);
                 });
         }
+        console.log($rootScope.historicalPortfolio);
     }
 }]);
 
