@@ -23,6 +23,7 @@ app.controller("basicInfoCtrl", ['$scope', '$http', '$uibModal', '$rootScope', f
             $rootScope.user = response.data;
         });
 
+
     $scope.options = {
         series: [
             {
@@ -30,8 +31,8 @@ app.controller("basicInfoCtrl", ['$scope', '$http', '$uibModal', '$rootScope', f
                 dataset: "dataSet",
                 key: "value",
                 label: "An area series",
-                color: "#00ff00",
-                type: ['line'],
+                color: "#ffa500",
+                type: ['line', 'area'],
                 id: 'mySeries0',
             }
         ],
@@ -39,41 +40,21 @@ app.controller("basicInfoCtrl", ['$scope', '$http', '$uibModal', '$rootScope', f
             x: {
                 key: "time",
             },
-            y: {}
+            y: {
+                min: 100
+            }
         }
     };
 
-
-    let firstList = true;
-
     //Fetch and process graph data
-    $scope.generateGraph = function () {
-        for (const crypto in $rootScope.holdings.cryptos) {
-            let totalQuantity = $rootScope.holdings.cryptos[crypto].totalQuantity;
-            console.log(totalQuantity);
-            //1825 days in 5 years
-            $http.get('https://min-api.cryptocompare.com/data/histoday?fsym=' + crypto + '&tsym=USD&limit=1825&aggregate=3&e=CCCAGG')
-                .then(function (response) {
-                    const currentCryptoHistory = response.data.Data;
-                    for (let i = 0; i < currentCryptoHistory.length; i++) {
-                        const day = currentCryptoHistory[i];
-                        if (day["close"] > 0) {
-                            if (firstList) {
-                                $rootScope.historicalPortfolio.dataSet[i] =
-                                    {
-                                        time: new Date(day["time"]),
-                                        value: day["close"] * totalQuantity
-                                    };
-                            } else {
-                                $rootScope.historicalPortfolio.dataSet[i].value +=
-                                    day["close"] * totalQuantity;
-                            }
-                        }
-                    }
-                    firstList = false;
+    $rootScope.generateGraph = function () {
+        $http.get(
+            'http://localhost:8080/user/get/holding-graph-data/gregoryamitten@gmail.com'
+        ).then(function (response) {
+            $rootScope.historicalPortfolio.dataSet = response.data;
+            console.log(response.data);
+        });
 
-                });
-        }
         console.log($rootScope.historicalPortfolio);
     }
 }]);
@@ -256,6 +237,7 @@ app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', 'user', '
             data: newHolding
         }).then(function (response) {
             console.log(response);
+            $rootScope.generateGraph();
             $uibModalStack.dismissAll();
         });
     }

@@ -2,21 +2,20 @@ package com.greg.service.user;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.greg.dao.user.UserDao;
+import com.greg.entity.GraphHoldingData;
 import com.greg.entity.holding.HoldingType;
 import com.greg.entity.user.Transaction;
 import com.greg.entity.user.User;
 import com.greg.entity.user.UserHolding;
 import com.greg.service.crypto.CryptoService;
 import com.greg.service.stock.StockService;
-import com.greg.utils.JSONUtils;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.text.ParseException;
+import java.util.*;
 
 /**
  * @author Greg Mitten (i7676925)
@@ -28,13 +27,11 @@ public class UserService {
     private UserDao userDao;
     private StockService stockService;
     private CryptoService cryptoService;
-    private JSONUtils jsonUtils;
 
     @Autowired
-    public UserService(UserDao userDao, StockService stockService, CryptoService cryptoService, JSONUtils jsonUtils) {
+    public UserService(UserDao userDao, StockService stockService, CryptoService cryptoService) {
         this.userDao = userDao;
         this.stockService = stockService;
-        this.jsonUtils = jsonUtils;
         this.cryptoService = cryptoService;
     }
 
@@ -87,5 +84,59 @@ public class UserService {
                     ));
         }
 
+    }
+
+    public List<GraphHoldingData> getGraphHoldingData(String email) throws UnirestException, IOException, ParseException {
+        User user = userDao.get(email);
+        List<GraphHoldingData> graphHoldingData = new ArrayList<>();
+
+        Map<Date, Double> graphHoldingDataMap = new LinkedHashMap<>();
+
+        for (UserHolding userHolding : user.getHoldings()) {
+            Map<Date, Double> currentDataHoldingMap = new LinkedHashMap<>();
+            switch (userHolding.getHoldingType()) {
+                case CRYPTO:
+                    currentDataHoldingMap =
+                            cryptoService.getCryptoHistory(
+                                    userHolding.getAcronym(),
+                                    userHolding.getTotalQuantity()
+                            );
+                    break;
+                case FIAT:
+                    break;
+                case STOCK:
+                    currentDataHoldingMap =
+                            stockService.getStockHistory(
+                                    userHolding.getAcronym(),
+                                    userHolding.getTotalQuantity()
+                            );
+                    break;
+            }
+
+            graphHoldingDataMap = mergeHoldingMap(graphHoldingDataMap, currentDataHoldingMap);
+        }
+
+        for (Map.Entry<Date, Double> day : graphHoldingDataMap.entrySet()) {
+            graphHoldingData.add(
+                    new GraphHoldingData(
+                            day.getKey(),
+                            day.getValue()
+                    )
+            );
+        }
+        Collections.sort(graphHoldingData);
+
+        return graphHoldingData;
+    }
+
+    private Map<Date, Double> mergeHoldingMap(Map<Date, Double> map1, Map<Date, Double> map2) {
+        for (Map.Entry<Date, Double> day : map2.entrySet()) {
+            if (map1.containsKey(day.getKey()))
+                map1.put(day.getKey(), map1.get(day.getKey()) + day.getValue());
+            else
+                map1.put(day.getKey(), day.getValue());
+        }
+
+        return map1;
     }
 }
