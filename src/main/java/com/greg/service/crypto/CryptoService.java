@@ -3,6 +3,7 @@ package com.greg.service.crypto;
 import com.greg.entity.holding.crypto.Crypto;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import org.apache.commons.lang3.time.DateUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
@@ -52,17 +53,48 @@ public class CryptoService {
         JSONArray history = Unirest.get(CRYPTO_HISTORY_FIRST_PART + acronym + CRYPTO_HISTORY_SECOND_PART)
                 .asJson().getBody().getObject().getJSONArray("Data");
 
+        long earliestDateInRange = new Date().getTime();
+
         for (int i = 0; i < history.length(); i++) {
             JSONObject day = history.getJSONObject(i);
             double price = day.getDouble("close");
+            Date unixIteratorAsDate = DateUtils.round(new Date(day.getLong("time") * 1000), Calendar.DAY_OF_MONTH);
+
+            if(unixIteratorAsDate.getTime() < earliestDateInRange) {
+                earliestDateInRange = unixIteratorAsDate.getTime();
+            }
 
             if (price > 0)
                 graphHoldingDataMap.put(
-                        new Date(day.getLong("time") * 1000),
+                        unixIteratorAsDate,
                         price * quantity
                 );
         }
 
+
+//        return fillGapsInHistory(graphHoldingDataMap, earliestDateInRange);
         return graphHoldingDataMap;
+    }
+
+    private Map<Date, Double> fillGapsInHistory(Map<Date, Double> cryptoHistory, long earliestDateInRange) {
+        long currentUnixTime = new Date().getTime();
+        double lastValue = 0;
+
+        for (long unixIterator = earliestDateInRange;
+             unixIterator < currentUnixTime;
+             unixIterator += DateUtils.MILLIS_PER_DAY) {
+            Date roundedDate = DateUtils.round(new Date(unixIterator), Calendar.DAY_OF_MONTH);
+            Double value = cryptoHistory.get(roundedDate);
+
+            if (value != null)
+                lastValue = value;
+            else {
+                cryptoHistory.put(
+                        roundedDate,
+                        lastValue
+                );
+            }
+        }
+        return cryptoHistory;
     }
 }

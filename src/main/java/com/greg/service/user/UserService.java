@@ -24,6 +24,7 @@ import java.util.*;
 @Service
 public class UserService {
 
+    private static final long DAY_IN_MS = 86400000;
     private UserDao userDao;
     private StockService stockService;
     private CryptoService cryptoService;
@@ -138,5 +139,25 @@ public class UserService {
         }
 
         return map1;
+    }
+
+    private Map<Date, Double> fillEmptyDates(Map<Date, Double> portfolioHistory, long earliestDateInRange) {
+        long currentUnixTime = new Date().getTime();
+        double lastValue = 0;
+
+        for(long unixIterator = earliestDateInRange;
+            unixIterator < currentUnixTime;
+            unixIterator += DAY_IN_MS * 7) {
+            Date unixIteratorAsDate = new Date(unixIterator);
+            Double value = portfolioHistory.get(unixIteratorAsDate);
+
+            if(value != null) {
+                lastValue = value;
+            } else {
+                portfolioHistory.put(unixIteratorAsDate, lastValue);
+            }
+        }
+
+        return portfolioHistory;
     }
 }
