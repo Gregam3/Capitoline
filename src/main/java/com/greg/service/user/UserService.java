@@ -87,7 +87,7 @@ public class UserService {
 
     }
 
-    public  Map<String, List<GraphHoldingData>>  getGraphHoldingData(String email) throws UnirestException, IOException, ParseException {
+    public Map<String, List<GraphHoldingData>> getGraphHoldingData(String email) throws UnirestException, IOException, ParseException {
         List<GraphHoldingData> graphHoldingData;
         List<GraphHoldingData> cryptoGraphHoldingData;
         List<GraphHoldingData> stockGraphHoldingData;
@@ -96,7 +96,7 @@ public class UserService {
         Map<Date, Double> graphHoldingDataMap = new HashMap<>();
         Map<Date, Double> cryptoGraphHoldingDataMap = new HashMap<>();
         Map<Date, Double> stockGraphHoldingDataMap = new HashMap<>();
-        Map<Date, Double> fiatGraphHoldingDataMap = new HashMap<>();
+        Map<Date, Double> fiatGraphHoldingDataMap = new LinkedHashMap<>();
 
         User user = userDao.get(email);
 
@@ -128,6 +128,7 @@ public class UserService {
 
 
         graphHoldingData = convertMapToList(graphHoldingDataMap);
+
         cryptoGraphHoldingData = convertMapToList(cryptoGraphHoldingDataMap);
         stockGraphHoldingData = convertMapToList(stockGraphHoldingDataMap);
         fiatGraphHoldingData = convertMapToList(fiatGraphHoldingDataMap);
@@ -140,9 +141,9 @@ public class UserService {
         Map<String, List<GraphHoldingData>> holdingsMap = new HashMap<>();
 
         holdingsMap.put("Total", graphHoldingData);
-        holdingsMap.put(HoldingType.CRYPTO.toString(), cryptoGraphHoldingData);
-        holdingsMap.put(HoldingType.STOCK.toString(), stockGraphHoldingData);
-        holdingsMap.put(HoldingType.FIAT.toString(), fiatGraphHoldingData);
+        holdingsMap.put("Crypto", cryptoGraphHoldingData);
+        holdingsMap.put("Stock", stockGraphHoldingData);
+        holdingsMap.put("Fiat", fiatGraphHoldingData);
 
         return holdingsMap;
     }
@@ -162,13 +163,13 @@ public class UserService {
         long currentUnixTime = new Date().getTime();
         double lastValue = 0;
 
-        for(long unixIterator = earliestDateInRange;
-            unixIterator < currentUnixTime;
-            unixIterator += DAY_IN_MS * 7) {
+        for (long unixIterator = earliestDateInRange;
+             unixIterator < currentUnixTime;
+             unixIterator += DAY_IN_MS * 7) {
             Date unixIteratorAsDate = new Date(unixIterator);
             Double value = portfolioHistory.get(unixIteratorAsDate);
 
-            if(value != null) {
+            if (value != null) {
                 lastValue = value;
             } else {
                 portfolioHistory.put(unixIteratorAsDate, lastValue);

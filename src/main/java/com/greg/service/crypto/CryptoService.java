@@ -19,7 +19,7 @@ public class CryptoService {
 
     private final static String CRYPTO_API_URL = "https://min-api.cryptocompare.com/";
     private final static String CRYPTO_HISTORY_FIRST_PART = "https://min-api.cryptocompare.com/data/histoday?fsym=";
-    private final static String CRYPTO_HISTORY_SECOND_PART = "&tsym=USD&limit=1825&aggregate=3&e=CCCAGG";
+    private final static String CRYPTO_HISTORY_SECOND_PART = "&tsym=USD&limit=1825";
 
     public List<Crypto> list() throws UnirestException {
         List<Crypto> cryptos = new ArrayList<>();
@@ -60,7 +60,7 @@ public class CryptoService {
             double price = day.getDouble("close");
             Date unixIteratorAsDate = DateUtils.round(new Date(day.getLong("time") * 1000), Calendar.DAY_OF_MONTH);
 
-            if(unixIteratorAsDate.getTime() < earliestDateInRange) {
+            if (unixIteratorAsDate.getTime() < earliestDateInRange) {
                 earliestDateInRange = unixIteratorAsDate.getTime();
             }
 
@@ -72,29 +72,30 @@ public class CryptoService {
         }
 
 
+        List<Date> fuck = new ArrayList<>();
+
+        for(long unix = earliestDateInRange; unix > new Date().getTime(); unix += DateUtils.MILLIS_PER_DAY) {
+            if(graphHoldingDataMap.get(DateUtils.round(new Date(unix), Calendar.DAY_OF_MONTH)) == null) {
+                fuck.add(new Date(unix));
+            }
+        }
+
         return fillGapsInHistory(graphHoldingDataMap, earliestDateInRange);
 //        return graphHoldingDataMap;
     }
 
-    private Map<Date, Double> fillGapsInHistory(Map<Date, Double> cryptoHistory, long earliestDateInRange) {
-        long currentUnixTime = new Date().getTime();
-        double lastValue = 0;
-
-        for (long unixIterator = earliestDateInRange;
-             unixIterator < currentUnixTime;
-             unixIterator += DateUtils.MILLIS_PER_DAY) {
-            Date roundedDate = DateUtils.round(new Date(unixIterator), Calendar.DAY_OF_MONTH);
-            Double value = cryptoHistory.get(roundedDate);
-
-            if (value != null && value > 0)
-                lastValue = value;
-            else {
-                cryptoHistory.put(
-                        roundedDate,
-                        lastValue
-                );
-            }
-        }
-        return cryptoHistory;
-    }
+//    private Map<Date, Double> fillGapsInHistory(Map<Date, Double> cryptoHistory, long earliestDateInRange) {
+//        long currentUnixTime = new Date().getTime();
+//        double lastValue = 0;
+//
+//
+//        for (long unixIterator = earliestDateInRange;
+//             unixIterator < currentUnixTime;
+//             unixIterator += DateUtils.MILLIS_PER_DAY) {
+//            Date roundedDate = DateUtils.round(new Date(unixIterator), Calendar.DAY_OF_MONTH);
+//            Double value = cryptoHistory.get(roundedDate);
+//
+//        }
+//        return cryptoHistory;
+//    }
 }

@@ -79,8 +79,20 @@ public class StockService {
         }
 
 
+
+
 //        return addWeekends(stockHistory, earliestDateInRange);
-        return addWeekends(stockHistory, earliestDateInRange);
+        Map<Date, Double> dateDoubleMap = addWeekends(stockHistory, earliestDateInRange);
+
+        List<Date> fuck = new ArrayList<>();
+
+        for(long unix = earliestDateInRange; unix > new Date().getTime(); unix += DateUtils.MILLIS_PER_DAY) {
+            if(dateDoubleMap.get(DateUtils.round(new Date(unix), Calendar.DAY_OF_MONTH)) == null) {
+                fuck.add(new Date(unix));
+            }
+        }
+
+        return dateDoubleMap;
     }
 
     private JSONArray sortStringDates(JSONArray names) throws ParseException {

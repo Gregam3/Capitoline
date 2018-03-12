@@ -16,12 +16,18 @@
             <h3>Total Change (%): {{(totalValue > acquisitionCost) ? "▲" : "▼" }}
                 {{100 - ((totalValue/acquisitionCost)*100)}}%</h3>
         </div>
+    </div>
 
-        <!--temp-->
+    <!--temp-->
 
-        <button class="pull-right" ng-click="generateGraph()">gen</button>
-
-        <linechart data="historicalPortfolio" options="options" style="height: 135px"></linechart>
+    <button class="pull-right" ng-click="generateGraph()">gen</button>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4>Historical Portfolio Value</h4>
+        </div>
+        <div class="panel-body">
+            <linechart data="historicalPortfolio" options="options" style="height: 250px"></linechart>
+        </div>
     </div>
 </div>
 </body>
