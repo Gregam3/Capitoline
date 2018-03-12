@@ -1,7 +1,7 @@
 package com.greg.controller.holding.fiat;
 
 import com.greg.entity.holding.fiat.Fiat;
-import com.greg.service.currency.FiatService;
+import com.greg.service.currency.fiat.FiatService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

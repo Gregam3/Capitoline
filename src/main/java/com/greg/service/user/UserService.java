@@ -7,7 +7,8 @@ import com.greg.entity.holding.HoldingType;
 import com.greg.entity.user.Transaction;
 import com.greg.entity.user.User;
 import com.greg.entity.user.UserHolding;
-import com.greg.service.crypto.CryptoService;
+import com.greg.service.currency.crypto.CryptoService;
+import com.greg.service.currency.fiat.FiatService;
 import com.greg.service.stock.StockService;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +29,14 @@ public class UserService {
     private UserDao userDao;
     private StockService stockService;
     private CryptoService cryptoService;
+    private FiatService fiatService;
 
     @Autowired
-    public UserService(UserDao userDao, StockService stockService, CryptoService cryptoService) {
+    public UserService(UserDao userDao, StockService stockService, CryptoService cryptoService, FiatService fiatService) {
         this.userDao = userDao;
         this.stockService = stockService;
         this.cryptoService = cryptoService;
+        this.fiatService = fiatService;
     }
 
     public User get(String email) throws IOException {
@@ -112,6 +115,13 @@ public class UserService {
                     cryptoGraphHoldingDataMap = mergeHoldingMap(cryptoGraphHoldingDataMap, currentDataHoldingMap);
                     break;
                 case FIAT:
+                    currentDataHoldingMap =
+                            fiatService.getFiatHistory(
+                                    userHolding.getAcronym(),
+                                    userHolding.getTotalQuantity()
+                            );
+
+                    fiatGraphHoldingDataMap = mergeHoldingMap(cryptoGraphHoldingDataMap, currentDataHoldingMap);
                     break;
                 case STOCK:
                     currentDataHoldingMap =
