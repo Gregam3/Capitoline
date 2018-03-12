@@ -72,8 +72,8 @@ public class CryptoService {
         }
 
 
-//        return fillGapsInHistory(graphHoldingDataMap, earliestDateInRange);
-        return graphHoldingDataMap;
+        return fillGapsInHistory(graphHoldingDataMap, earliestDateInRange);
+//        return graphHoldingDataMap;
     }
 
     private Map<Date, Double> fillGapsInHistory(Map<Date, Double> cryptoHistory, long earliestDateInRange) {
@@ -86,7 +86,7 @@ public class CryptoService {
             Date roundedDate = DateUtils.round(new Date(unixIterator), Calendar.DAY_OF_MONTH);
             Double value = cryptoHistory.get(roundedDate);
 
-            if (value != null)
+            if (value != null && value > 0)
                 lastValue = value;
             else {
                 cryptoHistory.put(

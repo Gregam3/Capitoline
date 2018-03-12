@@ -87,11 +87,18 @@ public class UserService {
 
     }
 
-    public List<GraphHoldingData> getGraphHoldingData(String email) throws UnirestException, IOException, ParseException {
-        User user = userDao.get(email);
-        List<GraphHoldingData> graphHoldingData = new ArrayList<>();
+    public  Map<String, List<GraphHoldingData>>  getGraphHoldingData(String email) throws UnirestException, IOException, ParseException {
+        List<GraphHoldingData> graphHoldingData;
+        List<GraphHoldingData> cryptoGraphHoldingData;
+        List<GraphHoldingData> stockGraphHoldingData;
+        List<GraphHoldingData> fiatGraphHoldingData;
 
-        Map<Date, Double> graphHoldingDataMap = new LinkedHashMap<>();
+        Map<Date, Double> graphHoldingDataMap = new HashMap<>();
+        Map<Date, Double> cryptoGraphHoldingDataMap = new HashMap<>();
+        Map<Date, Double> stockGraphHoldingDataMap = new HashMap<>();
+        Map<Date, Double> fiatGraphHoldingDataMap = new HashMap<>();
+
+        User user = userDao.get(email);
 
         for (UserHolding userHolding : user.getHoldings()) {
             Map<Date, Double> currentDataHoldingMap = new LinkedHashMap<>();
@@ -102,6 +109,7 @@ public class UserService {
                                     userHolding.getAcronym(),
                                     userHolding.getTotalQuantity()
                             );
+                    cryptoGraphHoldingDataMap = mergeHoldingMap(cryptoGraphHoldingDataMap, currentDataHoldingMap);
                     break;
                 case FIAT:
                     break;
@@ -111,23 +119,32 @@ public class UserService {
                                     userHolding.getAcronym(),
                                     userHolding.getTotalQuantity()
                             );
+                    stockGraphHoldingDataMap = mergeHoldingMap(stockGraphHoldingDataMap, currentDataHoldingMap);
                     break;
             }
 
             graphHoldingDataMap = mergeHoldingMap(graphHoldingDataMap, currentDataHoldingMap);
         }
 
-        for (Map.Entry<Date, Double> day : graphHoldingDataMap.entrySet()) {
-            graphHoldingData.add(
-                    new GraphHoldingData(
-                            day.getKey(),
-                            day.getValue()
-                    )
-            );
-        }
-        Collections.sort(graphHoldingData);
 
-        return graphHoldingData;
+        graphHoldingData = convertMapToList(graphHoldingDataMap);
+        cryptoGraphHoldingData = convertMapToList(cryptoGraphHoldingDataMap);
+        stockGraphHoldingData = convertMapToList(stockGraphHoldingDataMap);
+        fiatGraphHoldingData = convertMapToList(fiatGraphHoldingDataMap);
+
+        Collections.sort(graphHoldingData);
+        Collections.sort(cryptoGraphHoldingData);
+        Collections.sort(stockGraphHoldingData);
+        Collections.sort(fiatGraphHoldingData);
+
+        Map<String, List<GraphHoldingData>> holdingsMap = new HashMap<>();
+
+        holdingsMap.put("Total", graphHoldingData);
+        holdingsMap.put(HoldingType.CRYPTO.toString(), cryptoGraphHoldingData);
+        holdingsMap.put(HoldingType.STOCK.toString(), stockGraphHoldingData);
+        holdingsMap.put(HoldingType.FIAT.toString(), fiatGraphHoldingData);
+
+        return holdingsMap;
     }
 
     private Map<Date, Double> mergeHoldingMap(Map<Date, Double> map1, Map<Date, Double> map2) {
@@ -159,5 +176,20 @@ public class UserService {
         }
 
         return portfolioHistory;
+    }
+
+    private List<GraphHoldingData> convertMapToList(Map<Date, Double> mapToConvert) {
+        List<GraphHoldingData> list = new ArrayList<>();
+
+        for (Map.Entry<Date, Double> day : mapToConvert.entrySet()) {
+            list.add(
+                    new GraphHoldingData(
+                            day.getKey(),
+                            day.getValue()
+                    )
+            );
+        }
+
+        return list;
     }
 }

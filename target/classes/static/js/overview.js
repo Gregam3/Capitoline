@@ -30,7 +30,7 @@ app.controller("basicInfoCtrl", ['$scope', '$http', '$uibModal', '$rootScope', f
                 axis: "y",
                 dataset: "dataSet",
                 key: "value",
-                label: "An area series",
+                label: "Total Value",
                 color: "#ffa500",
                 type: ['line', 'area'],
                 id: 'mySeries0',
@@ -41,7 +41,6 @@ app.controller("basicInfoCtrl", ['$scope', '$http', '$uibModal', '$rootScope', f
                 key: "time",
             },
             y: {
-                min: 100
             }
         }
     };
@@ -51,7 +50,7 @@ app.controller("basicInfoCtrl", ['$scope', '$http', '$uibModal', '$rootScope', f
         $http.get(
             'http://localhost:8080/user/get/holding-graph-data/gregoryamitten@gmail.com'
         ).then(function (response) {
-            $rootScope.historicalPortfolio.dataSet = response.data;
+            $rootScope.historicalPortfolio.dataSet = response.data.Total;
             console.log(response.data);
         });
 

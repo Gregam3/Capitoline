@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Greg Mitten (i7676925)
@@ -58,10 +59,10 @@ public class UserController {
     }
 
     @GetMapping(value = "get/holding-graph-data/{email:.+}")
-    public ResponseEntity<List<GraphHoldingData>> getGraphHoldingData(@PathVariable("email") String email) {
+    public ResponseEntity<Map<String, List<GraphHoldingData>>> getGraphHoldingData(@PathVariable("email") String email) {
         try {
             return new ResponseEntity<>(userService.getGraphHoldingData(email), HttpStatus.OK);
-        } catch (UnirestException|IOException|ParseException e) {
+        } catch (UnirestException | IOException | ParseException e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

@@ -99,34 +99,37 @@ public class StockService {
         return recentStringDates;
     }
 
+    //Stock markets close on weekends but in order for data to line up with other holdings data must be inserted on a day to day basis
     private Map<Date, Double> addWeekends(Map<Date, Double> stockHistory, long earliestDateInRange) {
         long currentUnixTime = new Date().getTime();
+
+        //Adjusted depending on the day the data starts
+        int baseMultiplier = 5 - new Date(earliestDateInRange).getDay();
 
         for(long unixIterator = earliestDateInRange;
             unixIterator < currentUnixTime;
             //Iterate by week rather than by day to speed up processing
             unixIterator += DateUtils.MILLIS_PER_DAY * 7) {
-            double valueBeforeWeekend = getClosestValue(stockHistory, unixIterator + DateUtils.MILLIS_PER_DAY * 4);
+            double valueBeforeWeekend = getClosestValue(stockHistory, unixIterator + DateUtils.MILLIS_PER_DAY * baseMultiplier);
 
             //Add saturday value
             stockHistory.put(
-                    DateUtils.round(new Date(unixIterator + DateUtils.MILLIS_PER_DAY * 5), Calendar.DAY_OF_MONTH),
+                    DateUtils.round(new Date(unixIterator + DateUtils.MILLIS_PER_DAY * (baseMultiplier + 1)), Calendar.DAY_OF_MONTH),
                     valueBeforeWeekend
             );
             //Add sunday value
             stockHistory.put(
-                    DateUtils.round(new Date(unixIterator + DateUtils.MILLIS_PER_DAY * 6), Calendar.DAY_OF_MONTH),
+                    DateUtils.round(new Date(unixIterator + DateUtils.MILLIS_PER_DAY * (baseMultiplier + 2)), Calendar.DAY_OF_MONTH),
                     valueBeforeWeekend
             );
         }
-
 
         return stockHistory;
     }
 
     //If the date on the friday cannot be retrieved then it will recurse backwards until it finds the next closest value
     private double getClosestValue(Map<Date, Double> stockHistory, long unixIterator) {
-        Double value = stockHistory.get(new Date(unixIterator));
+        Double value = stockHistory.get(DateUtils.round(new Date(unixIterator), Calendar.DAY_OF_MONTH));
 
         if (value == null)
             return getClosestValue(stockHistory, unixIterator - DateUtils.MILLIS_PER_DAY);
