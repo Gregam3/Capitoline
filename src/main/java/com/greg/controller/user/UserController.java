@@ -3,6 +3,7 @@ package com.greg.controller.user;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.greg.entity.GraphHoldingData;
+import com.greg.entity.holding.HoldingType;
 import com.greg.entity.user.User;
 import com.greg.service.user.UserService;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -63,6 +64,19 @@ public class UserController {
         try {
             return new ResponseEntity<>(userService.getGraphHoldingData(email), HttpStatus.OK);
         } catch (UnirestException | IOException | ParseException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping(value = "delete/holding/{acronym}/{holdingType}/{amountToRemove}")
+    public ResponseEntity<String> deleteHolding(@PathVariable("acronym") String acronym,
+                                                @PathVariable("holdingType") String holdingType,
+                                                @PathVariable("amountToRemove") double amountToRemove) {
+        try {
+            userService.deleteHolding(acronym, HoldingType.valueOf(holdingType), amountToRemove);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (IOException e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

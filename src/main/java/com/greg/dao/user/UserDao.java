@@ -1,9 +1,9 @@
 package com.greg.dao.user;
 
 import com.greg.dao.Dao;
-import com.greg.entity.user.UserHolding;
 import com.greg.entity.user.Transaction;
 import com.greg.entity.user.User;
+import com.greg.entity.user.UserHolding;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;

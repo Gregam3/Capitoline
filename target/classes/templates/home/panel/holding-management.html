@@ -32,6 +32,10 @@
                         <td>{{stock.totalQuantity}}</td>
                         <td>${{stock.price}}</td>
                         <td>{{(stock.totalQuantity * stock.price) | currency}}</td>
+                        <td>
+                            <input type="number" placeholder="Number to remove" ng-model="amountToRemove"/>
+                            <button ng-click="removeHolding(stock.acronym, stock.holdingType, amountToRemove)">Remove</button>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -57,6 +61,10 @@
                         <td>{{(crypto.totalQuantity !== 0 ) ? crypto.totalQuantity : "Watch only"}}</td>
                         <td>${{crypto.price}}</td>
                         <td>{{(crypto.totalQuantity * crypto.price) | currency}}</td>
+                        <td>
+                            <input type="number" placeholder="Number to remove" ng-model="amountToRemove"/>
+                            <button ng-click="removeHolding(crypto.acronym, crypto.holdingType)">Remove</button>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -82,6 +90,10 @@
                         <td>{{fiat.totalQuantity}}</td>
                         <td>${{fiat.price}}</td>
                         <td>{{(fiat.totalQuantity * fiat.price) | currency}}</td>
+                        <td>
+                            <input type="number" placeholder="Number to remove" ng-model="amountToRemove"/>
+                            <button ng-click="removeHolding(fiat.acronym, fiat.holdingType)">Remove</button>
+                        </td>
                     </tr>
                     </tbody>
                 </table>

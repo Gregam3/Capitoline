@@ -18,7 +18,7 @@ public class User {
     private String name;
     private String settings;
 
-    @OneToMany(mappedBy = "user", cascade= CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade= CascadeType.ALL, orphanRemoval = true)
     private List<UserHolding> holdings;
 
     public User() {

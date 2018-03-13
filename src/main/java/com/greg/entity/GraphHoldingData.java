@@ -33,6 +33,7 @@ public class GraphHoldingData implements Comparable<GraphHoldingData> {
 
     @Override
     public int compareTo(GraphHoldingData graphHoldingData) {
-        return Long.compare(time.getTime(), graphHoldingData.getTime().getTime());
+        return Long.compare(getTime().getTime(), graphHoldingData.getTime().getTime());
     }
+
 }

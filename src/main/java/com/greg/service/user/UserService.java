@@ -10,6 +10,7 @@ import com.greg.entity.user.UserHolding;
 import com.greg.service.currency.crypto.CryptoService;
 import com.greg.service.currency.fiat.FiatService;
 import com.greg.service.stock.StockService;
+//import com.greg.service.userholding.UserHoldingService;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,18 +26,26 @@ import java.util.*;
 @Service
 public class UserService {
 
-    private static final long DAY_IN_MS = 86400000;
     private UserDao userDao;
     private StockService stockService;
     private CryptoService cryptoService;
     private FiatService fiatService;
+//    private UserHoldingService userHoldingService;
+    private final String currentUserEmail = "gregoryamitten@gmail.com";
 
     @Autowired
-    public UserService(UserDao userDao, StockService stockService, CryptoService cryptoService, FiatService fiatService) {
+    public UserService(
+            UserDao userDao,
+            StockService stockService,
+            CryptoService cryptoService,
+            FiatService fiatService
+//            UserHoldingService userHoldingService
+    ) {
         this.userDao = userDao;
         this.stockService = stockService;
         this.cryptoService = cryptoService;
         this.fiatService = fiatService;
+//        this.userHoldingService = userHoldingService;
     }
 
     public User get(String email) throws IOException {
@@ -136,7 +145,6 @@ public class UserService {
             graphHoldingDataMap = mergeHoldingMap(graphHoldingDataMap, currentDataHoldingMap);
         }
 
-
         graphHoldingData = convertMapToList(graphHoldingDataMap);
 
         cryptoGraphHoldingData = convertMapToList(cryptoGraphHoldingDataMap);
@@ -158,6 +166,31 @@ public class UserService {
         return holdingsMap;
     }
 
+    public boolean deleteHolding(String acronym, HoldingType holdingType, double amountToRemove) throws IOException {
+        User user = get(currentUserEmail);
+
+        for (UserHolding userHolding : user.getHoldings()) {
+            if (userHolding.getAcronym().equals(acronym) &&
+                    userHolding.getHoldingType().equals(holdingType)) {
+                if (userHolding.getTotalQuantity() <= amountToRemove) {
+                    //Make userholding orphan to be deleted automatically
+                    userHolding.setUser(null);
+                    user.getHoldings().remove(userHolding);
+                    update(user);
+                    return true;
+                } else {
+                    Transaction transaction = new Transaction(0 - amountToRemove);
+                    transaction.setUserHolding(userHolding);
+                    userHolding.addTransaction(transaction);
+                    update(user);
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     private Map<Date, Double> mergeHoldingMap(Map<Date, Double> map1, Map<Date, Double> map2) {
         for (Map.Entry<Date, Double> day : map2.entrySet()) {
             if (map1.containsKey(day.getKey()))
@@ -169,37 +202,16 @@ public class UserService {
         return map1;
     }
 
-    private Map<Date, Double> fillEmptyDates(Map<Date, Double> portfolioHistory, long earliestDateInRange) {
-        long currentUnixTime = new Date().getTime();
-        double lastValue = 0;
-
-        for (long unixIterator = earliestDateInRange;
-             unixIterator < currentUnixTime;
-             unixIterator += DAY_IN_MS * 7) {
-            Date unixIteratorAsDate = new Date(unixIterator);
-            Double value = portfolioHistory.get(unixIteratorAsDate);
-
-            if (value != null) {
-                lastValue = value;
-            } else {
-                portfolioHistory.put(unixIteratorAsDate, lastValue);
-            }
-        }
-
-        return portfolioHistory;
-    }
-
     private List<GraphHoldingData> convertMapToList(Map<Date, Double> mapToConvert) {
         List<GraphHoldingData> list = new ArrayList<>();
 
-        for (Map.Entry<Date, Double> day : mapToConvert.entrySet()) {
+        for (Map.Entry<Date, Double> day : mapToConvert.entrySet())
             list.add(
                     new GraphHoldingData(
                             day.getKey(),
                             day.getValue()
                     )
             );
-        }
 
         return list;
     }

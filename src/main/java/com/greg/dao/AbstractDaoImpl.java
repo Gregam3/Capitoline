@@ -17,7 +17,7 @@ import java.util.List;
 
 @Repository
 @Transactional
-public abstract class AbstractDaoImpl<T>  {
+public abstract class AbstractDaoImpl<T> implements Dao<T> {
 
     private static final Logger LOG = Logger.getLogger(StockController.class);
 
@@ -41,10 +41,12 @@ public abstract class AbstractDaoImpl<T>  {
     }
 
     public void update(T t) {
-        entityManager.flush();
-        entityManager.persist(t);
-        entityManager.flush();
+        entityManager.merge(t);
     }
+
+//    public void merge(T t) {
+//        entityManager.merge(t);
+//    }
 
     @SuppressWarnings("unchecked")
     public List list(String tableName) {

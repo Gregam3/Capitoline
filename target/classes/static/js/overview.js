@@ -1,11 +1,6 @@
 var app = angular.module("overview", ['ui.bootstrap', 'smart-table', 'n3-line-chart']);
 angular.module("overview").factory('user', function ($http) {
     return null;
-    $http.get('http://localhost:8080/user/get/gregoryamitten@gmail.com')
-        .then(function (response) {
-            console.log(response.data);
-            return response.data;
-        });
 });
 
 app.value('Email', 'gregoryamitten@gmail.com');
@@ -15,14 +10,7 @@ app.controller("basicInfoCtrl", ['$scope', '$http', '$uibModal', '$rootScope', f
     $rootScope.totalValue = 0.0;
     $rootScope.acquisitionCost = 0.0;
     $rootScope.historicalPortfolio = {dataSet: []};
-
     $rootScope.user = null;
-
-    $http.get('http://localhost:8080/user/get/gregoryamitten@gmail.com')
-        .then(function (response) {
-            $rootScope.user = response.data;
-        });
-
 
     $scope.options = {
         series: [
@@ -30,20 +18,24 @@ app.controller("basicInfoCtrl", ['$scope', '$http', '$uibModal', '$rootScope', f
                 axis: "y",
                 dataset: "dataSet",
                 key: "value",
-                label: "Total Value",
+                label: "Portfolio Value ($)",
                 color: "#ffa500",
                 type: ['line', 'area'],
-                id: 'mySeries0',
+                id: 'mySeries0'
             }
         ],
         axes: {
             x: {
                 key: "time",
+                type: 'date',
+                tickFormat: d3.time.format("%b %y")
             },
             y: {
+                type: 'currency'
             }
         }
     };
+
 
     //Fetch and process graph data
     $rootScope.generateGraph = function () {
@@ -60,77 +52,85 @@ app.controller("basicInfoCtrl", ['$scope', '$http', '$uibModal', '$rootScope', f
 
 app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'AlphaVantageKey', function ($scope, $http, $uibModal, $rootScope, AlphaVantageKey) {
     $scope.user = null;
+
     $rootScope.holdings = {
         cryptos: {},
         stocks: {},
         fiats: {}
     };
 
-    $http.get('http://localhost:8080/user/get/gregoryamitten@gmail.com')
-        .then(function (response) {
-            $scope.user = response.data;
-            console.log(response.data);
+    $rootScope.updateUser = function () {
 
-            for (let i = 0; i < $scope.user.holdings.length; i++) {
-                const currentHolding = $scope.user.holdings[i];
+        $http.get('http://localhost:8080/user/get/gregoryamitten@gmail.com')
+            .then(function (response) {
+                $scope.user = response.data;
+                console.log(response.data);
 
+                for (let i = 0; i < $scope.user.holdings.length; i++) {
+                    const currentHolding = $scope.user.holdings[i];
 
-                if (currentHolding.holdingType === "STOCK") {
-                    $rootScope.holdings.stocks[currentHolding.acronym] = currentHolding;
-                } else if (currentHolding.holdingType === "CRYPTO") {
-                    $rootScope.holdings.cryptos[currentHolding.acronym] = currentHolding;
-                } else if (currentHolding.holdingType === "FIAT") {
-                    $rootScope.holdings.fiats[currentHolding.acronym] = currentHolding;
+                    if (currentHolding.holdingType === "STOCK") {
+                        $rootScope.holdings.stocks[currentHolding.acronym] = currentHolding;
+                    } else if (currentHolding.holdingType === "CRYPTO") {
+                        $rootScope.holdings.cryptos[currentHolding.acronym] = currentHolding;
+                    } else if (currentHolding.holdingType === "FIAT") {
+                        $rootScope.holdings.fiats[currentHolding.acronym] = currentHolding;
+                    }
+
+                    for (let i = 0; i < currentHolding.transactions.length; i++) {
+                        $rootScope.acquisitionCost +=
+                            currentHolding.transactions[i].price * currentHolding.transactions[i].quantity;
+                    }
+
+                    $rootScope.generateGraph();
                 }
+            }).then(function () {
+                $http.get(
+                    "https://min-api.cryptocompare.com/data/pricemulti?fsyms="
+                    + $scope.convertHoldingsToUriVariables($rootScope.holdings.cryptos) + ","
+                    + $scope.convertHoldingsToUriVariables($rootScope.holdings.fiats)
+                    + "&tsyms=USD"
+                ).then(function (response) {
+                    let holding;
+                    for (holding in $rootScope.holdings.cryptos) {
+                        $rootScope.holdings.cryptos[holding].price =
+                            (response.data[holding]) ? response.data[holding]["USD"] : null;
+                        console.log($rootScope.holdings.cryptos[holding].price)
+                        $rootScope.totalValue +=
+                            $rootScope.holdings.cryptos[holding].price * $rootScope.holdings.cryptos[holding].totalQuantity;
+                    }
 
-                for (let i = 0; i < currentHolding.transactions.length; i++) {
-                    $rootScope.acquisitionCost +=
-                        currentHolding.transactions[i].price * currentHolding.transactions[i].quantity;
-                }
+                    for (holding in $rootScope.holdings.fiats) {
+                        $rootScope.holdings.fiats[holding].price =
+                            (response.data[holding]) ? response.data[holding]["USD"] : null;
+                        console.log($rootScope.holdings.fiats[holding].price);
+                        $rootScope.totalValue +=
+                            $rootScope.holdings.fiats[holding].price * $rootScope.holdings.fiats[holding].totalQuantity;
+                    }
+                });
+
+
+                //Get all User's stock prices
+                $http.get("https://www.alphavantage.co/query?function=BATCH_STOCK_QUOTES&symbols=" + $scope.convertHoldingsToUriVariables($scope.holdings.stocks)
+                    + "&apikey=" + AlphaVantageKey).then(function (response) {
+
+                    var i = 0;
+
+                    for (var holding in $rootScope.holdings.stocks) {
+                        $rootScope.holdings.stocks[holding].price =
+                            (response.data["Stock Quotes"][i]["2. price"]) ?
+                                response.data["Stock Quotes"][i]["2. price"] : null;
+                        $rootScope.totalValue +=
+                            $rootScope.holdings.stocks[holding].price * $rootScope.holdings.stocks[holding].totalQuantity;
+                        i++;
+                    }
+                });
             }
-        }).then(function () {
-            $http.get(
-                "https://min-api.cryptocompare.com/data/pricemulti?fsyms="
-                + $scope.convertHoldingsToUriVariables($rootScope.holdings.cryptos) + ","
-                + $scope.convertHoldingsToUriVariables($rootScope.holdings.fiats)
-                + "&tsyms=USD"
-            ).then(function (response) {
-                let holding;
-                for (holding in $rootScope.holdings.cryptos) {
-                    $rootScope.holdings.cryptos[holding].price =
-                        (response.data[holding]) ? response.data[holding]["USD"] : null;
-                    console.log($rootScope.holdings.cryptos[holding].price)
-                    $rootScope.totalValue +=
-                        $rootScope.holdings.cryptos[holding].price * $rootScope.holdings.cryptos[holding].totalQuantity;
-                }
+        );
+    };
 
-                for (holding in $rootScope.holdings.fiats) {
-                    $rootScope.holdings.fiats[holding].price =
-                        (response.data[holding]) ? response.data[holding]["USD"] : null;
-                    console.log($rootScope.holdings.fiats[holding].price);
-                    $rootScope.totalValue +=
-                        $rootScope.holdings.fiats[holding].price * $rootScope.holdings.fiats[holding].totalQuantity;
-                }
-            });
+    $rootScope.updateUser();
 
-
-            //Get all User's stock prices
-            $http.get("https://www.alphavantage.co/query?function=BATCH_STOCK_QUOTES&symbols=" + $scope.convertHoldingsToUriVariables($scope.holdings.stocks)
-                + "&apikey=" + AlphaVantageKey).then(function (response) {
-
-                var i = 0;
-
-                for (var holding in $rootScope.holdings.stocks) {
-                    $rootScope.holdings.stocks[holding].price =
-                        (response.data["Stock Quotes"][i]["2. price"]) ?
-                            response.data["Stock Quotes"][i]["2. price"] : null;
-                    $rootScope.totalValue +=
-                        $rootScope.holdings.stocks[holding].price * $rootScope.holdings.stocks[holding].totalQuantity;
-                    i++;
-                }
-            });
-        }
-    );
 
     $scope.convertHoldingsToUriVariables = function (currentHoldingsList) {
         var tickers = "";
@@ -149,6 +149,14 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
             controller: 'addHoldingCtrl'
         }).result.then(function (user) {
         });
+    };
+
+    $scope.removeHolding = function (acronym, holdingType) {
+        $http.delete('http://localhost:8080/user/delete/holding/' + acronym + '/' + holdingType + '/' + this.amountToRemove)
+            .then(function (response) {
+                console.log(response.data);
+                $rootScope.updateUser();
+            });
     };
 }]);
 
@@ -187,8 +195,8 @@ app.controller("settingsCtrl", ['$scope', '$http', '$uibModalStack', 'Email', fu
 }]);
 
 app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', 'user', '$rootScope', function ($scope, $http, $uibModalStack, user, $rootScope) {
-    var newHolding = {
-        email: $rootScope.user.email,
+    let newHolding = {
+        email: "gregoryamitten@gmail.com",
         name: null,
         acronym: null,
         holdingType: null,

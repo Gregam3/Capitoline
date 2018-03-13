@@ -55,19 +55,4 @@ public class CryptoService {
     public Map<Date, Double> getCryptoHistory(String acronym, double quantity) throws UnirestException {
         return currencyService.getCurrencyHistory(acronym, quantity);
     }
-
-//    private Map<Date, Double> fillGapsInHistory(Map<Date, Double> cryptoHistory, long earliestDateInRange) {
-//        long currentUnixTime = new Date().getTime();
-//        double lastValue = 0;
-//
-//
-//        for (long unixIterator = earliestDateInRange;
-//             unixIterator < currentUnixTime;
-//             unixIterator += DateUtils.MILLIS_PER_DAY) {
-//            Date roundedDate = DateUtils.round(new Date(unixIterator), Calendar.DAY_OF_MONTH);
-//            Double value = cryptoHistory.get(roundedDate);
-//
-//        }
-//        return cryptoHistory;
-//    }
 }

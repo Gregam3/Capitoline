@@ -29,7 +29,7 @@ public class UserHolding {
     @JoinColumn(name = "EMAIL", nullable = false)
     private User user;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transaction> transactions;
 
     @Transient

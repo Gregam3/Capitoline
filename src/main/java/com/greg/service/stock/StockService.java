@@ -78,65 +78,68 @@ public class StockService {
             }
         }
 
-
-
-
-//        return addWeekends(stockHistory, earliestDateInRange);
-        Map<Date, Double> dateDoubleMap = addWeekends(stockHistory, earliestDateInRange);
-
-        List<Date> fuck = new ArrayList<>();
-
-        for(long unix = earliestDateInRange; unix > new Date().getTime(); unix += DateUtils.MILLIS_PER_DAY) {
-            if(dateDoubleMap.get(DateUtils.round(new Date(unix), Calendar.DAY_OF_MONTH)) == null) {
-                fuck.add(new Date(unix));
-            }
-        }
-
-        return dateDoubleMap;
+        return addMissingDates(stockHistory, earliestDateInRange);
+//        return stockHistory;
     }
 
     private JSONArray sortStringDates(JSONArray names) throws ParseException {
         JSONArray recentStringDates = new JSONArray();
 
-        for (int i = 0; i < names.length(); i++) {
-            String[] dateSplit = names.getString(i).split("-");
-            Date currentDate = new Date();
-
-            //+1900 as the getYear() method minuses it, necessary for comparison
+        for (int i = 0; i < names.length(); i++)
             //5 as only 5 years of data is desired
-            if (Integer.valueOf(dateSplit[0]) > (currentDate.getYear() + 1900) - 5) {
+            if (formatter.parse(names.getString(i)).getTime() > new Date().getTime() - DateUtils.MILLIS_PER_DAY * (365 * 5))
                 recentStringDates.put(names.getString(i));
-            }
-        }
+
         return recentStringDates;
     }
 
-    //Stock markets close on weekends but in order for data to line up with other holdings data must be inserted on a day to day basis
-    private Map<Date, Double> addWeekends(Map<Date, Double> stockHistory, long earliestDateInRange) {
+//    //Stock markets close on weekends but in order for data to line up with other holdings data must be inserted on a day to day basis
+//    private Map<Date, Double> addWeekends(Map<Date, Double> stockHistory, long earliestDateInRange) {
+//        long currentUnixTime = new Date().getTime();
+//
+//        //Adjusted depending on the day the data starts
+//        int baseMultiplier = 5 - new Date(earliestDateInRange).getDay();
+//
+//        for (long unixIterator = earliestDateInRange;
+//             unixIterator < currentUnixTime;
+//            //Iterate by week rather than by day to speed up processing
+//             unixIterator += DateUtils.MILLIS_PER_DAY * 7) {
+//            double valueBeforeWeekend = getClosestValue(stockHistory, unixIterator + DateUtils.MILLIS_PER_DAY * baseMultiplier);
+//
+//            //Add saturday value
+//            stockHistory.put(
+//                    DateUtils.round(new Date(unixIterator + DateUtils.MILLIS_PER_DAY * (baseMultiplier + 1)), Calendar.DAY_OF_MONTH),
+//                    valueBeforeWeekend
+//            );
+//            //Add sunday value
+//            stockHistory.put(
+//                    DateUtils.round(new Date(unixIterator + DateUtils.MILLIS_PER_DAY * (baseMultiplier + 2)), Calendar.DAY_OF_MONTH),
+//                    valueBeforeWeekend
+//            );
+//        }
+//
+//        return stockHistory;
+//    }
+
+    private Map<Date, Double> addMissingDates(Map<Date, Double> stockHistory, long earliestDateInRange) {
         long currentUnixTime = new Date().getTime();
+        double lastValue = 0;
 
-        //Adjusted depending on the day the data starts
-        int baseMultiplier = 5 - new Date(earliestDateInRange).getDay();
+        for (long unixIterator = earliestDateInRange;
+             unixIterator < currentUnixTime;
+             unixIterator += DateUtils.MILLIS_PER_DAY) {
+            Date date = DateUtils.round(new Date(unixIterator), Calendar.DAY_OF_MONTH);
+            Double currentValue = stockHistory.get(date);
 
-        for(long unixIterator = earliestDateInRange;
-            unixIterator < currentUnixTime;
-            //Iterate by week rather than by day to speed up processing
-            unixIterator += DateUtils.MILLIS_PER_DAY * 7) {
-            double valueBeforeWeekend = getClosestValue(stockHistory, unixIterator + DateUtils.MILLIS_PER_DAY * baseMultiplier);
+            if (currentValue != null)
+                lastValue = currentValue;
+            else
+                stockHistory.put(date, lastValue);
 
-            //Add saturday value
-            stockHistory.put(
-                    DateUtils.round(new Date(unixIterator + DateUtils.MILLIS_PER_DAY * (baseMultiplier + 1)), Calendar.DAY_OF_MONTH),
-                    valueBeforeWeekend
-            );
-            //Add sunday value
-            stockHistory.put(
-                    DateUtils.round(new Date(unixIterator + DateUtils.MILLIS_PER_DAY * (baseMultiplier + 2)), Calendar.DAY_OF_MONTH),
-                    valueBeforeWeekend
-            );
         }
 
         return stockHistory;
+
     }
 
     //If the date on the friday cannot be retrieved then it will recurse backwards until it finds the next closest value

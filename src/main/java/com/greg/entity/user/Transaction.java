@@ -33,6 +33,11 @@ public class Transaction {
     public Transaction() {
     }
 
+    public Transaction(double quantity) {
+        this.quantity = quantity;
+        this.dateBought = new Date(new java.util.Date().getTime());
+    }
+
     public UserHolding getUserHolding() {
         return userHolding;
     }

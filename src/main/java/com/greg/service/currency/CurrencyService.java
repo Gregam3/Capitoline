@@ -32,10 +32,11 @@ public class CurrencyService {
             double price = day.getDouble("close");
             Date unixIteratorAsDate = DateUtils.round(new Date(day.getLong("time") * 1000), Calendar.DAY_OF_MONTH);
 
-            graphHoldingDataMap.put(
-                    unixIteratorAsDate,
-                    price * quantity
-            );
+            if (price > 0)
+                graphHoldingDataMap.put(
+                        unixIteratorAsDate,
+                        price * quantity
+                );
         }
 
         return graphHoldingDataMap;
