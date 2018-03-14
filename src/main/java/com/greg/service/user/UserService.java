@@ -130,7 +130,7 @@ public class UserService {
                                     userHolding.getTotalQuantity()
                             );
 
-                    fiatGraphHoldingDataMap = mergeHoldingMap(cryptoGraphHoldingDataMap, currentDataHoldingMap);
+                    fiatGraphHoldingDataMap = mergeHoldingMap(fiatGraphHoldingDataMap, currentDataHoldingMap);
                     break;
                 case STOCK:
                     currentDataHoldingMap =
@@ -158,10 +158,10 @@ public class UserService {
 
         Map<String, List<GraphHoldingData>> holdingsMap = new HashMap<>();
 
-        holdingsMap.put("Total", graphHoldingData);
-        holdingsMap.put("Crypto", cryptoGraphHoldingData);
-        holdingsMap.put("Stock", stockGraphHoldingData);
-        holdingsMap.put("Fiat", fiatGraphHoldingData);
+        holdingsMap.put("total", graphHoldingData);
+        holdingsMap.put("crypto", cryptoGraphHoldingData);
+        holdingsMap.put("stock", stockGraphHoldingData);
+        holdingsMap.put("fiat", fiatGraphHoldingData);
 
         return holdingsMap;
     }

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<body>
+
+<div th:fragment="diversification-pie-chart">
+    <div class="panel panel-default" style="height: 300px">
+        <div class="panel-heading">
+            <h4>Portfolio Diversification <span class="fa fa-pie-chart"></span></h4>
+        </div>
+        <div class="panel-body">
+            <pie-chart data="portfolioDiversification" options="pieOptions" style="height: 200px"></pie-chart>
+        </div>
+    </div>
+</div>
+</body>
+</html>

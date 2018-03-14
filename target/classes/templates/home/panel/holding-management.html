@@ -3,103 +3,90 @@
 <body>
 <div class="panel panel-default" th:fragment="holding-management" ng-controller="holdingManagementCtrl">
     <div class="panel-heading">
-        <div class="col-lg-12 row">
-            <h3>Holdings <span class="fa fa-list-ul"></span></h3>
-            <button class="pull-right" ng-click="addHolding()">
-                Add Holding <span class="fa fa-plus"></span>
-            </button>
+        <div class="row">
+            <div class="col-lg-11">
+                <h3>Holdings <span class="fa fa-list-ul"></span></h3>
+            </div>
+            <div class="col-lg-1">
+                <label>
+                    <button ng-click="addHolding()">
+                        Add Holding <span class="fa fa-plus"></span>
+                    </button>
+                </label>
+            </div>
         </div>
-
     </div>
     <div class="panel-body">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4>Stocks</h4>
-            </div>
-            <div class="panel-body">
-                <table st-table="rowCollection" class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th>Stock Name</th>
-                        <th>Total Count</th>
-                        <th>Price</th>
-                        <th>Total Holdings</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr ng-repeat="stock in holdings.stocks">
-                        <td>{{stock.name}} ({{stock.acronym}})</td>
-                        <td>{{stock.totalQuantity}}</td>
-                        <td>${{stock.price}}</td>
-                        <td>{{(stock.totalQuantity * stock.price) | currency}}</td>
-                        <td>
-                            <input type="number" placeholder="Number to remove" ng-model="amountToRemove"/>
-                            <button ng-click="removeHolding(stock.acronym, stock.holdingType, amountToRemove)">Remove</button>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4>Cryptocurrencies</h4>
-            </div>
-            <div class="panel-body">
-                <table st-table="rowCollection" class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th>Crypto Name</th>
-                        <th>Quantity</th>
-                        <th>Price</th>
-                        <th>Total Holdings</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr ng-repeat="crypto in holdings.cryptos">
-                        <td>{{crypto.name}}({{crypto.acronym}})</td>
-                        <td>{{(crypto.totalQuantity !== 0 ) ? crypto.totalQuantity : "Watch only"}}</td>
-                        <td>${{crypto.price}}</td>
-                        <td>{{(crypto.totalQuantity * crypto.price) | currency}}</td>
-                        <td>
-                            <input type="number" placeholder="Number to remove" ng-model="amountToRemove"/>
-                            <button ng-click="removeHolding(crypto.acronym, crypto.holdingType)">Remove</button>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4>Forex</h4>
-            </div>
-            <div class="panel-body">
-                <table st-table="rowCollection" class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th>Currency Name</th>
-                        <th>Total Count</th>
-                        <th>Price</th>
-                        <th>Total Holdings</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr ng-repeat="fiat in holdings.fiats">
-                        <td>{{fiat.acronym}} - {{fiat.name}} ({{fiat.symbol}})</td>
-                        <td>{{fiat.totalQuantity}}</td>
-                        <td>${{fiat.price}}</td>
-                        <td>{{(fiat.totalQuantity * fiat.price) | currency}}</td>
-                        <td>
-                            <input type="number" placeholder="Number to remove" ng-model="amountToRemove"/>
-                            <button ng-click="removeHolding(fiat.acronym, fiat.holdingType)">Remove</button>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-                <!--{{holdings.cryptos.price in holdings.cryptos }}-->
-            </div>
-        </div>
+        <label ng-hide="'Object.keys(holdings.cryptos).length > 0 || Object.keys(holdings.fiats).length > 0 || Object.keys(holdings.stocks).length > 0'">
+            To get started add a holding by clicking the button above.
+        </label>
+        <table st-table="rowCollection" class="table table-striped">
+            <thead>
+            <tr>
+                <th>Stock Name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total Holdings</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="stock in holdings.stocks">
+                <td>{{stock.name}} ({{stock.acronym}})</td>
+                <td>{{stock.totalQuantity}}</td>
+                <td>${{stock.price}}</td>
+                <td>{{(stock.totalQuantity * stock.price) | currency}}</td>
+                <td>
+                    <input type="number" placeholder="Number to remove" ng-model="amountToRemove"/>
+                    <button ng-click="removeHolding(stock.acronym, stock.holdingType, amountToRemove)">Remove
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <table st-table="rowCollection" class="table table-striped">
+            <thead>
+            <tr>
+                <th>Crypto Name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total Holdings</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="crypto in holdings.cryptos">
+                <td>{{crypto.name}}({{crypto.acronym}})</td>
+                <td>{{(crypto.totalQuantity !== 0 ) ? crypto.totalQuantity : "Watch only"}}</td>
+                <td>${{crypto.price}}</td>
+                <td>{{(crypto.totalQuantity * crypto.price) | currency}}</td>
+                <td>
+                    <input type="number" placeholder="Number to remove" ng-model="amountToRemove"/>
+                    <button ng-click="removeHolding(crypto.acronym, crypto.holdingType)">Remove</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <table st-table="rowCollection" class="table table-striped">
+            <thead>
+            <tr>
+                <th>Currency Name</th>
+                <th>Total Count</th>
+                <th>Price</th>
+                <th>Total Holdings</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="fiat in holdings.fiats">
+                <td>{{fiat.acronym}} - {{fiat.name}} ({{fiat.symbol}})</td>
+                <td>{{fiat.totalQuantity}}</td>
+                <td>${{fiat.price}}</td>
+                <td>{{(fiat.totalQuantity * fiat.price) | currency}}</td>
+                <td>
+                    <input type="number" placeholder="Number to remove" ng-model="amountToRemove"/>
+                    <button ng-click="removeHolding(fiat.acronym, fiat.holdingType)">Remove</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 </body>
