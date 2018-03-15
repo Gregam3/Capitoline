@@ -10,6 +10,7 @@ app.controller("overview", ['$scope', '$http', '$uibModal', '$rootScope', functi
     $rootScope.totalValue = 0.0;
     $rootScope.acquisitionCost = 0.0;
     $rootScope.user = null;
+    $rootScope.profitting = null;
 }]);
 
 
@@ -27,7 +28,7 @@ app.controller("totalValueLineChartCtrl", ['$scope', '$http', '$rootScope', func
                 axis: "y",
                 dataset: "total",
                 key: "value",
-                label: "Portfolio Value ($)",
+                label: "Total Value ($)",
                 color: "#E7972D",
                 type: ['line', 'area'],
                 id: 'mySeries0'
@@ -108,6 +109,7 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
         $http.get('http://localhost:8080/user/get/gregoryamitten@gmail.com')
             .then(function (response) {
                 $rootScope.user = response.data;
+                $rootScope.acquisitionCost = 0;
                 console.log(response.data);
 
                 $rootScope.holdings = {
@@ -128,11 +130,11 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
                     }
 
                     for (let i = 0; i < currentHolding.transactions.length; i++) {
-                        $rootScope.acquisitionCost +=
-                            currentHolding.transactions[i].price * currentHolding.transactions[i].quantity;
+                        if(currentHolding.transactions[i].quantity > 0) {
+                            $rootScope.acquisitionCost +=
+                                currentHolding.transactions[i].price * currentHolding.transactions[i].quantity;
+                        }
                     }
-
-                    $rootScope.generateGraph();
                 }
             }).then(function () {
                 $http.get(
@@ -181,6 +183,9 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
 
                         i++;
                     }
+                    $rootScope.generateGraph();
+                    $rootScope.profitting = $rootScope.totalValue > $rootScope.acquisitionCost;
+
                     $rootScope.portfolioDiversification.push(
                         {
                             label: "Cryptos" + " - " + (($scope.cryptoValue / $scope.totalValue) * 100).toFixed(2) + "%",
@@ -203,10 +208,10 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
 
             }
         );
+        // $scope.$apply();
     };
 
     $rootScope.updateUser();
-
 
     $scope.convertHoldingsToUriVariables = function (currentHoldingsList) {
         let tickers = "";

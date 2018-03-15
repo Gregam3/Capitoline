@@ -11,5 +11,15 @@
       <user-name>SYSTEM</user-name>
       <introspection-schemas>*:SYSTEM</introspection-schemas>
     </data-source>
+    <data-source name="AWS DB" uuid="628ddc17-a613-4f6d-81eb-3257140a1a5d">
+      <database-info product="Oracle" version="Oracle Database 12c Enterprise Edition Release 12.1.0.2.0 - 64bit Production&#10;With the Partitioning, OLAP, Advanced Analytics and Real Application Testing options" jdbc-version="4.0" driver-name="Oracle JDBC driver" driver-version="12.1.0.2.0">
+        <extra-name-characters>$#</extra-name-characters>
+        <identifier-quote-string>&quot;</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="upper" quoted-identifiers="exact" />
+      <secret-storage>master_key</secret-storage>
+      <user-name>gregam3</user-name>
+      <introspection-schemas>*:GREGAM3</introspection-schemas>
+    </data-source>
   </component>
 </project>

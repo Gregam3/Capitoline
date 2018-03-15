@@ -69,7 +69,7 @@ public class UserController {
         }
     }
 
-    @DeleteMapping(value = "delete/holding/{acronym}/{holdingType}/{amountToRemove}")
+    @DeleteMapping(value = "delete/holding/{acronym}/{holdingType}/{amountToRemove:.+}")
     public ResponseEntity<String> deleteHolding(@PathVariable("acronym") String acronym,
                                                 @PathVariable("holdingType") String holdingType,
                                                 @PathVariable("amountToRemove") double amountToRemove) {

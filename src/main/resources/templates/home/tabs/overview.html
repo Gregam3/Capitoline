@@ -6,7 +6,7 @@
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <div class="huge">
-                    {{totalValue | currency}}
+                    <b> {{totalValue | currency}}</b>
                 </div>
             </div>
             <div class="panel-footer">
@@ -18,7 +18,7 @@
         <div class="panel panel-info">
             <div class="panel-heading">
                 <div class="huge">
-                    {{acquisitionCost | currency}}
+                    <b>{{acquisitionCost | currency}}</b>
                 </div>
             </div>
             <div class="panel-footer">
@@ -27,15 +27,17 @@
         </div>
     </div>
     <div class="col-lg-4">
-        <div class="panel panel-warning">
-            <div class="panel-heading">
-                <div class="huge">
-                    {{(totalValue > acquisitionCost) ? "▲" : "▼" }}
-                    {{(((totalValue/acquisitionCost)*100) - 100).toFixed(2)}}%
+        <div class="panel">
+            <div ng-class="{'panel-success': profitting, 'panel-danger': !profitting}">
+                <div class="panel-heading">
+                    <div class="huge">
+                        {{(totalValue > acquisitionCost) ? "▲" : "▼" }}
+                        <b>{{(((totalValue/acquisitionCost)*100) - 100).toFixed(2)}}%</b>
+                    </div>
                 </div>
-            </div>
-            <div class="panel-footer">
-                <b>Total Change</b>
+                <div class="panel-footer">
+                    <b>Total Change</b>
+                </div>
             </div>
         </div>
     </div>

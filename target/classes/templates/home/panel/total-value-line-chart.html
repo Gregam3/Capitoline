@@ -9,7 +9,11 @@
                 <h4>Historical Portfolio Value <span class="fa fa-line-chart"></span></h4>
             </div>
             <div class="panel-body">
-                <linechart data="historicalPortfolio" options="lineOptions" style="height: 200px"></linechart>
+                <linechart data="historicalPortfolio" options="lineOptions" style="height: 200px"
+                           ng-show="historicalPortfolio.total.length > 0"></linechart>
+            </div>
+            <div class="huge " ng-hide="historicalPortfolio.total.length > 0" style="text-align: center;">
+                <span class="fa fa-circle-o-notch fa-spin"></span> Loading
             </div>
         </div>
     </div>

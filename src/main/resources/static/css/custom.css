@@ -1,3 +1,16 @@
 .huge {
     font-size:40px;
 }
+
+.table-large-font {
+    font-size:14px;
+}
+
+.fixed-column {
+    width: 300px;
+}
+
+.pie-chart-medium {
+    height: 150px;
+    max-height: 150px;
+}
