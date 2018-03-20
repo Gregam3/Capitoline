@@ -16,18 +16,23 @@ public class User {
     @Id
     private String email;
     private String name;
-    private String settings;
+
+    private String namingConvention;
+    //Becomes NAMING_CONVENTION
 
     @OneToMany(mappedBy = "user", cascade= CascadeType.ALL, orphanRemoval = true)
     private List<UserHolding> holdings;
 
     public User() {
+
     }
 
-    public User(String email, String name, String settingsJson, List<UserHolding> holdings) throws JsonProcessingException {
+    public User(String email,
+                String name,
+                List<UserHolding> holdings
+    ) throws JsonProcessingException {
         this.email = email;
         this.name = name;
-        this.settings = settingsJson;
         this.holdings = holdings;
     }
 
@@ -45,14 +50,6 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getSettings() {
-        return settings;
-    }
-
-    public void setSettings(String settings) {
-        this.settings = settings;
     }
 
     public List<UserHolding> getHoldings() {

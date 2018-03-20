@@ -36,24 +36,4 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
                 return i;
         return -1;
     }
-
-    @Override
-    public void appendTransaction(String email,
-                                  int holdingIndex,
-                                  Transaction transaction
-    ) throws IOException {
-        User user = get(email);
-        user.getHoldings().get(holdingIndex).addTransaction(transaction);
-        user.configureChildren();
-        update(user);
-    }
-
-    public void addHolding(String email, UserHolding userHolding) throws IOException {
-        User user = get(email);
-        List<UserHolding> userHoldings = user.getHoldings();
-        userHoldings.add(userHolding);
-        user.setHoldings(userHoldings);
-        user.configureChildren();
-        update(user);
-    }
 }

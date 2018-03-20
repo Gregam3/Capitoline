@@ -30,7 +30,7 @@ public class UserService {
     private StockService stockService;
     private CryptoService cryptoService;
     private FiatService fiatService;
-//    private UserHoldingService userHoldingService;
+    //    private UserHoldingService userHoldingService;
     private final String currentUserEmail = "gregoryamitten@gmail.com";
 
     @Autowired
@@ -77,26 +77,44 @@ public class UserService {
                 holdingNode.get("quantity").asDouble(),
                 price,
                 new java.sql.Date(
-                        (dateBought != null) ? dateBought.asLong() * 1000 : new Date().getTime()
+                        (dateBought == null || dateBought.asLong() * 1000 > new Date().getTime()) ?
+                                new Date().getTime() :
+                                dateBought.asLong() * 1000
                 )
         );
 
         int holdingIndex = userDao.indexOfHolding(email, acronym);
 
+        User user = get(email);
+
         if (holdingIndex >= 0)
-            userDao.appendTransaction(email, holdingIndex, transaction);
+            user
+                    .getHoldings()
+                    .get(holdingIndex)
+                    .addTransaction(transaction);
         else {
             List<Transaction> transactions = new ArrayList<>();
             transactions.add(transaction);
-            userDao.addHolding(email,
+
+            List<UserHolding> userHoldings = user.getHoldings();
+            userHoldings.add(
                     new UserHolding(
                             holdingNode.get("acronym").asText(),
                             holdingNode.get("name").asText(),
                             HoldingType.valueOf(holdingNode.get("holdingType").asText()),
                             transactions
-                    ));
+                    )
+            );
+
+            user.setHoldings(userHoldings);
         }
 
+        updateUser(user);
+    }
+
+    private void updateUser(User user) {
+        user.configureChildren();
+        userDao.update(user);
     }
 
     public Map<String, List<GraphHoldingData>> getGraphHoldingData(String email) throws UnirestException, IOException, ParseException {
@@ -113,7 +131,7 @@ public class UserService {
         User user = userDao.get(email);
 
         for (UserHolding userHolding : user.getHoldings()) {
-            Map<Date, Double> currentDataHoldingMap = new LinkedHashMap<>();
+            Map<Date, Double> currentDataHoldingMap = new HashMap<>();
             switch (userHolding.getHoldingType()) {
                 case CRYPTO:
                     currentDataHoldingMap =
@@ -173,7 +191,7 @@ public class UserService {
             if (userHolding.getAcronym().equals(acronym) &&
                     userHolding.getHoldingType().equals(holdingType)) {
                 if (userHolding.getTotalQuantity() <= amountToRemove) {
-                    //Make userholding orphan to be deleted automatically
+                    //UserHolding's orphan will be deleted automatically
                     userHolding.setUser(null);
                     user.getHoldings().remove(userHolding);
                     update(user);

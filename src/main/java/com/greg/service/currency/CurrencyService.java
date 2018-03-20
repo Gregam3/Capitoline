@@ -24,8 +24,12 @@ public class CurrencyService {
     public Map<Date, Double> getCurrencyHistory(String acronym, double quantity) throws UnirestException {
         Map<Date, Double> graphHoldingDataMap = new HashMap<>();
 
-        JSONArray history = Unirest.get(CRYPTO_HISTORY_FIRST_PART + acronym + CRYPTO_HISTORY_SECOND_PART)
-                .asJson().getBody().getObject().getJSONArray("Data");
+        JSONArray history =
+                Unirest.get(CRYPTO_HISTORY_FIRST_PART + acronym + CRYPTO_HISTORY_SECOND_PART)
+                        .asJson()
+                        .getBody()
+                        .getObject()
+                        .getJSONArray("Data");
 
         if (!acronym.equals("USD")) {
             for (int i = 0; i < history.length(); i++) {
