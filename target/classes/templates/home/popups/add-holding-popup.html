@@ -10,8 +10,13 @@
             <label>Quantity</label>
             <input type="number" name="input" ng-model="quantity"/>
         </div>
-        <label>Date Bought</label>
-        <div uib-datepicker ng-model="holding.dateBought" class="well well-sm" datepicker-options="options"></div>
+        <div class="col-lg-7">
+            <label>Date Bought</label>
+            <div uib-datepicker ng-model="holding.dateBought" class="well well-sm"
+                 datepicker-options="options"></div>
+        </div>
+    </div>
+    <div class="modal-footer" id="modal-footer">
         <button ng-click="add()">Add <span class="fa fa-plus"></span></button>
     </div>
 </div>

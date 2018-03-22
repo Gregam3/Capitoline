@@ -20,8 +20,6 @@ import java.util.Map;
 @Service
 public class FiatService {
 
-    private final String tableName = "PT_CURRENCY";
-
     private final FiatDao fiatDao;
     private final CurrencyService currencyService;
 

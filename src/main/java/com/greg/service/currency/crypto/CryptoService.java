@@ -40,7 +40,6 @@ public class CryptoService {
                     )
             );
         }
-
         return cryptos;
     }
 

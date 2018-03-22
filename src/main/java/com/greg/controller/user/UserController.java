@@ -50,8 +50,19 @@ public class UserController {
     @PutMapping(value = "add-holding", produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<String> updateUser(@RequestBody JsonNode holdingNode) {
         try {
+            if(holdingNode.get("acronym") == null)
+                return new ResponseEntity<>("You must select a holding", HttpStatus.BAD_REQUEST);
+
+            if(holdingNode.get("quantity") == null ||
+                    holdingNode.get("quantity").asDouble() <= 0 ||
+                    holdingNode.get("quantity").asDouble() >= 10000000000L)
+                return new ResponseEntity<>("A value must be provided for Quantity and between than 0 and 10BN.", HttpStatus.BAD_REQUEST);
+
+            if(holdingNode.get("dateBought") == null )
+                return new ResponseEntity<>("A date must be selected for between than 1/1/2000 and today", HttpStatus.BAD_REQUEST);
+
             userService.addTransaction(holdingNode);
-            return new ResponseEntity<>("Updated successfully", HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (UnirestException | IOException e) {
             LOG.error(e.getMessage());
             System.err.println(e);
@@ -69,11 +80,14 @@ public class UserController {
         }
     }
 
-    @DeleteMapping(value = "delete/holding/{acronym}/{holdingType}/{amountToRemove:.+}")
+    @DeleteMapping(value = "delete/holding/{acronym}/{holdingType}/{amountToRemove:.+}", produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<String> deleteHolding(@PathVariable("acronym") String acronym,
                                                 @PathVariable("holdingType") String holdingType,
-                                                @PathVariable("amountToRemove") double amountToRemove) {
+                                                @PathVariable("amountToRemove") Double amountToRemove) {
         try {
+            if(amountToRemove == null || amountToRemove <= 0)
+                return new ResponseEntity<>("Amount to remove must be greater than 0.", HttpStatus.BAD_REQUEST);
+
             userService.deleteHolding(acronym, HoldingType.valueOf(holdingType), amountToRemove);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (IOException e) {

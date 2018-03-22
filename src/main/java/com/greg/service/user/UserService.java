@@ -39,13 +39,11 @@ public class UserService {
             StockService stockService,
             CryptoService cryptoService,
             FiatService fiatService
-//            UserHoldingService userHoldingService
     ) {
         this.userDao = userDao;
         this.stockService = stockService;
         this.cryptoService = cryptoService;
         this.fiatService = fiatService;
-//        this.userHoldingService = userHoldingService;
     }
 
     public User get(String email) throws IOException {
@@ -60,8 +58,9 @@ public class UserService {
         double price = 0;
         String email = holdingNode.get("email").asText();
         String acronym = holdingNode.get("acronym").asText();
+        HoldingType holdingType = HoldingType.valueOf(holdingNode.get("holdingType").asText());
 
-        switch (HoldingType.valueOf(holdingNode.get("holdingType").asText())) {
+        switch (holdingType) {
             case STOCK:
                 price = stockService.getStockPrice(acronym);
                 break;
@@ -83,7 +82,7 @@ public class UserService {
                 )
         );
 
-        int holdingIndex = userDao.indexOfHolding(email, acronym);
+        int holdingIndex = userDao.indexOfHolding(email, acronym, holdingType);
 
         User user = get(email);
 
@@ -101,7 +100,7 @@ public class UserService {
                     new UserHolding(
                             holdingNode.get("acronym").asText(),
                             holdingNode.get("name").asText(),
-                            HoldingType.valueOf(holdingNode.get("holdingType").asText()),
+                            holdingType,
                             transactions
                     )
             );
@@ -109,10 +108,6 @@ public class UserService {
             user.setHoldings(userHoldings);
         }
 
-        updateUser(user);
-    }
-
-    private void updateUser(User user) {
         user.configureChildren();
         userDao.update(user);
     }
@@ -184,7 +179,7 @@ public class UserService {
         return holdingsMap;
     }
 
-    public boolean deleteHolding(String acronym, HoldingType holdingType, double amountToRemove) throws IOException {
+    public void deleteHolding(String acronym, HoldingType holdingType, double amountToRemove) throws IOException {
         User user = get(currentUserEmail);
 
         for (UserHolding userHolding : user.getHoldings()) {
@@ -195,18 +190,16 @@ public class UserService {
                     userHolding.setUser(null);
                     user.getHoldings().remove(userHolding);
                     update(user);
-                    return true;
+                    break;
                 } else {
                     Transaction transaction = new Transaction(0 - amountToRemove);
                     transaction.setUserHolding(userHolding);
                     userHolding.addTransaction(transaction);
                     update(user);
-                    return true;
+                    break;
                 }
             }
         }
-
-        return false;
     }
 
     private Map<Date, Double> mergeHoldingMap(Map<Date, Double> map1, Map<Date, Double> map2) {

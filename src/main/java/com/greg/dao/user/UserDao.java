@@ -1,6 +1,7 @@
 package com.greg.dao.user;
 
 import com.greg.dao.Dao;
+import com.greg.entity.holding.HoldingType;
 import com.greg.entity.user.User;
 import org.springframework.stereotype.Repository;
 
@@ -14,6 +15,5 @@ import java.io.IOException;
 @Transactional
 @Repository
 public interface UserDao extends Dao<User> {
-
-    int indexOfHolding(String email, String acronym) throws IOException;
+    int indexOfHolding(String email, String acronym, HoldingType holdingType) throws IOException;
 }

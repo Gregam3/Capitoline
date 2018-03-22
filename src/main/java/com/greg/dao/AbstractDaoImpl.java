@@ -24,7 +24,7 @@ public abstract class AbstractDaoImpl<T> implements Dao<T> {
     private Class currentClass;
 
     @PersistenceContext(type = PersistenceContextType.EXTENDED)
-    protected EntityManager entityManager;
+    private EntityManager entityManager;
 
     protected void setThisClass(Class currentClass) {
         this.currentClass = currentClass;
@@ -43,10 +43,6 @@ public abstract class AbstractDaoImpl<T> implements Dao<T> {
     public void update(T t) {
         entityManager.merge(t);
     }
-
-//    public void merge(T t) {
-//        entityManager.merge(t);
-//    }
 
     @SuppressWarnings("unchecked")
     public List list(String tableName) {

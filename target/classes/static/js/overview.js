@@ -1,4 +1,4 @@
-var app = angular.module("capitoline", ['ui.bootstrap', 'smart-table', 'n3-line-chart', 'n3-pie-chart']);
+var app = angular.module("capitoline", ['ui.bootstrap', 'smart-table', 'n3-line-chart', 'n3-pie-chart', 'toaster']);
 angular.module("capitoline").factory('user', function ($http) {
     return null;
 });
@@ -88,158 +88,163 @@ app.controller("totalValueLineChartCtrl", ['$scope', '$http', '$rootScope', func
 }]);
 
 app.controller("diversificationPieChartCtrl", ['$scope', '$http', '$rootScope', function ($scope, $http, $rootScope) {
-    $scope.pieOptions = {thickness: 10};
+    $scope.pieOptions = {
+        thickness: 10
+    };
+
     $rootScope.portfolioDiversification = [];
 }]);
 
-app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'AlphaVantageKey', function ($scope, $http, $uibModal, $rootScope, AlphaVantageKey) {
-    $scope.user = null;
+app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'AlphaVantageKey', 'toaster',
+    function ($scope, $http, $uibModal, $rootScope, AlphaVantageKey, toaster) {
+        $scope.user = null;
 
+        $rootScope.updateUser = function () {
+            $scope.cryptoValue = 0;
+            $scope.stockValue = 0;
+            $scope.fiatValue = 0;
 
-    $rootScope.updateUser = function () {
+            $rootScope.totalValue = 0;
 
-        $scope.cryptoValue = 0;
-        $scope.stockValue = 0;
-        $scope.fiatValue = 0;
+            console.log("updating user");
+            $rootScope.portfolioDiversification = [];
+            $http.get('http://localhost:8080/user/get/gregoryamitten@gmail.com')
+                .then(function (response) {
+                    $rootScope.user = response.data;
+                    $rootScope.acquisitionCost = 0;
+                    console.log(response.data);
 
-        $rootScope.totalValue = 0;
+                    $rootScope.holdings = {
+                        cryptos: {},
+                        stocks: {},
+                        fiats: {}
+                    };
 
-        console.log("updating user");
-        $rootScope.portfolioDiversification = [];
-        $http.get('http://localhost:8080/user/get/gregoryamitten@gmail.com')
-            .then(function (response) {
-                $rootScope.user = response.data;
-                $rootScope.acquisitionCost = 0;
-                console.log(response.data);
+                    for (let i = 0; i < $rootScope.user.holdings.length; i++) {
+                        const currentHolding = $rootScope.user.holdings[i];
 
-                $rootScope.holdings = {
-                    cryptos: {},
-                    stocks: {},
-                    fiats: {}
-                };
+                        if (currentHolding.holdingType === "STOCK") {
+                            $rootScope.holdings.stocks[currentHolding.acronym] = currentHolding;
+                        } else if (currentHolding.holdingType === "CRYPTO") {
+                            $rootScope.holdings.cryptos[currentHolding.acronym] = currentHolding;
+                        } else if (currentHolding.holdingType === "FIAT") {
+                            $rootScope.holdings.fiats[currentHolding.acronym] = currentHolding;
+                        }
 
-                for (let i = 0; i < $rootScope.user.holdings.length; i++) {
-                    const currentHolding = $rootScope.user.holdings[i];
-
-                    if (currentHolding.holdingType === "STOCK") {
-                        $rootScope.holdings.stocks[currentHolding.acronym] = currentHolding;
-                    } else if (currentHolding.holdingType === "CRYPTO") {
-                        $rootScope.holdings.cryptos[currentHolding.acronym] = currentHolding;
-                    } else if (currentHolding.holdingType === "FIAT") {
-                        $rootScope.holdings.fiats[currentHolding.acronym] = currentHolding;
-                    }
-
-                    for (let i = 0; i < currentHolding.transactions.length; i++) {
-                        if(currentHolding.transactions[i].quantity > 0) {
-                            $rootScope.acquisitionCost +=
-                                currentHolding.transactions[i].price * currentHolding.transactions[i].quantity;
+                        for (let i = 0; i < currentHolding.transactions.length; i++) {
+                            if (currentHolding.transactions[i].quantity > 0) {
+                                $rootScope.acquisitionCost +=
+                                    currentHolding.transactions[i].price * currentHolding.transactions[i].quantity;
+                            }
                         }
                     }
+                }).then(function () {
+                    $http.get(
+                        "https://min-api.cryptocompare.com/data/pricemulti?fsyms="
+                        + $scope.convertHoldingsToUriVariables($rootScope.holdings.cryptos) + ","
+                        + $scope.convertHoldingsToUriVariables($rootScope.holdings.fiats)
+                        + "&tsyms=USD"
+                    ).then(function (response) {
+
+                        let holding;
+                        for (holding in $rootScope.holdings.cryptos) {
+                            $rootScope.holdings.cryptos[holding].price =
+                                (response.data[holding]) ? response.data[holding]["USD"] : null;
+                            const currentValue = $rootScope.holdings.cryptos[holding].price * $rootScope.holdings.cryptos[holding].totalQuantity;
+
+                            $rootScope.totalValue += currentValue;
+                            $scope.cryptoValue += currentValue;
+
+                        }
+
+                        for (holding in $rootScope.holdings.fiats) {
+                            $rootScope.holdings.fiats[holding].price =
+                                (response.data[holding]) ? response.data[holding]["USD"] : null;
+
+                            const currentValue = $rootScope.holdings.fiats[holding].price * $rootScope.holdings.fiats[holding].totalQuantity;
+
+                            $rootScope.totalValue += currentValue;
+                            $scope.fiatValue += currentValue;
+                        }
+                    });
+
+                    //Get all User's stock prices
+                    $http.get("https://www.alphavantage.co/query?function=BATCH_STOCK_QUOTES&symbols=" + $scope.convertHoldingsToUriVariables($scope.holdings.stocks)
+                        + "&apikey=" + AlphaVantageKey).then(function (response) {
+
+                        let i = 0;
+
+                        for (const holding in $rootScope.holdings.stocks) {
+                            $rootScope.holdings.stocks[holding].price =
+                                (response.data["Stock Quotes"][i]["2. price"]) ?
+                                    response.data["Stock Quotes"][i]["2. price"] : null;
+                            const currentValue = $rootScope.holdings.stocks[holding].price * $rootScope.holdings.stocks[holding].totalQuantity;
+
+                            $rootScope.totalValue += currentValue;
+                            $scope.stockValue += currentValue;
+
+                            i++;
+                        }
+                        $rootScope.generateGraph();
+                        $rootScope.profitting = $rootScope.totalValue > $rootScope.acquisitionCost;
+
+                        $rootScope.portfolioDiversification.push(
+                            {
+                                label: "Cryptos - " + (($scope.cryptoValue / $scope.totalValue) * 100).toFixed(2) + "%",
+                                value: $scope.cryptoValue.toFixed(2),
+                                color: '#139000'
+                            },
+                            {
+                                label: "Fiat - " + (($scope.fiatValue / $scope.totalValue) * 100).toFixed(2) + "%",
+                                value: $scope.fiatValue,
+                                color: '#ad0e00'
+                            },
+                            {
+                                label: "Stocks - " + (($scope.stockValue / $scope.totalValue) * 100).toFixed(2) + "%",
+                                value: $scope.stockValue,
+                                color: '#0000d6'
+                            }
+                        );
+                    });
+
+
                 }
-            }).then(function () {
-                $http.get(
-                    "https://min-api.cryptocompare.com/data/pricemulti?fsyms="
-                    + $scope.convertHoldingsToUriVariables($rootScope.holdings.cryptos) + ","
-                    + $scope.convertHoldingsToUriVariables($rootScope.holdings.fiats)
-                    + "&tsyms=USD"
-                ).then(function (response) {
+            );
+            // $scope.$apply();
+        };
 
-                    let holding;
-                    for (holding in $rootScope.holdings.cryptos) {
-                        $rootScope.holdings.cryptos[holding].price =
-                            (response.data[holding]) ? response.data[holding]["USD"] : null;
-                        const currentValue = $rootScope.holdings.cryptos[holding].price * $rootScope.holdings.cryptos[holding].totalQuantity;
+        $rootScope.updateUser();
 
-                        $rootScope.totalValue += currentValue;
-                        $scope.cryptoValue += currentValue;
+        $scope.convertHoldingsToUriVariables = function (currentHoldingsList) {
+            let tickers = "";
 
-                    }
-
-                    for (holding in $rootScope.holdings.fiats) {
-                        $rootScope.holdings.fiats[holding].price =
-                            (response.data[holding]) ? response.data[holding]["USD"] : null;
-
-                        const currentValue = $rootScope.holdings.fiats[holding].price * $rootScope.holdings.fiats[holding].totalQuantity;
-
-                        $rootScope.totalValue += currentValue;
-                        $scope.fiatValue += currentValue;
-                    }
-                });
-
-                //Get all User's stock prices
-                $http.get("https://www.alphavantage.co/query?function=BATCH_STOCK_QUOTES&symbols=" + $scope.convertHoldingsToUriVariables($scope.holdings.stocks)
-                    + "&apikey=" + AlphaVantageKey).then(function (response) {
-
-                    let i = 0;
-
-                    for (const holding in $rootScope.holdings.stocks) {
-                        $rootScope.holdings.stocks[holding].price =
-                            (response.data["Stock Quotes"][i]["2. price"]) ?
-                                response.data["Stock Quotes"][i]["2. price"] : null;
-                        const currentValue = $rootScope.holdings.stocks[holding].price * $rootScope.holdings.stocks[holding].totalQuantity;
-
-                        $rootScope.totalValue += currentValue;
-                        $scope.stockValue += currentValue;
-
-                        i++;
-                    }
-                    $rootScope.generateGraph();
-                    $rootScope.profitting = $rootScope.totalValue > $rootScope.acquisitionCost;
-
-                    $rootScope.portfolioDiversification.push(
-                        {
-                            label: "Cryptos" + " - " + (($scope.cryptoValue / $scope.totalValue) * 100).toFixed(2) + "%",
-                            value: $scope.cryptoValue,
-                            color: '#139000'
-                        },
-                        {
-                            label: "Fiat" + " - " + (($scope.fiatValue / $scope.totalValue) * 100).toFixed(2) + "%",
-                            value: $scope.fiatValue,
-                            color: '#ad0e00'
-                        },
-                        {
-                            label: "Stocks" + " - " + (($scope.stockValue / $scope.totalValue) * 100).toFixed(2) + "%",
-                            value: $scope.stockValue,
-                            color: '#0000d6'
-                        }
-                    );
-                });
-
-
+            for (const holding in currentHoldingsList) {
+                tickers += currentHoldingsList[holding].acronym + ",";
             }
-        );
-        // $scope.$apply();
-    };
 
-    $rootScope.updateUser();
+            //Removing trailing comma for uri format
+            return tickers.substr(0, tickers.length - 1);
+        };
 
-    $scope.convertHoldingsToUriVariables = function (currentHoldingsList) {
-        let tickers = "";
-
-        for (const holding in currentHoldingsList) {
-            tickers += currentHoldingsList[holding].acronym + ",";
-        }
-
-        //Removing trailing comma for uri format
-        return tickers.substr(0, tickers.length - 1);
-    };
-
-    $scope.addHolding = function () {
-        $rootScope.addHoldingModal = $uibModal.open({
-            templateUrl: 'templates/home/popups/add-holding-popup.html',
-            controller: 'addHoldingCtrl'
-        }).result.then(function (user) {
-        });
-    };
-
-    $scope.removeHolding = function (acronym, holdingType) {
-        $http.delete('http://localhost:8080/user/delete/holding/' + acronym + '/' + holdingType + '/' + this.amountToRemove)
-            .then(function (response) {
-                console.log(response.data);
-                $rootScope.updateUser();
+        $scope.addHolding = function () {
+            $rootScope.addHoldingModal = $uibModal.open({
+                templateUrl: 'templates/home/popups/add-holding-popup.html',
+                controller: 'addHoldingCtrl'
+            }).result.then(function (user) {
             });
-    };
-}]);
+        };
+
+        $scope.removeHolding = function (acronym, holdingType, amountToRemove) {
+
+            $http.delete('http://localhost:8080/user/delete/holding/' + acronym + '/' + holdingType + '/' + amountToRemove)
+                .then(function successCallback(response) {
+                    toaster.pop('success', "Successfully removed", "Removed " + amountToRemove + " from " + acronym);
+                    $rootScope.updateUser();
+                }, function errorFallback(response) {
+                    toaster.pop('error', "Failed to Remove " +acronym, response.data);
+            });
+        };
+    }]);
 
 app.controller("settingsCtrl", ['$scope', '$http', '$uibModalStack', 'Email', function ($scope, $http, $uibModalStack, Email) {
     $scope.user = {
@@ -275,58 +280,68 @@ app.controller("settingsCtrl", ['$scope', '$http', '$uibModalStack', 'Email', fu
     }
 }]);
 
-app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', 'user', '$rootScope', function ($scope, $http, $uibModalStack, user, $rootScope) {
-    let newHolding = {
-        email: "gregoryamitten@gmail.com",
-        name: null,
-        acronym: null,
-        holdingType: null,
-        quantity: -1,
-        dateBought: null
-    };
+app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', 'user', '$rootScope', 'toaster',
+    function ($scope, $http, $uibModalStack, user, $rootScope, toaster) {
+        $scope.holding = {};
 
-    console.log(newHolding);
+        let newHolding = {
+            email: "gregoryamitten@gmail.com",
+            name: null,
+            acronym: null,
+            holdingType: null,
+            quantity: -1,
+            dateBought: null
+        };
 
-    $scope.holdingList = [];
-
-    //save reloading every time
-    if ($scope.holdingList.length === 0) {
-        $http.get(
-            "http://localhost:8080/crypto/list"
-        ).then(function (response) {
-            $scope.holdingList = $scope.holdingList.concat(response.data);
-        });
-
-        $http.get(
-            "http://localhost:8080/fiat/list"
-        ).then(function (response) {
-            $scope.holdingList = $scope.holdingList.concat(response.data);
-        });
-
-        $http.get(
-            "http://localhost:8080/stock/list"
-        ).then(function (response) {
-            $scope.holdingList = $scope.holdingList.concat(response.data);
-        });
-    }
-
-    $scope.add = function () {
-        newHolding.acronym = $scope.holding.acronym;
-        newHolding.name = $scope.holding.name;
-        newHolding.holdingType = $scope.holding.holdingType;
-        newHolding.quantity = $scope.quantity;
-        newHolding.dateBought = $scope.holding.dateBought / 1000;
+        $scope.options = {
+            minDate: new Date(946684800000),
+            maxDate: new Date()
+        };
 
         console.log(newHolding);
 
-        $http({
-            method: 'PUT',
-            url: "http://localhost:8080/user/add-holding",
-            data: newHolding
-        }).then(function (response) {
-            console.log(response);
-            $rootScope.updateUser();
-            $uibModalStack.dismissAll();
-        });
-    }
-}]);
+        $scope.holdingList = [];
+
+        //save reloading every time
+        if ($scope.holdingList.length === 0) {
+            $http.get(
+                "http://localhost:8080/crypto/list"
+            ).then(function (response) {
+                $scope.holdingList = $scope.holdingList.concat(response.data);
+            });
+
+            $http.get(
+                "http://localhost:8080/fiat/list"
+            ).then(function (response) {
+                $scope.holdingList = $scope.holdingList.concat(response.data);
+            });
+
+            $http.get(
+                "http://localhost:8080/stock/list"
+            ).then(function (response) {
+                $scope.holdingList = $scope.holdingList.concat(response.data);
+            });
+        }
+
+        $scope.add = function () {
+            newHolding.acronym = $scope.holding.acronym;
+            newHolding.name = $scope.holding.name;
+            newHolding.holdingType = $scope.holding.holdingType;
+            newHolding.quantity = $scope.quantity;
+            newHolding.dateBought = $scope.holding.dateBought / 1000;
+
+            console.log(newHolding);
+
+            $http({
+                method: 'PUT',
+                url: "http://localhost:8080/user/add-holding",
+                data: newHolding
+            }).then(function (response) {
+                toaster.pop('success', "Successfully Added", "Added " +newHolding.quantity + " instance of " + newHolding.name);
+                $rootScope.updateUser();
+                $uibModalStack.dismissAll();
+            }, function (response) {
+                toaster.pop('error', "Failed to Add", response.data);
+            });
+        }
+    }]);

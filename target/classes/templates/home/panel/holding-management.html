@@ -19,6 +19,7 @@
         </div>
     </div>
     <div class="panel-body">
+
         <!--<label ng-hide="">-->
             <!--To get started add a holding by clicking the button above.-->
         <!--</label>-->
@@ -62,7 +63,7 @@
                 <td>{{(crypto.totalQuantity * crypto.price) | currency}}</td>
                 <td>
                     <input type="number" placeholder="Number to remove" ng-model="amountToRemove"/>
-                    <button ng-click="removeHolding(crypto.acronym, crypto.holdingType)">Remove</button>
+                    <button ng-click="removeHolding(crypto.acronym, crypto.holdingType, amountToRemove)">Remove</button>
                 </td>
             </tr>
             </tbody>
@@ -84,7 +85,7 @@
                 <td>{{(fiat.totalQuantity * fiat.price) | currency}}</td>
                 <td>
                     <input type="number" placeholder="Number to remove" ng-model="amountToRemove"/>
-                    <button ng-click="removeHolding(fiat.acronym, fiat.holdingType)">Remove</button>
+                    <button ng-click="removeHolding(fiat.acronym, fiat.holdingType, amountToRemove)">Remove</button>
                 </td>
             </tr>
             </tbody>
