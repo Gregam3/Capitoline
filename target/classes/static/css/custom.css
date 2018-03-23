@@ -14,3 +14,13 @@
     height: 150px;
     max-height: 150px;
 }
+
+.holding-up {
+    font-weight: bold;
+    color: #1e7e34;
+}
+
+.holding-down {
+    font-weight: bold;
+    color: #ad0e00;
+}

@@ -7,10 +7,9 @@ import com.greg.entity.holding.HoldingType;
 import com.greg.entity.user.Transaction;
 import com.greg.entity.user.User;
 import com.greg.entity.user.UserHolding;
-import com.greg.service.currency.crypto.CryptoService;
-import com.greg.service.currency.fiat.FiatService;
+import com.greg.exceptions.InvalidHoldingException;
+import com.greg.service.currency.CurrencyService;
 import com.greg.service.stock.StockService;
-//import com.greg.service.userholding.UserHoldingService;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,22 +27,18 @@ public class UserService {
 
     private UserDao userDao;
     private StockService stockService;
-    private CryptoService cryptoService;
-    private FiatService fiatService;
-    //    private UserHoldingService userHoldingService;
+    private CurrencyService currencyService;
     private final String currentUserEmail = "gregoryamitten@gmail.com";
 
     @Autowired
     public UserService(
             UserDao userDao,
             StockService stockService,
-            CryptoService cryptoService,
-            FiatService fiatService
+            CurrencyService currencyService
     ) {
         this.userDao = userDao;
         this.stockService = stockService;
-        this.cryptoService = cryptoService;
-        this.fiatService = fiatService;
+        this.currencyService = currencyService;
     }
 
     public User get(String email) throws IOException {
@@ -54,54 +49,55 @@ public class UserService {
         userDao.update(user);
     }
 
-    public void addTransaction(JsonNode holdingNode) throws UnirestException, IOException {
+    public void addTransaction(JsonNode holdingNode) throws Exception {
         double price = 0;
-        String email = holdingNode.get("email").asText();
         String acronym = holdingNode.get("acronym").asText();
         HoldingType holdingType = HoldingType.valueOf(holdingNode.get("holdingType").asText());
 
+        JsonNode dateNode = holdingNode.get("dateBought");
+        java.sql.Date date = new java.sql.Date(
+                (dateNode == null || dateNode.asLong() > new Date().getTime()) ?
+                        new Date().getTime() :
+                        dateNode.asLong()
+        );
+
         switch (holdingType) {
             case STOCK:
-                price = stockService.getStockPrice(acronym);
+                int dayAsInt = new Date(date.getTime()).getDay();
+
+                if (dayAsInt == 0 || dayAsInt == 6)
+                    throw new InvalidHoldingException("The Stock market is only open on week days.");
+                price = stockService.getStockPriceAtDate(acronym, date.getTime());
                 break;
             case FIAT:
             case CRYPTO:
-                price = cryptoService.getCryptoPrice(acronym);
-                break;
+                price = currencyService.getValueAtDate(acronym, date.getTime());
         }
 
-        JsonNode dateBought = holdingNode.get("dateBought");
 
         Transaction transaction = new Transaction(
                 holdingNode.get("quantity").asDouble(),
                 price,
-                new java.sql.Date(
-                        (dateBought == null || dateBought.asLong() * 1000 > new Date().getTime()) ?
-                                new Date().getTime() :
-                                dateBought.asLong() * 1000
-                )
+                date
         );
 
-        int holdingIndex = userDao.indexOfHolding(email, acronym, holdingType);
+        int holdingIndex = userDao.indexOfHolding(currentUserEmail, acronym, holdingType);
 
-        User user = get(email);
+        User user = get(currentUserEmail);
 
-        if (holdingIndex >= 0)
+        if (holdingIndex >= 0) {
             user
                     .getHoldings()
                     .get(holdingIndex)
                     .addTransaction(transaction);
-        else {
-            List<Transaction> transactions = new ArrayList<>();
-            transactions.add(transaction);
-
+        } else {
             List<UserHolding> userHoldings = user.getHoldings();
             userHoldings.add(
                     new UserHolding(
                             holdingNode.get("acronym").asText(),
                             holdingNode.get("name").asText(),
                             holdingType,
-                            transactions
+                            transaction
                     )
             );
 
@@ -113,11 +109,7 @@ public class UserService {
     }
 
     public Map<String, List<GraphHoldingData>> getGraphHoldingData(String email) throws UnirestException, IOException, ParseException {
-        List<GraphHoldingData> graphHoldingData;
-        List<GraphHoldingData> cryptoGraphHoldingData;
-        List<GraphHoldingData> stockGraphHoldingData;
-        List<GraphHoldingData> fiatGraphHoldingData;
-
+        //Map used as only one instance of a day should be in each map
         Map<Date, Double> graphHoldingDataMap = new HashMap<>();
         Map<Date, Double> cryptoGraphHoldingDataMap = new HashMap<>();
         Map<Date, Double> stockGraphHoldingDataMap = new HashMap<>();
@@ -129,21 +121,18 @@ public class UserService {
             Map<Date, Double> currentDataHoldingMap = new HashMap<>();
             switch (userHolding.getHoldingType()) {
                 case CRYPTO:
-                    currentDataHoldingMap =
-                            cryptoService.getCryptoHistory(
-                                    userHolding.getAcronym(),
-                                    userHolding.getTotalQuantity()
-                            );
-                    cryptoGraphHoldingDataMap = mergeHoldingMap(cryptoGraphHoldingDataMap, currentDataHoldingMap);
-                    break;
                 case FIAT:
                     currentDataHoldingMap =
-                            fiatService.getFiatHistory(
+                            currencyService.getCurrencyHistory(
                                     userHolding.getAcronym(),
                                     userHolding.getTotalQuantity()
                             );
 
-                    fiatGraphHoldingDataMap = mergeHoldingMap(fiatGraphHoldingDataMap, currentDataHoldingMap);
+                    if (userHolding.getHoldingType().equals(HoldingType.CRYPTO))
+                        cryptoGraphHoldingDataMap = mergeHoldingMap(cryptoGraphHoldingDataMap, currentDataHoldingMap);
+                    else
+                        fiatGraphHoldingDataMap = mergeHoldingMap(fiatGraphHoldingDataMap, currentDataHoldingMap);
+
                     break;
                 case STOCK:
                     currentDataHoldingMap =
@@ -158,17 +147,27 @@ public class UserService {
             graphHoldingDataMap = mergeHoldingMap(graphHoldingDataMap, currentDataHoldingMap);
         }
 
-        graphHoldingData = convertMapToList(graphHoldingDataMap);
+        //Converts Maps into sorted lists so it can be put into the n3 charts
+        List<GraphHoldingData> graphHoldingData;
+        List<GraphHoldingData> cryptoGraphHoldingData;
+        List<GraphHoldingData> stockGraphHoldingData;
+        List<GraphHoldingData> fiatGraphHoldingData;
 
-        cryptoGraphHoldingData = convertMapToList(cryptoGraphHoldingDataMap);
-        stockGraphHoldingData = convertMapToList(stockGraphHoldingDataMap);
-        fiatGraphHoldingData = convertMapToList(fiatGraphHoldingDataMap);
+        graphHoldingData =
+                convertHoldingDataMapToList(graphHoldingDataMap);
+        cryptoGraphHoldingData =
+                convertHoldingDataMapToList(cryptoGraphHoldingDataMap);
+        stockGraphHoldingData =
+                convertHoldingDataMapToList(stockGraphHoldingDataMap);
+        fiatGraphHoldingData =
+                convertHoldingDataMapToList(fiatGraphHoldingDataMap);
 
         Collections.sort(graphHoldingData);
         Collections.sort(cryptoGraphHoldingData);
         Collections.sort(stockGraphHoldingData);
         Collections.sort(fiatGraphHoldingData);
 
+        //Creates a map allowing for easy access of each list in JavaScript
         Map<String, List<GraphHoldingData>> holdingsMap = new HashMap<>();
 
         holdingsMap.put("total", graphHoldingData);
@@ -179,7 +178,7 @@ public class UserService {
         return holdingsMap;
     }
 
-    public void deleteHolding(String acronym, HoldingType holdingType, double amountToRemove) throws IOException {
+    public void deleteHolding(String acronym, HoldingType holdingType, double amountToRemove) throws IOException, UnirestException {
         User user = get(currentUserEmail);
 
         for (UserHolding userHolding : user.getHoldings()) {
@@ -192,14 +191,27 @@ public class UserService {
                     update(user);
                     break;
                 } else {
-                    Transaction transaction = new Transaction(0 - amountToRemove);
+                    double price = getAverageBuyPrice(userHolding);
+
+                    Transaction transaction = new Transaction(
+                            0 - amountToRemove, price, new java.sql.Date(new Date().getTime())
+                    );
                     transaction.setUserHolding(userHolding);
                     userHolding.addTransaction(transaction);
+
                     update(user);
                     break;
                 }
             }
         }
+    }
+
+    private double getAverageBuyPrice(UserHolding userHolding) {
+        double allPricesCombined = 0;
+        for (Transaction transaction : userHolding.getTransactions())
+            allPricesCombined = transaction.getPrice();
+
+        return allPricesCombined / userHolding.getTransactions().size();
     }
 
     private Map<Date, Double> mergeHoldingMap(Map<Date, Double> map1, Map<Date, Double> map2) {
@@ -213,7 +225,7 @@ public class UserService {
         return map1;
     }
 
-    private List<GraphHoldingData> convertMapToList(Map<Date, Double> mapToConvert) {
+    private List<GraphHoldingData> convertHoldingDataMapToList(Map<Date, Double> mapToConvert) {
         List<GraphHoldingData> list = new ArrayList<>();
 
         for (Map.Entry<Date, Double> day : mapToConvert.entrySet())

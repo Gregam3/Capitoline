@@ -21,7 +21,7 @@
     <div class="panel-body">
 
         <!--<label ng-hide="">-->
-            <!--To get started add a holding by clicking the button above.-->
+        <!--To get started add a holding by clicking the button above.-->
         <!--</label>-->
         <table st-table="rowCollection" class="table table-striped table-large-font">
             <thead>
@@ -30,6 +30,7 @@
                 <th class="fixed-column">Quantity</th>
                 <th class="fixed-column">Price</th>
                 <th class="fixed-column">Total Holdings</th>
+                <th class="fixed-column">Total Change</th>
             </tr>
             </thead>
             <tbody>
@@ -37,7 +38,13 @@
                 <td>{{stock.name}} ({{stock.acronym}})</td>
                 <td>{{stock.totalQuantity}}</td>
                 <td>${{stock.price}}</td>
-                <td>{{(stock.totalQuantity * stock.price) | currency}}</td>
+                <td>{{(stock.totalValue) | currency}}</td>
+                <!-- Condition won't accept '<' ! used as an alternative -->
+                <td ng-class="{'holding-up': stock.totalValue > stock.acquisitionCost,
+                'holding-down': !(stock.totalValue > stock.acquisitionCost)}">
+                    {{(stock.totalValue > stock.acquisitionCost) ? "▲" : "▼" }}
+                    {{((stock.totalValue / stock.acquisitionCost) * 100 - 100).toFixed(2)}}%
+                </td>
                 <td>
                     <input type="number" placeholder="Number to remove" ng-model="amountToRemove"/>
                     <button ng-click="removeHolding(stock.acronym, stock.holdingType, amountToRemove)">Remove
@@ -53,6 +60,7 @@
                 <th class="fixed-column">Quantity</th>
                 <th class="fixed-column">Price</th>
                 <th class="fixed-column">Total Holdings</th>
+                <th class="fixed-column">Total Change</th>
             </tr>
             </thead>
             <tbody>
@@ -61,6 +69,11 @@
                 <td>{{(crypto.totalQuantity !== 0 ) ? crypto.totalQuantity : "Watch only"}}</td>
                 <td>${{crypto.price}}</td>
                 <td>{{(crypto.totalQuantity * crypto.price) | currency}}</td>
+                <td ng-class="{'holding-up': crypto.totalValue > crypto.acquisitionCost,
+                'holding-down': !(crypto.totalValue > crypto.acquisitionCost)}">
+                    {{(crypto.totalValue > crypto.acquisitionCost) ? "▲" : "▼" }}
+                    {{((crypto.totalValue / crypto.acquisitionCost) * 100 - 100).toFixed(2)}}%
+                </td>
                 <td>
                     <input type="number" placeholder="Number to remove" ng-model="amountToRemove"/>
                     <button ng-click="removeHolding(crypto.acronym, crypto.holdingType, amountToRemove)">Remove</button>
@@ -75,6 +88,7 @@
                 <th class="fixed-column">Quantity</th>
                 <th class="fixed-column">Price</th>
                 <th class="fixed-column">Total Holdings</th>
+                <th class="fixed-column">Total Change</th>
             </tr>
             </thead>
             <tbody>
@@ -83,6 +97,11 @@
                 <td>{{fiat.totalQuantity.toFixed(2)}}</td>
                 <td>${{fiat.price}}</td>
                 <td>{{(fiat.totalQuantity * fiat.price) | currency}}</td>
+                <td ng-class="{'holding-up': fiat.totalValue > fiat.acquisitionCost,
+                'holding-down': !(fiat.totalValue > fiat.acquisitionCost)}">
+                    {{(fiat.totalValue > fiat.acquisitionCost) ? "▲" : "▼" }}
+                    {{((fiat.totalValue / fiat.acquisitionCost) * 100 - 100).toFixed(2)}}%
+                </td>
                 <td>
                     <input type="number" placeholder="Number to remove" ng-model="amountToRemove"/>
                     <button ng-click="removeHolding(fiat.acronym, fiat.holdingType, amountToRemove)">Remove</button>

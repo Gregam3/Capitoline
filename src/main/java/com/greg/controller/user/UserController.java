@@ -63,7 +63,7 @@ public class UserController {
 
             userService.addTransaction(holdingNode);
             return new ResponseEntity<>(HttpStatus.OK);
-        } catch (UnirestException | IOException e) {
+        } catch (Exception e) {
             LOG.error(e.getMessage());
             System.err.println(e);
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -90,7 +90,7 @@ public class UserController {
 
             userService.deleteHolding(acronym, HoldingType.valueOf(holdingType), amountToRemove);
             return new ResponseEntity<>(HttpStatus.OK);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

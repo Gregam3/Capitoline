@@ -131,12 +131,7 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
                             $rootScope.holdings.fiats[currentHolding.acronym] = currentHolding;
                         }
 
-                        for (let i = 0; i < currentHolding.transactions.length; i++) {
-                            if (currentHolding.transactions[i].quantity > 0) {
-                                $rootScope.acquisitionCost +=
-                                    currentHolding.transactions[i].price * currentHolding.transactions[i].quantity;
-                            }
-                        }
+                        $rootScope.acquisitionCost += currentHolding.acquisitionCost;
                     }
                 }).then(function () {
                     $http.get(
@@ -148,21 +143,26 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
 
                         let holding;
                         for (holding in $rootScope.holdings.cryptos) {
+                            console.log("converting cryptos");
                             $rootScope.holdings.cryptos[holding].price =
                                 (response.data[holding]) ? response.data[holding]["USD"] : null;
                             const currentValue = $rootScope.holdings.cryptos[holding].price * $rootScope.holdings.cryptos[holding].totalQuantity;
 
+                            $rootScope.holdings.cryptos[holding].totalValue = currentValue;
                             $rootScope.totalValue += currentValue;
                             $scope.cryptoValue += currentValue;
 
                         }
 
                         for (holding in $rootScope.holdings.fiats) {
+                            console.log("converting fiats");
                             $rootScope.holdings.fiats[holding].price =
                                 (response.data[holding]) ? response.data[holding]["USD"] : null;
 
-                            const currentValue = $rootScope.holdings.fiats[holding].price * $rootScope.holdings.fiats[holding].totalQuantity;
+                            const currentValue =
+                                $rootScope.holdings.fiats[holding].price * $rootScope.holdings.fiats[holding].totalQuantity;
 
+                            $rootScope.holdings.fiats[holding].totalValue = currentValue;
                             $rootScope.totalValue += currentValue;
                             $scope.fiatValue += currentValue;
                         }
@@ -175,11 +175,13 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
                         let i = 0;
 
                         for (const holding in $rootScope.holdings.stocks) {
+                            console.log("converting stocks");
                             $rootScope.holdings.stocks[holding].price =
                                 (response.data["Stock Quotes"][i]["2. price"]) ?
                                     response.data["Stock Quotes"][i]["2. price"] : null;
                             const currentValue = $rootScope.holdings.stocks[holding].price * $rootScope.holdings.stocks[holding].totalQuantity;
 
+                            $rootScope.holdings.stocks[holding].totalValue = currentValue;
                             $rootScope.totalValue += currentValue;
                             $scope.stockValue += currentValue;
 
@@ -241,8 +243,8 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
                     toaster.pop('success', "Successfully removed", "Removed " + amountToRemove + " from " + acronym);
                     $rootScope.updateUser();
                 }, function errorFallback(response) {
-                    toaster.pop('error', "Failed to Remove " +acronym, response.data);
-            });
+                    toaster.pop('error', "Failed to Remove " + acronym, response.data);
+                });
         };
     }]);
 
@@ -324,11 +326,14 @@ app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', 'user', '
         }
 
         $scope.add = function () {
-            newHolding.acronym = $scope.holding.acronym;
-            newHolding.name = $scope.holding.name;
-            newHolding.holdingType = $scope.holding.holdingType;
-            newHolding.quantity = $scope.quantity;
-            newHolding.dateBought = $scope.holding.dateBought / 1000;
+            newHolding = {
+                acronym: $scope.holding.acronym,
+                name: $scope.holding.name,
+                holdingType: $scope.holding.holdingType,
+                quantity: $scope.quantity,
+                dateBought: $scope.holding.dateBought * 1
+            };
+
 
             console.log(newHolding);
 
@@ -337,7 +342,7 @@ app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', 'user', '
                 url: "http://localhost:8080/user/add-holding",
                 data: newHolding
             }).then(function (response) {
-                toaster.pop('success', "Successfully Added", "Added " +newHolding.quantity + " instance of " + newHolding.name);
+                toaster.pop('success', "Successfully Added", "Added " + newHolding.quantity + " instance of " + newHolding.name);
                 $rootScope.updateUser();
                 $uibModalStack.dismissAll();
             }, function (response) {

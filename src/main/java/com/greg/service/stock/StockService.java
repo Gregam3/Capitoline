@@ -3,6 +3,7 @@ package com.greg.service.stock;
 import com.greg.dao.stock.StockDao;
 import com.greg.entity.holding.HoldingType;
 import com.greg.entity.holding.stock.Stock;
+import com.greg.exceptions.InvalidHoldingException;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.apache.commons.lang3.time.DateUtils;
@@ -35,6 +36,21 @@ public class StockService {
         this.stockDao = stockDao;
     }
 
+    public String clearStocksWithoutData() throws UnirestException {
+        List<Stock> list = list();
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (Stock stock : list) {
+            System.out.println(stock.getAcronym());
+            if (getCurrentStockPrice(stock.getAcronym()) == 0) {
+                stringBuilder.append(stock.getAcronym());
+            }
+        }
+
+        return stringBuilder.toString();
+    }
+
     public List<Stock> list() {
         List<Stock> stockList = stockDao.list();
         stockList.forEach(item -> item.setHoldingType(HoldingType.STOCK));
@@ -42,12 +58,35 @@ public class StockService {
         return stockList;
     }
 
-    public double getStockPrice(String acronym) throws UnirestException {
+    public double getCurrentStockPrice(String acronym) throws UnirestException {
         //Get Response
         JSONObject object = Unirest.get(BATCH_QUOTE_URL + acronym + "&apikey=" + API_KEY).asJson().getBody().getObject();
 
         //Casting necessary in order to access JSON elements
         return ((JSONObject) (((JSONArray) object.get("Stock Quotes")).get(0))).getDouble("2. price");
+    }
+
+    public double getStockPriceAtDate(String acronym, long unixDate) throws UnirestException, ParseException, InvalidHoldingException {
+        JSONObject historyJson = Unirest.get(TIME_SERIES_DAILY_URL_1 + acronym + TIME_SERIES_DAILY_URL_2)
+                .asJson().getBody().getObject().getJSONObject("Time Series (Daily)");
+
+        JSONArray stringDates = historyJson.names();
+
+        Long earliestDate = new Date().getTime();
+
+        for (int i = 0; i < stringDates.length(); i++) {
+            long currentIndexUnixTime = formatter.parse(stringDates.get(i).toString()).getTime();
+
+            if (earliestDate > currentIndexUnixTime)
+                earliestDate = currentIndexUnixTime;
+
+            if (currentIndexUnixTime == unixDate)
+                return historyJson.getJSONObject(stringDates.get(i).toString()).getDouble("4. close");
+
+        }
+        throw new InvalidHoldingException(
+                "The earliest data that could be for found " + acronym + " was " + new Date(earliestDate)
+        );
     }
 
 
@@ -56,16 +95,16 @@ public class StockService {
         JSONObject historyJson = Unirest.get(TIME_SERIES_DAILY_URL_1 + acronym + TIME_SERIES_DAILY_URL_2)
                 .asJson().getBody().getObject().getJSONObject("Time Series (Daily)");
 
-        JSONArray names = sortStringDates(historyJson.names());
+        JSONArray stringDates = sortStringDates(historyJson.names());
 
         long earliestDateInRange = new Date().getTime();
 
-        for (int i = 0; i < names.length(); i++) {
-            JSONObject day = historyJson.getJSONObject(names.get(i).toString());
+        for (int i = 0; i < stringDates.length(); i++) {
+            JSONObject day = historyJson.getJSONObject(stringDates.get(i).toString());
             double price = day.getDouble("4. close");
 
             if (price > 0) {
-                Date parsedDate = formatter.parse(names.get(i).toString());
+                Date parsedDate = formatter.parse(stringDates.get(i).toString());
 
                 //Necessary for populating weekend data
                 if (parsedDate.getTime() < earliestDateInRange)

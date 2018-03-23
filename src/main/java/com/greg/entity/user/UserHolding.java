@@ -7,6 +7,7 @@ import com.greg.utils.JSONUtils;
 
 import javax.persistence.*;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,6 +24,7 @@ public class UserHolding {
     private String acronym;
     private String name;
     private HoldingType holdingType;
+    private double acquisitionCost;
 
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL)
@@ -35,15 +37,26 @@ public class UserHolding {
     @Transient
     private Double totalQuantity;
 
-    public UserHolding(String acronym, String name, HoldingType holdingType, List<Transaction> transactions) throws IOException {
+    public UserHolding(String acronym, String name, HoldingType holdingType, Transaction transaction) throws IOException {
         this.acronym = acronym;
         this.name = name;
         this.holdingType = holdingType;
-        this.transactions = transactions;
+        this.transactions = new ArrayList<>();
+        addTransaction(transaction);
         this.totalQuantity = getTotalQuantity();
+        this.acquisitionCost =
+                transaction.getQuantity() * transaction.getPrice();
     }
 
     public UserHolding() {
+    }
+
+    public Double getAcquisitionCost() {
+        return acquisitionCost;
+    }
+
+    public void setAcquisitionCost(Double acquisitionCost) {
+        this.acquisitionCost = acquisitionCost;
     }
 
     public String getAcronym() {
@@ -115,6 +128,8 @@ public class UserHolding {
     }
 
     public void addTransaction(Transaction transaction) throws JsonProcessingException {
+        this.acquisitionCost +=
+                transaction.getQuantity() * transaction.getPrice();
         transactions.add(transaction);
     }
 

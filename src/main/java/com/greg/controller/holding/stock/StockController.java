@@ -2,6 +2,7 @@ package com.greg.controller.holding.stock;
 
 import com.greg.entity.holding.stock.Stock;
 import com.greg.service.stock.StockService;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,7 +31,12 @@ public class StockController {
     }
 
     @GetMapping("list")
-    public ResponseEntity<List<Stock>> getStockById() {
+    public ResponseEntity<List<Stock>> list() {
         return new ResponseEntity<>(stockService.list(), HttpStatus.OK);
+    }
+
+    @GetMapping("check")
+    public ResponseEntity<String> getStockById() throws UnirestException {
+        return new ResponseEntity<>(stockService.clearStocksWithoutData(), HttpStatus.OK);
     }
 }

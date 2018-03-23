@@ -17,9 +17,6 @@ public class User {
     private String email;
     private String name;
 
-    private String namingConvention;
-    //Becomes NAMING_CONVENTION
-
     @OneToMany(mappedBy = "user", cascade= CascadeType.ALL, orphanRemoval = true)
     private List<UserHolding> holdings;
 

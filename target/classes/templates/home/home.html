@@ -54,7 +54,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row" ng-show="totalValue > 0">
         <div class="col-lg-9" ng-controller="totalValueLineChartCtrl">
             <div th:replace="/home/panel/total-value-line-chart :: total-value-line-chart"></div>
         </div>
