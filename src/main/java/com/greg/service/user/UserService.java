@@ -124,8 +124,7 @@ public class UserService {
                 case FIAT:
                     currentDataHoldingMap =
                             currencyService.getCurrencyHistory(
-                                    userHolding.getAcronym(),
-                                    userHolding.getTotalQuantity()
+                                    userHolding
                             );
 
                     if (userHolding.getHoldingType().equals(HoldingType.CRYPTO))
@@ -137,8 +136,7 @@ public class UserService {
                 case STOCK:
                     currentDataHoldingMap =
                             stockService.getStockHistory(
-                                    userHolding.getAcronym(),
-                                    userHolding.getTotalQuantity()
+                                    userHolding
                             );
                     stockGraphHoldingDataMap = mergeHoldingMap(stockGraphHoldingDataMap, currentDataHoldingMap);
                     break;
@@ -191,11 +189,12 @@ public class UserService {
                     update(user);
                     break;
                 } else {
-                    double price = getAverageBuyPrice(userHolding);
-
                     Transaction transaction = new Transaction(
-                            0 - amountToRemove, price, new java.sql.Date(new Date().getTime())
+                            0 - amountToRemove,
+                            userHolding.getAcquisitionCost() / userHolding.getTotalQuantity(),
+                            new java.sql.Date(new Date().getTime())
                     );
+
                     transaction.setUserHolding(userHolding);
                     userHolding.addTransaction(transaction);
 
@@ -204,14 +203,6 @@ public class UserService {
                 }
             }
         }
-    }
-
-    private double getAverageBuyPrice(UserHolding userHolding) {
-        double allPricesCombined = 0;
-        for (Transaction transaction : userHolding.getTransactions())
-            allPricesCombined = transaction.getPrice();
-
-        return allPricesCombined / userHolding.getTransactions().size();
     }
 
     private Map<Date, Double> mergeHoldingMap(Map<Date, Double> map1, Map<Date, Double> map2) {

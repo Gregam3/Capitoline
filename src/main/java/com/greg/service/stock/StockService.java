@@ -3,6 +3,8 @@ package com.greg.service.stock;
 import com.greg.dao.stock.StockDao;
 import com.greg.entity.holding.HoldingType;
 import com.greg.entity.holding.stock.Stock;
+import com.greg.entity.user.Transaction;
+import com.greg.entity.user.UserHolding;
 import com.greg.exceptions.InvalidHoldingException;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -90,29 +92,45 @@ public class StockService {
     }
 
 
-    public Map<Date, Double> getStockHistory(String acronym, double quantity) throws UnirestException, ParseException {
-        Map<Date, Double> stockHistory = new LinkedHashMap<>();
-        JSONObject historyJson = Unirest.get(TIME_SERIES_DAILY_URL_1 + acronym + TIME_SERIES_DAILY_URL_2)
-                .asJson().getBody().getObject().getJSONObject("Time Series (Daily)");
+    public Map<Date, Double> getStockHistory(UserHolding userHolding) throws UnirestException, ParseException {
+        Map<Date, Double> stockHistory = new HashMap<>();
 
+        JSONObject historyJson = Unirest.get(TIME_SERIES_DAILY_URL_1 + userHolding.getAcronym() + TIME_SERIES_DAILY_URL_2)
+                .asJson().getBody().getObject().getJSONObject("Time Series (Daily)");
         JSONArray stringDates = sortStringDates(historyJson.names());
 
         long earliestDateInRange = new Date().getTime();
+
+        Queue<Transaction> transactionQueue = new PriorityQueue<>();
+        transactionQueue.addAll(userHolding.getTransactions());
+        Transaction currentTransaction = null;
+        double cumulativeQuantity = 0;
+        long nextDateUnix = 0;
+
 
         for (int i = 0; i < stringDates.length(); i++) {
             JSONObject day = historyJson.getJSONObject(stringDates.get(i).toString());
             double price = day.getDouble("4. close");
 
-            if (price > 0) {
-                Date parsedDate = formatter.parse(stringDates.get(i).toString());
 
+            Date currentItemUnixDate = formatter.parse(stringDates.get(i).toString());
+
+            if (currentItemUnixDate.getTime() > nextDateUnix) {
+                currentTransaction = transactionQueue.poll();
+                cumulativeQuantity += currentTransaction.getQuantity();
+                nextDateUnix = (transactionQueue.size() > 0) ?
+                        transactionQueue.peek().getDate().getTime() : new Date().getTime();
+            }
+
+
+            if (currentItemUnixDate.getTime() > currentTransaction.getDate().getTime()) {
                 //Necessary for populating weekend data
-                if (parsedDate.getTime() < earliestDateInRange)
-                    earliestDateInRange = parsedDate.getTime();
+                if (currentItemUnixDate.getTime() < earliestDateInRange)
+                    earliestDateInRange = currentItemUnixDate.getTime();
 
                 stockHistory.put(
-                        DateUtils.round(parsedDate, Calendar.DAY_OF_MONTH),
-                        price * quantity
+                        DateUtils.round(currentItemUnixDate, Calendar.DAY_OF_MONTH),
+                        price * cumulativeQuantity
                 );
             }
         }

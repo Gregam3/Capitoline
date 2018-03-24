@@ -1,26 +1,32 @@
 var app = angular.module("capitoline", ['ui.bootstrap', 'smart-table', 'n3-line-chart', 'n3-pie-chart', 'toaster']);
+
 angular.module("capitoline").factory('user', function ($http) {
     return null;
 });
 
-app.value('Email', 'gregoryamitten@gmail.com');
-app.value('AlphaVantageKey', 'QVJRID55FX6HALQH');
-
-app.controller("overview", ['$scope', '$http', '$uibModal', '$rootScope', function ($scope, $http, $uibModal, $rootScope) {
+app.run(function ($rootScope) {
     $rootScope.totalValue = 0.0;
     $rootScope.acquisitionCost = 0.0;
     $rootScope.user = null;
     $rootScope.profitting = null;
-}]);
 
-
-app.controller("totalValueLineChartCtrl", ['$scope', '$http', '$rootScope', function ($scope, $http, $rootScope) {
     $rootScope.historicalPortfolio = {
         total: [],
         crypto: [],
         stock: [],
         fiat: []
     };
+});
+
+app.value('Email', 'gregoryamitten@gmail.com');
+app.value('AlphaVantageKey', 'QVJRID55FX6HALQH');
+
+app.controller("overview", ['$scope', '$http', '$uibModal', '$rootScope', function ($scope, $http, $uibModal, $rootScope) {
+}]);
+
+
+app.controller("totalValueLineChartCtrl", ['$scope', '$http', '$rootScope', function ($scope, $http, $rootScope) {
+
 
     $scope.lineOptions = {
         series: [
@@ -29,7 +35,7 @@ app.controller("totalValueLineChartCtrl", ['$scope', '$http', '$rootScope', func
                 dataset: "total",
                 key: "value",
                 label: "Total Value ($)",
-                color: "#E7972D",
+                color: "#7d7d7d",
                 type: ['line', 'area'],
                 id: 'mySeries0'
             },
@@ -38,7 +44,7 @@ app.controller("totalValueLineChartCtrl", ['$scope', '$http', '$rootScope', func
                 dataset: "crypto",
                 key: "value",
                 label: "Crypto Value ($)",
-                color: "#139000",
+                color: "#008c00",
                 type: ['line', 'area'],
                 id: 'mySeries1'
             },
@@ -47,7 +53,7 @@ app.controller("totalValueLineChartCtrl", ['$scope', '$http', '$rootScope', func
                 dataset: "stock",
                 key: "value",
                 label: "Stock Value ($)",
-                color: "#0000d6",
+                color: "#0000c8",
                 type: ['line', 'area'],
                 id: 'mySeries2'
             },
@@ -56,7 +62,7 @@ app.controller("totalValueLineChartCtrl", ['$scope', '$http', '$rootScope', func
                 dataset: "fiat",
                 key: "value",
                 label: "Fiat Value ($)",
-                color: "#ad0e00",
+                color: "#b40e00",
                 type: ['line', 'area'],
                 id: 'mySeries3'
             }
@@ -87,22 +93,102 @@ app.controller("totalValueLineChartCtrl", ['$scope', '$http', '$rootScope', func
     }
 }]);
 
-app.controller("diversificationPieChartCtrl", ['$scope', '$http', '$rootScope', function ($scope, $http, $rootScope) {
-    $scope.pieOptions = {
-        thickness: 10
-    };
+app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster',
+    function ($scope, $http, $rootScope, toaster) {
+        //Diversification Tab
+        $scope.pieOptions = {
+            thickness: 10
+        };
 
-    $rootScope.portfolioDiversification = [];
-}]);
+        $rootScope.portfolioDiversification = [];
+
+        //Crypto Performance
+        $scope.btcChange = 0;
+        $scope.portfolioCryptoChange = 0;
+        $scope.volatility = {
+            low: 0,
+            medium: 0,
+            high: 0,
+            veryHigh: 0
+        };
+
+
+        $scope.calculateCryptoPerformance = function () {
+            $scope.volatility = {
+                low: 0,
+                medium: 0,
+                high: 0,
+                veryHigh: 0
+            };
+
+            if ($rootScope.historicalPortfolio.crypto.length === 0) {
+                toaster.pop('info', "Cannot do that yet", "We need to load a few more things first.");
+                $scope.active = 0;
+            } else if ($rootScope.historicalPortfolio.crypto.length < 5) {
+                toaster.pop('error', "Not Applicable for your portfolio", "You must have owned Cryptocurrencies for at least 30 days before this is accessible");
+                $scope.active = 0;
+            } else {
+                let btcValueOneWeekAgo = 0;
+                let btcValueNow = 0;
+
+                $http.get("https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD")
+                    .then(function (response) {
+                        btcValueNow = response.data["USD"];
+
+                        $http.get("https://min-api.cryptocompare.com/data/pricehistorical?fsym=BTC&tsyms=USD&ts=" + (new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))
+                            .then(function (response) {
+                                btcValueOneWeekAgo = response.data["BTC"]["USD"];
+                                $scope.btcChange = ((btcValueNow / btcValueOneWeekAgo) * 100 - 100).toFixed(3);
+
+                                $scope.portfolioCryptoChange =
+                                    ($rootScope.historicalPortfolio.crypto[$rootScope.historicalPortfolio.crypto.length - 1].value /
+                                    ($rootScope.historicalPortfolio.crypto[$rootScope.historicalPortfolio.crypto.length - 31].value)
+                                        * 100 - 100).toFixed(3)
+
+                            });
+                    });
+
+
+                for (const holding in $rootScope.holdings.cryptos) {
+                    $http.get("https://min-api.cryptocompare.com/data/histoday?fsym=USD&tsym=" + holding + "&limit=30")
+                        .then(function (response) {
+                            const currentHoldingHistory = response.data.Data;
+
+                            let high = 0;
+                            let low = 1000000;
+
+                            console.log(response);
+
+                            for (const day in currentHoldingHistory) {
+                                const currentPrice = currentHoldingHistory[day]["close"];
+                                if (currentPrice > high) {
+                                    high = currentPrice
+                                } else if (currentPrice < low) {
+                                    low = currentPrice;
+                                }
+                            }
+                            const volatility = (high / low);
+
+                            if (volatility < 1.25) $scope.volatility.low++;
+                            else if (volatility > 1.25 && volatility < 1.5) $scope.volatility.medium++;
+                            else if (volatility > 1.5 && volatility < 2) $scope.volatility.high++;
+                            else $scope.volatility.veryHigh++;
+                        });
+                }
+                console.log($scope.volatility);
+            }
+
+        }
+    }]);
 
 app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'AlphaVantageKey', 'toaster',
     function ($scope, $http, $uibModal, $rootScope, AlphaVantageKey, toaster) {
         $scope.user = null;
 
         $rootScope.updateUser = function () {
-            $scope.cryptoValue = 0;
-            $scope.stockValue = 0;
-            $scope.fiatValue = 0;
+            $rootScope.cryptoValue = 0;
+            $rootScope.stockValue = 0;
+            $rootScope.fiatValue = 0;
 
             $rootScope.totalValue = 0;
 
@@ -150,7 +236,7 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
 
                             $rootScope.holdings.cryptos[holding].totalValue = currentValue;
                             $rootScope.totalValue += currentValue;
-                            $scope.cryptoValue += currentValue;
+                            $rootScope.cryptoValue += currentValue;
 
                         }
 
@@ -164,7 +250,7 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
 
                             $rootScope.holdings.fiats[holding].totalValue = currentValue;
                             $rootScope.totalValue += currentValue;
-                            $scope.fiatValue += currentValue;
+                            $rootScope.fiatValue += currentValue;
                         }
                     });
 
@@ -181,9 +267,14 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
                                     response.data["Stock Quotes"][i]["2. price"] : null;
                             const currentValue = $rootScope.holdings.stocks[holding].price * $rootScope.holdings.stocks[holding].totalQuantity;
 
+                            if (currentValue === 0) {
+                                toaster.pop('warning', "Issue retrieving " + $rootScope.holdings.stocks[holding].acronym,
+                                    $rootScope.holdings.stocks[holding].name + "'s value was retrieved as 0, this may influence your portfolio's accuracy.");
+                            }
+
                             $rootScope.holdings.stocks[holding].totalValue = currentValue;
                             $rootScope.totalValue += currentValue;
-                            $scope.stockValue += currentValue;
+                            $rootScope.stockValue += currentValue;
 
                             i++;
                         }
@@ -299,6 +390,26 @@ app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', 'user', '
             minDate: new Date(946684800000),
             maxDate: new Date()
         };
+
+        $scope.changeDatesAvailable = function (holdingType) {
+            if (holdingType === "STOCK") {
+                $scope.options = {
+                    minDate: new Date(946684800000),
+                    maxDate: new Date()
+                };
+            } else if (holdingType === "CRYPTO") {
+                $scope.options = {
+                    minDate: new Date(1230768000000),
+                    maxDate: new Date()
+                };
+            } else {
+                $scope.options = {
+                    minDate: new Date(1420070400000),
+                    maxDate: new Date()
+                };
+            }
+        };
+
 
         console.log(newHolding);
 

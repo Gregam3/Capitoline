@@ -2,7 +2,6 @@ package com.greg.controller.user;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.greg.entity.GraphHoldingData;
 import com.greg.entity.holding.HoldingType;
 import com.greg.entity.user.User;
 import com.greg.service.user.UserService;
@@ -16,8 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author Greg Mitten (i7676925)
@@ -50,15 +47,15 @@ public class UserController {
     @PutMapping(value = "add-holding", produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<String> updateUser(@RequestBody JsonNode holdingNode) {
         try {
-            if(holdingNode.get("acronym") == null)
+            if (holdingNode.get("acronym") == null)
                 return new ResponseEntity<>("You must select a holding", HttpStatus.BAD_REQUEST);
 
-            if(holdingNode.get("quantity") == null ||
+            if (holdingNode.get("quantity") == null ||
                     holdingNode.get("quantity").asDouble() <= 0 ||
                     holdingNode.get("quantity").asDouble() >= 10000000000L)
                 return new ResponseEntity<>("A value must be provided for Quantity and between than 0 and 10BN.", HttpStatus.BAD_REQUEST);
 
-            if(holdingNode.get("dateBought") == null )
+            if (holdingNode.get("dateBought") == null)
                 return new ResponseEntity<>("A date must be selected for between than 1/1/2000 and today", HttpStatus.BAD_REQUEST);
 
             userService.addTransaction(holdingNode);
@@ -71,12 +68,12 @@ public class UserController {
     }
 
     @GetMapping(value = "get/holding-graph-data/{email:.+}")
-    public ResponseEntity<Map<String, List<GraphHoldingData>>> getGraphHoldingData(@PathVariable("email") String email) {
+    public ResponseEntity<?> getGraphHoldingData(@PathVariable("email") String email) {
         try {
             return new ResponseEntity<>(userService.getGraphHoldingData(email), HttpStatus.OK);
         } catch (UnirestException | IOException | ParseException e) {
             e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -85,7 +82,7 @@ public class UserController {
                                                 @PathVariable("holdingType") String holdingType,
                                                 @PathVariable("amountToRemove") Double amountToRemove) {
         try {
-            if(amountToRemove == null || amountToRemove <= 0)
+            if (amountToRemove == null || amountToRemove <= 0)
                 return new ResponseEntity<>("Amount to remove must be greater than 0.", HttpStatus.BAD_REQUEST);
 
             userService.deleteHolding(acronym, HoldingType.valueOf(holdingType), amountToRemove);

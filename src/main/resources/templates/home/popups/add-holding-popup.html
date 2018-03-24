@@ -5,7 +5,7 @@
     <div class="modal-body" id="modal-body">
         <h4><b>{{(holding.holdingType) ? holding.holdingType + ':' : 'Holding:'}}</b> {{holding.name}}</h4>
         <div class="col-lg-12">
-            <select ng-model="holding"
+            <select ng-model="holding" ng-change="changeDatesAvailable(holding.holdingType)"
                     ng-options="(holding.name+' - ' +holding.holdingType) for holding in holdingList | orderBy: 'name'"></select>
             <label>Quantity</label>
             <input type="number" name="input" ng-model="quantity"/>

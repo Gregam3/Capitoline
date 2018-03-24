@@ -53,8 +53,4 @@ public class CryptoService {
 
         return (response.length() == 1) ? response.getDouble("USD") : -1;
     }
-
-    public Map<Date, Double> getCryptoHistory(String acronym, double quantity) throws UnirestException {
-        return currencyService.getCurrencyHistory(acronym, quantity);
-    }
 }

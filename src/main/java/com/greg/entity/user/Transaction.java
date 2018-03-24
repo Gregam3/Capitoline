@@ -11,7 +11,7 @@ import java.sql.Date;
  */
 @Entity
 @Table(name = "PT_TRANSACTION")
-public class Transaction {
+public class Transaction implements Comparable<Transaction> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long transactionId;
@@ -76,5 +76,10 @@ public class Transaction {
 
     public void setDate(Date dateBought) {
         this.dateBought = dateBought;
+    }
+
+    @Override
+    public int compareTo(Transaction transaction) {
+        return Long.compare(getDate().getTime(), transaction.getDate().getTime());
     }
 }

@@ -4,13 +4,10 @@ import com.greg.dao.fiat.FiatDao;
 import com.greg.entity.holding.HoldingType;
 import com.greg.entity.holding.fiat.Fiat;
 import com.greg.service.currency.CurrencyService;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Greg Mitten (i7676925)
@@ -38,9 +35,5 @@ public class FiatService {
         fiatList.forEach(item -> item.setHoldingType(HoldingType.FIAT));
 
         return fiatList;
-    }
-
-    public Map<Date, Double> getFiatHistory(String acronym, double quantity) throws UnirestException {
-        return currencyService.getCurrencyHistory(acronym, quantity);
     }
 }
