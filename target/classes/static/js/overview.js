@@ -72,7 +72,7 @@ app.controller("totalValueLineChartCtrl", ['$scope', '$http', '$rootScope', func
             x: {
                 key: "time",
                 type: 'date',
-                tickFormat: d3.time.format("%b %y")
+                tickFormat: d3.time.format("%d %b %y")
             },
             y: {}
         }
@@ -105,22 +105,10 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster',
         //Crypto Performance
         $scope.btcChange = 0;
         $scope.portfolioCryptoChange = 0;
-        $scope.volatility = {
-            low: 0,
-            medium: 0,
-            high: 0,
-            veryHigh: 0
-        };
+        $scope.volatility = [];
 
 
         $scope.calculateCryptoPerformance = function () {
-            $scope.volatility = {
-                low: 0,
-                medium: 0,
-                high: 0,
-                veryHigh: 0
-            };
-
             if ($rootScope.historicalPortfolio.crypto.length === 0) {
                 toaster.pop('info', "Cannot do that yet", "We need to load a few more things first.");
                 $scope.active = 0;
@@ -148,7 +136,6 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster',
                             });
                     });
 
-
                 for (const holding in $rootScope.holdings.cryptos) {
                     $http.get("https://min-api.cryptocompare.com/data/histoday?fsym=USD&tsym=" + holding + "&limit=30")
                         .then(function (response) {
@@ -169,13 +156,34 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster',
                             }
                             const volatility = (high / low);
 
-                            if (volatility < 1.25) $scope.volatility.low++;
-                            else if (volatility > 1.25 && volatility < 1.5) $scope.volatility.medium++;
-                            else if (volatility > 1.5 && volatility < 2) $scope.volatility.high++;
-                            else $scope.volatility.veryHigh++;
+                            if (volatility < 1.25) $scope.volatility[0].value++;
+                            else if (volatility > 1.25 && volatility < 1.5) $scope.volatility[1].value++;
+                            else if (volatility > 1.5 && volatility < 2)$scope.volatility[2].value++;
+                            else $scope.volatility[3].value++;
                         });
                 }
-                console.log($scope.volatility);
+
+                $scope.volatility = [
+                    {
+                        label: "<25%",
+                        value: 0,
+                        color: '#0000d6'
+                    },
+                    {
+                        label: "25%-50%",
+                        value: 0,
+                        color: '#5ab4c6'
+                    },
+                    {
+                        label: "50%-100%",
+                        value: 0,
+                        color: '#d65e21'
+                    },
+                    {
+                        label: ">100%",
+                        value: 0,
+                        color: '#d61700'
+                    }];
             }
 
         }
