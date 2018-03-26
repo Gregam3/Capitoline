@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<body>
+
+<div th:fragment="crypto-performance">
+    <div class="panel-heading">
+        <h4>Crypto Performance</h4>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-lg-5">
+                <p style="font-size: 14px;">Over the month BitCoin was {{((btcChange > 0 ) ? "up" :
+                    "down")}} <b>{{btcChange}}%</b>
+                    relative to your Cryptocurrencies which were {{((portfolioCryptoChange > 0 ) ?
+                    "up"
+                    :
+                    "down")}} <b>{{portfolioCryptoChange}}%</b> (a <b>{{(portfolioCryptoChange -
+                        btcChange).toFixed(3)}}%</b> difference)
+                </p>
+            </div>
+            <div class="col-lg-7" style="text-align: center;">
+                <label >Volatility</label>
+                <pie-chart class="pie-chart-medium" data="volatility" options="pieOptions"
+                           style="height: 150px;"></pie-chart>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

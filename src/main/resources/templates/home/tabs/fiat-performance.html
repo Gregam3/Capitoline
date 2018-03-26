@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<body>
+
+<div th:fragment="fiat-performance">
+    <div class="panel-heading">
+        <h4>Fiat Performance</h4>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-lg-12">
+                <p style="font-size: 14px;">Over the month the Pound, Euro, Yen, Yuan and Swiss
+                    Franc
+                    were cumulatively {{((currencyChange > 0 ) ? "up" :
+                    "down")}} <b>{{currencyChange}}%</b>
+                    relative to your Fiat currencies which were {{((portfolioFiatChange > 0 ) ?
+                    "up"
+                    :
+                    "down")}} <b>{{portfolioFiatChange}}%</b> (a <b>{{(portfolioFiatChange -
+                        currencyChange).toFixed(3)}}%</b> difference)
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

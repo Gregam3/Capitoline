@@ -46,11 +46,11 @@
         </div>
     </div>
 
-    <toaster-container toaster-options="{'time-out': 4000}"></toaster-container>
+    <toaster-container toaster-options="{'time-out': 5500}"></toaster-container>
 
     <div class="row" ng-controller="overview" ng-show="totalValue > 0">
         <div class="col-lg-12">
-            <div th:replace="/home/tabs/overview :: overview"></div>
+            <div th:replace="/home/panel/overview :: overview"></div>
         </div>
     </div>
 
@@ -62,38 +62,34 @@
             <div class="panel panel-default" style="height: 300px;">
                 <uib-tabset active="active">
                     <uib-tab index="0" heading="Diversification">
-                        <div th:replace="/home/panel/diversification-pie-chart :: diversification-pie-chart"></div>
+                        <div th:replace="/home/tabs/diversification-pie-chart :: diversification-pie-chart"></div>
                     </uib-tab>
                     <uib-tab index="1" heading="Crypto" ng-click="calculateCryptoPerformance()">
+                        <div th:replace="/home/tabs/crypto-performance :: crypto-performance"></div>
+                    </uib-tab>
+                    <uib-tab index="2" heading="Stock" ng-click="retrieveAndCalculateStockPerformance()">
                         <div class="panel-heading">
-                            <h4>Crypto Performance</h4>
+                            <h4>Stock Performance</h4>
                         </div>
                         <div class="panel-body">
                             <div class="row">
-                                <div class="col-lg-5">
-                                    <p style="font-size: 14px;">Over the month BitCoin was {{((btcChange > 0 ) ? "up" :
-                                        "down")}} <b>{{btcChange}}%</b>
-                                        relative to your Cryptocurrencies which were {{((portfolioCryptoChange > 0 ) ?
+                                <div class="col-lg-12">
+                                    <p style="font-size: 14px;">Over the month the Stock sectors, Utilities, Energy, IT,
+                                        Consumer Discretionary, Telecommunication Services, Health Care, Industrials and
+                                        Financials were was {{((aggregateSectorChange > 0 ) ? "up" :
+                                        "down")}} <b>{{aggregateSectorChange}}%</b>
+                                        relative to your Stocks which were {{((portfolioStockChange > 0 ) ?
                                         "up"
                                         :
-                                        "down")}} <b>{{portfolioCryptoChange}}%</b> (a <b>{{(portfolioCryptoChange -
+                                        "down")}} <b>{{portfolioStockChange}}%</b> (a <b>{{(portfolioStockChange -
                                             btcChange).toFixed(3)}}%</b> difference)
                                     </p>
                                 </div>
-                                <div class="col-lg-7" style="text-align: center;">
-                                    <label >Volatility</label>
-                                    <pie-chart class="pie-chart-medium" data="volatility" options="pieOptions"
-                                               style="height: 150px;"></pie-chart>
-                                </div>
-
                             </div>
                         </div>
                     </uib-tab>
-                    <uib-tab index="2" heading="Stock">
-                        Stock performance
-                    </uib-tab>
-                    <uib-tab index="3" heading="Fiat">
-                        Fiat performance
+                    <uib-tab index="3" heading="Fiat" ng-click="calculateFiatPerformance()">
+                        <div th:replace="/home/tabs/fiat-performance :: fiat-performance"></div>
                     </uib-tab>
                 </uib-tabset>
             </div>

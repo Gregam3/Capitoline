@@ -93,8 +93,8 @@ app.controller("totalValueLineChartCtrl", ['$scope', '$http', '$rootScope', func
     }
 }]);
 
-app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster',
-    function ($scope, $http, $rootScope, toaster) {
+app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', 'AlphaVantageKey',
+    function ($scope, $http, $rootScope, toaster, AlphaVantageKey) {
         //Diversification Tab
         $scope.pieOptions = {
             thickness: 10
@@ -102,116 +102,156 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster',
 
         $rootScope.portfolioDiversification = [];
 
-        //Crypto Performance
         $scope.btcChange = 0;
+        $scope.currencyChange = 0;
+        $scope.aggregateSectorChange = 0;
+
         $scope.portfolioCryptoChange = 0;
+        $scope.portfolioStockChange = 0;
+        $scope.portfolioFiatChange = 0;
+
         $scope.volatility = [];
 
+        let btcValueOneMonthAgo = 0;
+        let btcValueNow = 0;
+
+        let totalFiatValueOneMonthAgo = 0;
+        let totalFiatValueNow = 0;
+
+        $http.get("https://min-api.cryptocompare.com/data/price?fsym=USD&tsyms=BTC,JPY,EUR,GBP,CNY,CHF")
+            .then(function (response) {
+                btcValueNow = response.data["BTC"];
+                totalFiatValueNow =
+                    response.data["JPY"] +
+                    response.data["EUR"] +
+                    response.data["GBP"] +
+                    response.data["CNY"] +
+                    response.data["CHF"];
+
+
+                $http.get("https://min-api.cryptocompare.com/data/pricehistorical?fsym=USD&tsyms=BTC,JPY,EUR,GBP,CNY,CHF&ts=" + (new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))
+                    .then(function (response) {
+                        btcValueOneMonthAgo = response.data["USD"]["BTC"];
+                        totalFiatValueOneMonthAgo =
+                            response.data["USD"]["JPY"] +
+                            response.data["USD"]["EUR"] +
+                            response.data["USD"]["GBP"] +
+                            response.data["USD"]["CNY"] +
+                            response.data["USD"]["CHF"];
+
+                        $scope.btcChange = ((btcValueNow / btcValueOneMonthAgo) * 100 - 100).toFixed(3);
+                        $scope.currencyChange = ((totalFiatValueNow / totalFiatValueOneMonthAgo) * 100 - 100).toFixed(3);
+                    });
+            });
 
         $scope.calculateCryptoPerformance = function () {
-            if ($rootScope.historicalPortfolio.crypto.length === 0) {
-                toaster.pop('info', "Cannot do that yet", "We need to load a few more things first.");
-                $scope.active = 0;
-            } else if ($rootScope.historicalPortfolio.crypto.length < 5) {
-                toaster.pop('error', "Not Applicable for your portfolio", "You must have owned Cryptocurrencies for at least 30 days before this is accessible");
-                $scope.active = 0;
-            } else {
-                let btcValueOneMonthAgo = 0;
-                let btcValueNow = 0;
+            if ($rootScope.historicalPortfolio.crypto.length < 30)
+                $scope.performanceNotReadyPopUp("crypto");
+            else
+                $scope.portfolioCryptoChange =
+                    ($rootScope.historicalPortfolio.crypto[$rootScope.historicalPortfolio.crypto.length - 1].value /
+                        ($rootScope.historicalPortfolio.crypto[$rootScope.historicalPortfolio.crypto.length - 31].value)
+                        * 100 - 100).toFixed(3);
 
-                let totalFiatValueOneMonthAgo = 0;
-                let totalFiatValueNow = 0;
+            $scope.generateCryptoVolatilityPieChart();
+        };
 
-                $http.get("https://min-api.cryptocompare.com/data/price?fsym=USD&tsyms=BTC,JPY,EUR,GBP,CNY,CHF")
+        $scope.calculateFiatPerformance = function () {
+            if ($rootScope.historicalPortfolio.fiat.length < 30)
+                $scope.performanceNotReadyPopUp("fiat");
+            else
+                $scope.portfolioFiatChange =
+                    ($rootScope.historicalPortfolio.fiat[$rootScope.historicalPortfolio.fiat.length - 1].value /
+                        ($rootScope.historicalPortfolio.fiat[$rootScope.historicalPortfolio.fiat.length - 31].value)
+                        * 100 - 100).toFixed(3);
+
+            console.log($scope.portfolioFiatChange);
+        };
+
+        $scope.retrieveAndCalculateStockPerformance = function () {
+            if ($rootScope.historicalPortfolio.stock.length < 30)
+                $scope.performanceNotReadyPopUp("stock");
+            else
+                $scope.portfolioStockChange =
+                    ($rootScope.historicalPortfolio.stock[$rootScope.historicalPortfolio.stock.length - 1].value /
+                        ($rootScope.historicalPortfolio.stock[$rootScope.historicalPortfolio.stock.length - 31].value)
+                        * 100 - 100).toFixed(3);
+
+            $http.get('https://www.alphavantage.co/query?function=SECTOR&apikey=' + AlphaVantageKey)
+                .then(function (response) {
+                    const sectorPerformance = response.data["Rank D: 1 Month Performance"];
+
+                    console.log(sectorPerformance);
+
+
+                    //AlphaVantage API sends data back with trailing '%', this needs to be removed in order for it to be treated as a number
+                    $scope.aggregateSectorChange =
+                        (sectorPerformance["Utilities"].substr(0, sectorPerformance["Utilities"].length - 1) * 1 +
+                            sectorPerformance["Energy"].substr(0, sectorPerformance["Energy"].length - 1) * 1 +
+                            sectorPerformance["Information Technology"].substr(0, sectorPerformance["Information Technology"].length - 1) * 1 +
+                            sectorPerformance["Consumer Discretionary"].substr(0, sectorPerformance["Consumer Discretionary"].length - 1) * 1 +
+                            sectorPerformance["Telecommunication Services"].substr(0, sectorPerformance["Telecommunication Services"].length - 1) * 1 +
+                            sectorPerformance["Health Care"].substr(0, sectorPerformance["Health Care"].length - 1) * 1 +
+                            sectorPerformance["Industrials"].substr(0, sectorPerformance["Industrials"].length - 1) * 1 +
+                            sectorPerformance["Financials"].substr(0, sectorPerformance["Financials"].length - 1) * 1) / 8;
+                });
+        };
+
+        $scope.performanceNotReadyPopUp = function (holdingType) {
+            toaster.pop('info', "Cannot do that yet", "We might still be loading your data, if not your oldest " + holdingType + " must be older than a month for this functionality.");
+            $scope.active = 0;
+        };
+
+        $scope.generateCryptoVolatilityPieChart = function () {
+            for (const holding in $rootScope.holdings.cryptos) {
+                $http.get("https://min-api.cryptocompare.com/data/histoday?fsym=USD&tsym=" + holding + "&limit=30")
                     .then(function (response) {
-                        btcValueNow = response.data["BTC"];
-                        totalFiatValueNow =
-                            response.data["JPY"] +
-                            response.data["EUR"] +
-                            response.data["GBP"] +
-                            response.data["CNY"] +
-                            response.data["CHF"];
+                        const currentHoldingHistory = response.data.Data;
 
+                        let high = 0;
+                        let low = 1000000;
 
-                        $http.get("https://min-api.cryptocompare.com/data/pricehistorical?fsym=USD&tsyms=BTC,JPY,EUR,GBP,CNY,CHF&ts=" + (new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))
-                            .then(function (response) {
-                                btcValueOneMonthAgo  = response.data["USD"]["BTC"];
-                                $scope.btcChange = ((btcValueNow / btcValueOneMonthAgo) * 100 - 100).toFixed(3);
-
-                                totalFiatValueOneMonthAgo =
-                                    response.data["JPY"] +
-                                    response.data["EUR"] +
-                                    response.data["GBP"] +
-                                    response.data["CNY"] +
-                                    response.data["CHF"];
-
-                                $scope.portfolioCryptoChange =
-                                    ($rootScope.historicalPortfolio.crypto[$rootScope.historicalPortfolio.crypto.length - 1].value /
-                                    ($rootScope.historicalPortfolio.crypto[$rootScope.historicalPortfolio.crypto.length - 31].value)
-                                        * 100 - 100).toFixed(3);
-
-                                $scope.portfolioFiatChange =
-                                    ($rootScope.historicalPortfolio.fiat[$rootScope.historicalPortfolio.fiat.length - 1].value /
-                                        ($rootScope.historicalPortfolio.fiat[$rootScope.historicalPortfolio.fiat.length - 31].value)
-                                        * 100 - 100).toFixed(3)
-
-                            });
-                    });
-
-
-
-                for (const holding in $rootScope.holdings.cryptos) {
-                    $http.get("https://min-api.cryptocompare.com/data/histoday?fsym=USD&tsym=" + holding + "&limit=30")
-                        .then(function (response) {
-                            const currentHoldingHistory = response.data.Data;
-
-                            let high = 0;
-                            let low = 1000000;
-
-                            console.log(response);
-
-                            for (const day in currentHoldingHistory) {
-                                const currentPrice = currentHoldingHistory[day]["close"];
-                                if (currentPrice > high) {
-                                    high = currentPrice
-                                } else if (currentPrice < low) {
-                                    low = currentPrice;
-                                }
+                        for (const day in currentHoldingHistory) {
+                            const currentPrice = currentHoldingHistory[day]["close"];
+                            if (currentPrice > high) {
+                                high = currentPrice
+                            } else if (currentPrice < low) {
+                                low = currentPrice;
                             }
-                            const volatility = (high / low);
+                        }
+                        const volatility = (high / low);
 
-                            if (volatility < 1.25) $scope.volatility[0].value++;
-                            else if (volatility > 1.25 && volatility < 1.5) $scope.volatility[1].value++;
-                            else if (volatility > 1.5 && volatility < 2)$scope.volatility[2].value++;
-                            else $scope.volatility[3].value++;
-                        });
-                }
-
-                $scope.volatility = [
-                    {
-                        label: "<25%",
-                        value: 0,
-                        color: '#0000d6'
-                    },
-                    {
-                        label: "25%-50%",
-                        value: 0,
-                        color: '#5ab4c6'
-                    },
-                    {
-                        label: "50%-100%",
-                        value: 0,
-                        color: '#d65e21'
-                    },
-                    {
-                        label: ">100%",
-                        value: 0,
-                        color: '#d61700'
-                    }];
+                        if (volatility < 1.25) $scope.volatility[0].value++;
+                        else if (volatility > 1.25 && volatility < 1.5) $scope.volatility[1].value++;
+                        else if (volatility > 1.5 && volatility < 2) $scope.volatility[2].value++;
+                        else $scope.volatility[3].value++;
+                    });
             }
 
-        }
+            $scope.volatility = [
+                {
+                    label: "<25%",
+                    value: 0,
+                    color: '#0000d6'
+                },
+                {
+                    label: "25%-50%",
+                    value: 0,
+                    color: '#5ab4c6'
+                },
+                {
+                    label: "50%-100%",
+                    value: 0,
+                    color: '#d65e21'
+                },
+                {
+                    label: ">100%",
+                    value: 0,
+                    color: '#d61700'
+                }];
+        };
     }]);
+
 
 app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'AlphaVantageKey', 'toaster',
     function ($scope, $http, $uibModal, $rootScope, AlphaVantageKey, toaster) {
