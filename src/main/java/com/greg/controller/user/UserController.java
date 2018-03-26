@@ -92,4 +92,9 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PutMapping(value = "update/settings")
+    public ResponseEntity<String> updateSettings(@RequestBody JsonNode settingsNode) {
+        return new ResponseEntity<>("test", HttpStatus.OK);
+    }
 }

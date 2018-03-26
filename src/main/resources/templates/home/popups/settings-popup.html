@@ -3,10 +3,10 @@
         <h3 class="modal-title" id="modal-title">User Settings <span class="fa fa-cog"></span></h3>
     </div>
     <div class="modal-body" id="modal-body">
-        <h4>User Currency: {{user.settings.currency.name}}
-            {{user.settings.currency.symbol != null ? (user.settings.currency.symbol): ''}}
-        </h4>
-        <select ng-model="user.settings.currency" ng-options="currency.acronym for currency in currencies"></select>
+        <label style="font-size:14px;">User Currency: {{user.settings.currency.name}}
+            {{user.settings.currency.symbol != null ? '(' +user.settings.currency.symbol + ')': ''}}
+        </label>
+        <select ng-model="user.settings.currency" ng-options="currency.name for currency in currencies"></select>
         <button ng-click="save()">Save <span class="glyphicon glyphicon-floppy-disk"></span></button>
     </div>
 </div>

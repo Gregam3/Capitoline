@@ -11,7 +11,7 @@ import javax.persistence.Table;
  * gregoryamitten@gmail.com
  */
 @Entity
-@Table(name = "PT_CURRENCY")
+@Table(name = "PT_FIAT")
 public class Fiat extends Holding {
 
     private String symbol;
@@ -30,8 +30,6 @@ public class Fiat extends Holding {
         this.symbol = symbol;
         this.setHoldingType(HoldingType.FIAT);
     }
-
-
 
     public String getSymbol() {
         return symbol;

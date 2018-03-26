@@ -9,6 +9,7 @@ app.run(function ($rootScope) {
     $rootScope.acquisitionCost = 0.0;
     $rootScope.user = null;
     $rootScope.profitting = null;
+    $rootScope.userCurrencyModifier = 1;
 
     $rootScope.historicalPortfolio = {
         total: [],
@@ -21,13 +22,17 @@ app.run(function ($rootScope) {
 app.value('Email', 'gregoryamitten@gmail.com');
 app.value('AlphaVantageKey', 'QVJRID55FX6HALQH');
 
-app.controller("overview", ['$scope', '$http', '$uibModal', '$rootScope', function ($scope, $http, $uibModal, $rootScope) {
+app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', function ($scope, $http, $uibModal) {
+    $scope.openSettings = function () {
+        $uibModal.open({
+            templateUrl: 'templates/home/popups/settings-popup.html',
+            controller: 'settingsCtrl'
+        })
+    }
 }]);
 
 
 app.controller("totalValueLineChartCtrl", ['$scope', '$http', '$rootScope', function ($scope, $http, $rootScope) {
-
-
     $scope.lineOptions = {
         series: [
             {
@@ -268,7 +273,15 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
             $rootScope.portfolioDiversification = [];
             $http.get('http://localhost:8080/user/get/gregoryamitten@gmail.com')
                 .then(function (response) {
+                    console.log(response.data);
                     $rootScope.user = response.data;
+
+                    if($rootScope.user.settings.currency
+                        ||$rootScope.user.settings.currency.acronym !== "USD") {
+                        $rootScope.userCurrencyModifier =
+                            $rootScope.fetchCurrency($rootScope.user.settings.currency.acronym)
+                    }
+
                     $rootScope.acquisitionCost = 0;
                     console.log(response.data);
 
@@ -395,8 +408,7 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
             $rootScope.addHoldingModal = $uibModal.open({
                 templateUrl: 'templates/home/popups/add-holding-popup.html',
                 controller: 'addHoldingCtrl'
-            }).result.then(function (user) {
-            });
+            })
         };
 
         $scope.removeHolding = function (acronym, holdingType, amountToRemove) {
@@ -411,39 +423,47 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
         };
     }]);
 
-app.controller("settingsCtrl", ['$scope', '$http', '$uibModalStack', 'Email', function ($scope, $http, $uibModalStack, Email) {
-    $scope.user = {
-        email: Email,
-        settings: {
-            currency: null
-        }
-    };
+app.controller("settingsCtrl", ['$scope', '$http', '$uibModalStack', 'Email', 'toaster',
+    function ($scope, $http, $uibModalStack, Email, toaster) {
+        $scope.userSettings = {
+            email: Email,
+            settings: {
+                currency: null
+            }
+        };
 
-    $scope.currencies = null;
+        $scope.currencies = null;
 
-    $http.get(
-        "http://localhost:8080/fiat/list"
-    ).then(function (response) {
-        console.log(response);
-        $scope.currencies = response.data;
-    });
-
-    $scope.fetchCurrency = function () {
-
-    };
-
-    $scope.save = function () {
-        $http.put(
-            "http://localhost:8080/user/update",
-            JSON.stringify($scope.user),
-            {"Content-Type": "application/json"}
+        $http.get(
+            "http://localhost:8080/fiat/list"
         ).then(function (response) {
             console.log(response);
-            $uibModalStack.dismissAll();
+            $scope.currencies = response.data;
         });
 
-    }
-}]);
+        $rootScope.fetchCurrency = function (acronym) {
+            $http.get('https://min-api.cryptocompare.com/data/price?fsym=USD&tsyms=' + acronym)
+                .then(function (response) {
+                    //a modifier used instead of changing requests as AlphaVantage does not provide currency support
+                    $rootScope.userCurrencyModifier = response.data[acronym];
+                });
+        };
+
+        $scope.save = function () {
+            $http({
+                method: 'PUT',
+                url: "http://localhost:8080/user/update/settings",
+                data: $scope.userSettings
+            }).then(function successCallback(response) {
+                toaster.pop('success', "Successfully changed currency",
+                    "Currency changed to " + $scope.userSettings.settings.currency.name);
+                console.log(response);
+                $uibModalStack.dismissAll();
+            }, function failureCallback(response) {
+                toaster.pop('error', "Failed to Change currency", response.data);
+            });
+        }
+    }]);
 
 app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', 'user', '$rootScope', 'toaster',
     function ($scope, $http, $uibModalStack, user, $rootScope, toaster) {
@@ -510,7 +530,7 @@ app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', 'user', '
 
         $scope.add = function () {
             newHolding = {
-                acronym: $scope.holding.acronym,
+                acronym: $fscope.holding.acronym,
                 name: $scope.holding.name,
                 holdingType: $scope.holding.holdingType,
                 quantity: $scope.quantity,

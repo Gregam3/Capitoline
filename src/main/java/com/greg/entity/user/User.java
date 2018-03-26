@@ -1,6 +1,7 @@
 package com.greg.entity.user;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.greg.entity.settings.Settings;
 import com.greg.utils.JSONUtils;
 
 import javax.persistence.*;
@@ -17,11 +18,13 @@ public class User {
     private String email;
     private String name;
 
-    @OneToMany(mappedBy = "user", cascade= CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL)
+    private Settings settings = new Settings();
+
+    @OneToMany(mappedBy = "settings", cascade= CascadeType.ALL, orphanRemoval = true)
     private List<UserHolding> holdings;
 
     public User() {
-
     }
 
     public User(String email,
@@ -31,6 +34,14 @@ public class User {
         this.email = email;
         this.name = name;
         this.holdings = holdings;
+    }
+
+    public Settings getSettings() {
+        return settings;
+    }
+
+    public void setSettings(Settings settings) {
+        this.settings = settings;
     }
 
     public String getName() {
