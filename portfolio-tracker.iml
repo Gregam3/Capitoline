@@ -26,6 +26,7 @@
     <orderEntry type="library" name="d3.v4" level="application" />
     <orderEntry type="library" name="angular" level="application" />
     <orderEntry type="library" name="d3" level="application" />
+    <orderEntry type="library" name="angular-animate" level="application" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.7" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-thymeleaf:1.4.2.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter:1.4.2.RELEASE" level="project" />
@@ -102,6 +103,5 @@
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpcore-nio:4.4.5" level="project" />
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpmime:4.5.2" level="project" />
     <orderEntry type="library" name="Maven: org.json:json:20140107" level="project" />
-    <orderEntry type="library" name="angular-animate" level="application" />
   </component>
 </module>
