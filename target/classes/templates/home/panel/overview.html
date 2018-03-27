@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <body>
-<div th:fragment="homeCtrl">
+<div th:fragment="overview">
     <div class="col-lg-4">
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <div class="huge">
-                    <b> {{totalValue | currency}}</b>
+                    <b> {{userCurrency.symbol}}{{(totalValue * userCurrency.modifier).toFixed(2) | number}}</b>
                 </div>
             </div>
             <div class="panel-footer">
@@ -18,7 +18,7 @@
         <div class="panel panel-info">
             <div class="panel-heading">
                 <div class="huge">
-                    <b>{{acquisitionCost | currency}}</b>
+                    <b>{{userCurrency.symbol}}{{(acquisitionCost * userCurrency.modifier).toFixed(2) | number}}</b>
                 </div>
             </div>
             <div class="panel-footer">

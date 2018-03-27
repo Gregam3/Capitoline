@@ -4,11 +4,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.greg.dao.user.UserDao;
 import com.greg.entity.GraphHoldingData;
 import com.greg.entity.holding.HoldingType;
+import com.greg.entity.settings.Settings;
 import com.greg.entity.user.Transaction;
 import com.greg.entity.user.User;
 import com.greg.entity.user.UserHolding;
 import com.greg.exceptions.InvalidHoldingException;
 import com.greg.service.currency.CurrencyService;
+import com.greg.service.currency.fiat.FiatService;
 import com.greg.service.stock.StockService;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,17 +30,20 @@ public class UserService {
     private UserDao userDao;
     private StockService stockService;
     private CurrencyService currencyService;
+    private FiatService fiatService;
     private final String currentUserEmail = "gregoryamitten@gmail.com";
 
     @Autowired
     public UserService(
             UserDao userDao,
             StockService stockService,
-            CurrencyService currencyService
+            CurrencyService currencyService,
+            FiatService fiatService
     ) {
         this.userDao = userDao;
         this.stockService = stockService;
         this.currencyService = currencyService;
+        this.fiatService = fiatService;
     }
 
     public User get(String email) throws IOException {
@@ -117,6 +122,11 @@ public class UserService {
 
         User user = userDao.get(email);
 
+        double userCurrencyModifier = currencyService.getCurrentPrice(
+                "USD",
+                user.getSettings().getUserCurrency().getAcronym()
+        );
+
         for (UserHolding userHolding : user.getHoldings()) {
             Map<Date, Double> currentDataHoldingMap = new HashMap<>();
             switch (userHolding.getHoldingType()) {
@@ -124,7 +134,8 @@ public class UserService {
                 case FIAT:
                     currentDataHoldingMap =
                             currencyService.getCurrencyHistory(
-                                    userHolding
+                                    userHolding,
+                                    userCurrencyModifier
                             );
 
                     if (userHolding.getHoldingType().equals(HoldingType.CRYPTO))
@@ -136,7 +147,8 @@ public class UserService {
                 case STOCK:
                     currentDataHoldingMap =
                             stockService.getStockHistory(
-                                    userHolding
+                                    userHolding,
+                                    userCurrencyModifier
                             );
                     stockGraphHoldingDataMap = mergeHoldingMap(stockGraphHoldingDataMap, currentDataHoldingMap);
                     break;
@@ -228,5 +240,31 @@ public class UserService {
             );
 
         return list;
+    }
+
+    public void addSettings() throws IOException {
+        User user = get(currentUserEmail);
+        Settings settings = new Settings();
+        settings.setUserCurrency(fiatService.get("USD"));
+        user.setSettings(settings);
+        update(user);
+    }
+
+    public void updateSettings(JsonNode settingsNode) throws IOException {
+        Settings settings = new Settings(
+                fiatService.get(
+                        settingsNode
+                                .get("settings")
+                                .get("currency")
+                                .get("acronym")
+                                .asText()
+                )
+        );
+
+        String email = settingsNode.get("email").asText();
+        User user = get(email);
+        user.setSettings(settings);
+
+        update(user);
     }
 }

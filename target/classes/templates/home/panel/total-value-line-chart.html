@@ -6,7 +6,8 @@
     <div th:fragment="charts">
         <div class="panel panel-default" style="height: 300px">
             <div class="panel-heading">
-                <h4>Historical Portfolio Value <span class="fa fa-line-chart"></span></h4>
+                <h4><span class="fa fa-line-chart"></span>Historical Portfolio Value </h4>if holding is partially
+                removed its effect on your portfolio's history will linger.
             </div>
             <div class="panel-body">
                 <linechart data="historicalPortfolio" options="lineOptions" style="height: 200px"

@@ -21,7 +21,7 @@ public class User {
     @OneToOne(cascade = CascadeType.ALL)
     private Settings settings = new Settings();
 
-    @OneToMany(mappedBy = "settings", cascade= CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade= CascadeType.ALL, orphanRemoval = true)
     private List<UserHolding> holdings;
 
     public User() {

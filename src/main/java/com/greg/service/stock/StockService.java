@@ -92,7 +92,7 @@ public class StockService {
     }
 
 
-    public Map<Date, Double> getStockHistory(UserHolding userHolding) throws UnirestException, ParseException {
+    public Map<Date, Double> getStockHistory(UserHolding userHolding, double userCurrencyModifier) throws UnirestException, ParseException {
         Map<Date, Double> stockHistory = new HashMap<>();
 
         JSONObject historyJson = Unirest.get(TIME_SERIES_DAILY_URL_1 + userHolding.getAcronym() + TIME_SERIES_DAILY_URL_2)
@@ -130,7 +130,7 @@ public class StockService {
 
                 stockHistory.put(
                         DateUtils.round(currentItemUnixDate, Calendar.DAY_OF_MONTH),
-                        price * cumulativeQuantity
+                        (price * cumulativeQuantity) * userCurrencyModifier
                 );
             }
         }

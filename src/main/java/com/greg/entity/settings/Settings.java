@@ -1,7 +1,6 @@
 package com.greg.entity.settings;
 
 import com.greg.entity.holding.fiat.Fiat;
-import com.greg.entity.user.User;
 
 import javax.persistence.*;
 
@@ -16,27 +15,15 @@ public class Settings {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long settingsId;
 
-    @OneToOne(fetch =  FetchType.LAZY, cascade = CascadeType.ALL)
-    private User user;
-
-//    @ManyToOne
-//    @JoinColumn(name="acronym")
-//    private Fiat userCurrency = new Fiat();
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="acronym")
+    private Fiat userCurrency = new Fiat();
 
     public Settings() {
     }
 
-    public Settings(User user, Fiat userCurrency) {
-//        this.userCurrency = userCurrency;
-        this.user = user;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
+    public Settings(Fiat userCurrency) {
+        this.userCurrency = userCurrency;
     }
 
     public long getSettingsId() {
@@ -47,11 +34,11 @@ public class Settings {
         this.settingsId = settingsId;
     }
 
-//    public Fiat getUserCurrency() {
-//        return userCurrency;
-//    }
-//
-//    public void setUserCurrency(Fiat userCurrency) {
-//        this.userCurrency = userCurrency;
-//    }
+    public Fiat getUserCurrency() {
+        return userCurrency;
+    }
+
+    public void setUserCurrency(Fiat userCurrency) {
+        this.userCurrency = userCurrency;
+    }
 }

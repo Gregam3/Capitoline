@@ -24,7 +24,7 @@ public class CurrencyService {
     private final static String HISTORY_SECOND_PART = "&tsym=USD&limit=1825";
     private final static String PRICE_DAY = BASE_URL + "pricehistorical?fsym=";
 
-    public Map<Date, Double> getCurrencyHistory(UserHolding userHolding) throws UnirestException, IOException {
+    public Map<Date, Double> getCurrencyHistory(UserHolding userHolding, double userCurrencyModifier) throws UnirestException, IOException {
         Map<Date, Double> graphHoldingDataMap = new HashMap<>();
 
 
@@ -59,7 +59,7 @@ public class CurrencyService {
                 if (currentItemUnixDate.getTime() > currentTransaction.getDate().getTime())
                     graphHoldingDataMap.put(
                             currentItemUnixDate,
-                            price * cumulativeQuantity
+                            (price * cumulativeQuantity) * userCurrencyModifier
                     );
             }
 
@@ -80,14 +80,17 @@ public class CurrencyService {
 
     }
 
-    public double getCurrencyPrice(String acronym) throws UnirestException {
+    public double getCurrentPrice(String acronym, String currencyDesired) throws UnirestException {
+        if (acronym.equals("USD") && currencyDesired.equals("USD"))
+            return 1;
+
         JSONObject response =
-                Unirest.get(BASE_URL + "/data/price?fsym=" + acronym + "&tsyms=USD")
+                Unirest.get(BASE_URL + "price?fsym=" + acronym + "&tsyms=" + currencyDesired)
                         .asJson()
                         .getBody()
                         .getObject();
 
-        return (response.length() == 1) ? response.getDouble("USD") : -1;
+        return (response.length() == 1) ? response.getDouble(currencyDesired) : -1;
     }
 
     private Map<Date, Double> convertUsd(double quantity) throws UnirestException {

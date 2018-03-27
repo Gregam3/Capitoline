@@ -1,15 +1,15 @@
 var app = angular.module("capitoline", ['ui.bootstrap', 'smart-table', 'n3-line-chart', 'n3-pie-chart', 'toaster']);
 
-angular.module("capitoline").factory('user', function ($http) {
-    return null;
-});
-
 app.run(function ($rootScope) {
     $rootScope.totalValue = 0.0;
+
     $rootScope.acquisitionCost = 0.0;
     $rootScope.user = null;
     $rootScope.profitting = null;
-    $rootScope.userCurrencyModifier = 1;
+    $rootScope.userCurrency = {
+        modifier: 1,
+        symbol: '$'
+    };
 
     $rootScope.historicalPortfolio = {
         total: [],
@@ -22,13 +22,29 @@ app.run(function ($rootScope) {
 app.value('Email', 'gregoryamitten@gmail.com');
 app.value('AlphaVantageKey', 'QVJRID55FX6HALQH');
 
-app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', function ($scope, $http, $uibModal) {
+app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', function ($scope, $http, $uibModal, $rootScope) {
     $scope.openSettings = function () {
         $uibModal.open({
             templateUrl: 'templates/home/popups/settings-popup.html',
             controller: 'settingsCtrl'
         })
-    }
+    };
+
+    $rootScope.setCurrencyModifier = function () {
+        if ($rootScope.user.settings.userCurrency.acronym === "USD") {
+            $rootScope.userCurrency.modifier = 1;
+            $rootScope.userCurrency.symbol = '$';
+        } else {
+            $http.get('https://min-api.cryptocompare.com/data/price?fsym=USD&tsyms=' + $rootScope.user.settings.userCurrency.acronym)
+                .then(function (response) {
+                    //a modifier used instead of changing requests as AlphaVantage does not provide currency support
+                    if($rootScope.user.settings.userCurrency.acronym !== "USD") {
+                        $rootScope.userCurrency.modifier = response.data[$rootScope.user.settings.userCurrency.acronym];
+                        $rootScope.userCurrency.symbol = $rootScope.user.settings.userCurrency.symbol;
+                    }
+                });
+        }
+    };
 }]);
 
 
@@ -88,6 +104,8 @@ app.controller("totalValueLineChartCtrl", ['$scope', '$http', '$rootScope', func
         $http.get(
             'http://localhost:8080/user/get/holding-graph-data/gregoryamitten@gmail.com'
         ).then(function (response) {
+            console.log("generated graph");
+
             $rootScope.historicalPortfolio.total = response.data.total;
             $rootScope.historicalPortfolio.crypto = response.data.crypto;
             $rootScope.historicalPortfolio.fiat = response.data.fiat;
@@ -260,8 +278,6 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', '
 
 app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'AlphaVantageKey', 'toaster',
     function ($scope, $http, $uibModal, $rootScope, AlphaVantageKey, toaster) {
-        $scope.user = null;
-
         $rootScope.updateUser = function () {
             $rootScope.cryptoValue = 0;
             $rootScope.stockValue = 0;
@@ -276,10 +292,10 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
                     console.log(response.data);
                     $rootScope.user = response.data;
 
-                    if($rootScope.user.settings.currency
-                        ||$rootScope.user.settings.currency.acronym !== "USD") {
+                    if ($rootScope.user.settings
+                        || $rootScope.user.settings.currency.acronym !== "USD") {
                         $rootScope.userCurrencyModifier =
-                            $rootScope.fetchCurrency($rootScope.user.settings.currency.acronym)
+                            $rootScope.setCurrencyModifier();
                     }
 
                     $rootScope.acquisitionCost = 0;
@@ -354,7 +370,7 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
 
                             if (currentValue === 0) {
                                 toaster.pop('warning', "Issue retrieving " + $rootScope.holdings.stocks[holding].acronym,
-                                    $rootScope.holdings.stocks[holding].name + "'s value was retrieved as 0, this may influence your portfolio's accuracy.");
+                                    "One of our data providers is currently not functioning properly, this may influence your portfolio's accuracy.");
                             }
 
                             $rootScope.holdings.stocks[holding].totalValue = currentValue;
@@ -363,8 +379,10 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
 
                             i++;
                         }
+
                         $rootScope.generateGraph();
-                        $rootScope.profitting = $rootScope.totalValue > $rootScope.acquisitionCost;
+                        $rootScope.profitting =
+                            $rootScope.totalValue > $rootScope.acquisitionCost;
 
                         $rootScope.portfolioDiversification.push(
                             {
@@ -423,8 +441,8 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
         };
     }]);
 
-app.controller("settingsCtrl", ['$scope', '$http', '$uibModalStack', 'Email', 'toaster',
-    function ($scope, $http, $uibModalStack, Email, toaster) {
+app.controller("settingsCtrl", ['$scope', '$http', '$uibModalStack', 'Email', 'toaster', '$rootScope',
+    function ($scope, $http, $uibModalStack, Email, toaster, $rootScope) {
         $scope.userSettings = {
             email: Email,
             settings: {
@@ -441,14 +459,6 @@ app.controller("settingsCtrl", ['$scope', '$http', '$uibModalStack', 'Email', 't
             $scope.currencies = response.data;
         });
 
-        $rootScope.fetchCurrency = function (acronym) {
-            $http.get('https://min-api.cryptocompare.com/data/price?fsym=USD&tsyms=' + acronym)
-                .then(function (response) {
-                    //a modifier used instead of changing requests as AlphaVantage does not provide currency support
-                    $rootScope.userCurrencyModifier = response.data[acronym];
-                });
-        };
-
         $scope.save = function () {
             $http({
                 method: 'PUT',
@@ -457,16 +467,17 @@ app.controller("settingsCtrl", ['$scope', '$http', '$uibModalStack', 'Email', 't
             }).then(function successCallback(response) {
                 toaster.pop('success', "Successfully changed currency",
                     "Currency changed to " + $scope.userSettings.settings.currency.name);
-                console.log(response);
+                $rootScope.updateUser();
                 $uibModalStack.dismissAll();
             }, function failureCallback(response) {
+                console.log(response);
                 toaster.pop('error', "Failed to Change currency", response.data);
             });
         }
     }]);
 
-app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', 'user', '$rootScope', 'toaster',
-    function ($scope, $http, $uibModalStack, user, $rootScope, toaster) {
+app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', '$rootScope', 'toaster',
+    function ($scope, $http, $uibModalStack, $rootScope, toaster) {
         $scope.holding = {};
 
         let newHolding = {
@@ -530,7 +541,7 @@ app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', 'user', '
 
         $scope.add = function () {
             newHolding = {
-                acronym: $fscope.holding.acronym,
+                acronym: $scope.holding.acronym,
                 name: $scope.holding.name,
                 holdingType: $scope.holding.holdingType,
                 quantity: $scope.quantity,

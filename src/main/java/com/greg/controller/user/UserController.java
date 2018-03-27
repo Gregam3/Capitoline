@@ -44,6 +44,18 @@ public class UserController {
         }
     }
 
+//    @GetMapping(value = "post")
+//    public ResponseEntity<User> getUser() throws JsonProcessingException {
+//        try {
+//            userService.addSettings();
+//            return new ResponseEntity<>(HttpStatus.OK);
+//        } catch (Exception e) {
+//            LOG.error(e.getMessage());
+//            System.err.println(e);
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//    }
+
     @PutMapping(value = "add-holding", produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<String> updateUser(@RequestBody JsonNode holdingNode) {
         try {
@@ -93,8 +105,13 @@ public class UserController {
         }
     }
 
-    @PutMapping(value = "update/settings")
+    @PutMapping(value = "update/settings",  produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<String> updateSettings(@RequestBody JsonNode settingsNode) {
-        return new ResponseEntity<>("test", HttpStatus.OK);
+        try {
+            userService.updateSettings(settingsNode);
+            return new ResponseEntity<>("test", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("No currency selected", HttpStatus.BAD_REQUEST);
+        }
     }
 }
