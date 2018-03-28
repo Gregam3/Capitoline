@@ -1,8 +1,8 @@
 package com.greg.entity.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.greg.entity.settings.Settings;
-import com.greg.utils.JSONUtils;
 
 import javax.persistence.*;
 import java.util.List;
@@ -16,6 +16,10 @@ import java.util.List;
 public class User {
     @Id
     private String email;
+
+    @JsonIgnore
+    private String password;
+
     private String name;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -34,6 +38,24 @@ public class User {
         this.email = email;
         this.name = name;
         this.holdings = holdings;
+    }
+
+    public User(String email,
+                String password,
+                String name,
+                Settings settings) {
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.settings = settings;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Settings getSettings() {
@@ -66,10 +88,6 @@ public class User {
 
     public void setHoldings(List<UserHolding> holdings) {
         this.holdings = holdings;
-    }
-
-    private String convertHoldings(List<UserHolding> userHoldings) throws JsonProcessingException {
-        return JSONUtils.OBJECT_MAPPER.writeValueAsString((userHoldings != null) ? userHoldings : "[]");
     }
 
     public void configureChildren() {

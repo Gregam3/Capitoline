@@ -48,5 +48,9 @@ public abstract class AbstractDaoImpl<T> implements Dao<T> {
     public List list(String tableName) {
         return entityManager.createQuery("from " + tableName, currentClass).getResultList();
     }
+
+    public void add(T t) {
+        entityManager.persist(t);
+    }
 }
 

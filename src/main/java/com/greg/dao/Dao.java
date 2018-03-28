@@ -16,4 +16,5 @@ public interface Dao<T> {
     void delete(String id);
     List list();
     void update(T t);
+    void add(T t);
 }

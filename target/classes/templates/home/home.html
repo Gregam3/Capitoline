@@ -35,31 +35,33 @@
 </head>
 <body>
 <div id="page-wrapper" ng-app="capitoline">
-    <div class="row">
-        <div class="col-lg-12" ng-controller="homeCtrl">
-            <!-- nav bar fixed top-->
-            <nav class="navbar navbar-default navbar-static-top"
-                 role="navigation" style="margin-bottom:0">
-                <div class="row">
-                    <div class="col-lg-11">
-                        <a class="navbar-brand"><span class="fa fa-bar-chart"></span> Capitoline - A Portfolio
-                            Tracker</a>
+    <div ng-controller="homeCtrl">
+        <div class="row">
+            <div class="col-lg-12">
+                <!-- nav bar fixed top-->
+                <nav class="navbar navbar-default navbar-static-top"
+                     role="navigation" style="margin-bottom:0">
+                    <div class="row">
+                        <div class="col-lg-11">
+                            <a class="navbar-brand"><span class="fa fa-bar-chart"></span> Capitoline - A Portfolio
+                                Tracker</a>
+                        </div>
+                        <div class="col-lg-1">
+                            <button ng-click="openSettings()">
+                                Settings <span class="fa fa-cog"></span>
+                            </button>
+                        </div>
                     </div>
-                    <div class="col-lg-1">
-                        <button ng-click="openSettings()">
-                            Settings <span class="fa fa-cog"></span>
-                        </button>
-                    </div>
-                </div>
-            </nav>
+                </nav>
+            </div>
         </div>
-    </div>
 
-    <toaster-container toaster-options="{'time-out': 5500}"></toaster-container>
+        <toaster-container toaster-options="{'time-out': 5500}"></toaster-container>
 
-    <div class="row" ng-controller="homeCtrl" ng-show="totalValue > 0">
-        <div class="col-lg-12">
-            <div th:replace="/home/panel/overview :: overview"></div>
+        <div class="row" ng-show="totalValue > 0">
+            <div class="col-lg-12">
+                <div th:replace="/home/panel/overview :: overview"></div>
+            </div>
         </div>
     </div>
 

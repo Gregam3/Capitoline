@@ -15,5 +15,5 @@ import java.io.IOException;
 @Transactional
 @Repository
 public interface UserDao extends Dao<User> {
-    int indexOfHolding(String email, String acronym, HoldingType holdingType) throws IOException;
+    int indexOfHolding(User user, String acronym, HoldingType holdingType) throws IOException;
 }

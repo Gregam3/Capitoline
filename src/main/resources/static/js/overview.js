@@ -2,8 +2,8 @@ var app = angular.module("capitoline", ['ui.bootstrap', 'smart-table', 'n3-line-
 
 app.run(function ($rootScope) {
     $rootScope.totalValue = 0.0;
-
     $rootScope.acquisitionCost = 0.0;
+
     $rootScope.user = null;
     $rootScope.profitting = null;
     $rootScope.userCurrency = {
@@ -18,8 +18,6 @@ app.run(function ($rootScope) {
         fiat: []
     };
 });
-
-app.value('Email', 'gregoryamitten@gmail.com');
 app.value('AlphaVantageKey', 'QVJRID55FX6HALQH');
 
 app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', function ($scope, $http, $uibModal, $rootScope) {
@@ -102,7 +100,7 @@ app.controller("totalValueLineChartCtrl", ['$scope', '$http', '$rootScope', func
     //Fetch and process graph data
     $rootScope.generateGraph = function () {
         $http.get(
-            'http://localhost:8080/user/get/holding-graph-data/gregoryamitten@gmail.com'
+            'http://localhost:8080/user/get/holding-graph-data/'+ $rootScope.user.email
         ).then(function (response) {
             console.log("generated graph");
 
@@ -287,7 +285,13 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
 
             console.log("updating user");
             $rootScope.portfolioDiversification = [];
-            $http.get('http://localhost:8080/user/get/gregoryamitten@gmail.com')
+            if(!$rootScope.user.email) {
+                $rootScope.user.email = localStorage.getItem("email");
+            }
+
+            console.log("test" + localStorage.getItem("email"));
+
+            $http.get('http://localhost:8080/user/get/' + $rootScope.user.email)
                 .then(function (response) {
                     console.log(response.data);
                     $rootScope.user = response.data;
@@ -481,7 +485,7 @@ app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', '$rootSco
         $scope.holding = {};
 
         let newHolding = {
-            email: "gregoryamitten@gmail.com",
+            email: $rootScope.user.email,
             name: null,
             acronym: null,
             holdingType: null,
@@ -562,5 +566,60 @@ app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', '$rootSco
             }, function (response) {
                 toaster.pop('error', "Failed to Add", response.data);
             });
-        }
+        };
+
+        app.controller("loginCtrl", ['$scope', '$http', 'toaster', '$window', '$rootScope',
+            function ($scope, $http, toaster, $window, $rootScope) {
+                $scope.loginDetails = {
+                    email: null,
+                    password: null
+                };
+                $scope.registerDetails = {
+                    email: null,
+                    name: null,
+                    password: null,
+                    confirmedPassword: null
+                };
+
+                $scope.heading = "Log In";
+
+                $scope.login = function () {
+                    $http({
+                        method: 'POST',
+                        url: "http://localhost:8080/security/login/",
+                        data: $scope.loginDetails
+                    }).then(function successCallback(response) {
+                        toaster.pop('success', "Logged in", response.data);
+                        localStorage.setItem("email", $scope.registerDetails.email);
+                        $window.location.reload();
+                    }, function errorCallback(response) {
+                        console.log(response);
+                        toaster.pop('error', "Failed to Login", response.data);
+                    });
+                };
+
+                $scope.register = function () {
+                    if ($scope.registerDetails.password !== $scope.registerDetails.confirmedPassword) {
+                        toaster.pop('error', "Failed to Register", "Password's did not match");
+                    } else {
+                        $http({
+                            method: 'POST',
+                            url: "http://localhost:8080/security/register/",
+                            data: $scope.registerDetails
+                        }).then(function successCallback(response) {
+                            toaster.pop('success', "You are now Registered", response.data);
+                            localStorage.setItem("email", $scope.registerDetails.email);
+                            $window.location.reload();
+                        }, function errorCallback(response) {
+                            console.log(response);
+                            toaster.pop('error', "Failed to Register", response.data);
+                        });
+                    }
+                };
+
+                $scope.changeHeading = function (newHeading) {
+                    console.log(newHeading);
+                    $scope.heading = newHeading;
+                }
+            }]);
     }]);

@@ -9,6 +9,7 @@ import com.greg.entity.user.Transaction;
 import com.greg.entity.user.User;
 import com.greg.entity.user.UserHolding;
 import com.greg.exceptions.InvalidHoldingException;
+import com.greg.exceptions.InvalidAccessAttemptException;
 import com.greg.service.currency.CurrencyService;
 import com.greg.service.currency.fiat.FiatService;
 import com.greg.service.stock.StockService;
@@ -25,13 +26,15 @@ import java.util.*;
  * gregoryamitten@gmail.com
  */
 @Service
+//@Scope(proxyMode= ScopedProxyMode.TARGET_CLASS, value="session")
 public class UserService {
 
     private UserDao userDao;
     private StockService stockService;
     private CurrencyService currencyService;
     private FiatService fiatService;
-    private final String currentUserEmail = "gregoryamitten@gmail.com";
+
+    private User currentUser = null;
 
     @Autowired
     public UserService(
@@ -47,12 +50,16 @@ public class UserService {
     }
 
     public User get(String email) throws IOException {
-        return userDao.get(email);
+        currentUser = userDao.get(email);
+        return currentUser;
     }
 
     public void update(User user) {
         userDao.update(user);
     }
+
+
+
 
     public void addTransaction(JsonNode holdingNode) throws Exception {
         double price = 0;
@@ -86,17 +93,15 @@ public class UserService {
                 date
         );
 
-        int holdingIndex = userDao.indexOfHolding(currentUserEmail, acronym, holdingType);
-
-        User user = get(currentUserEmail);
+        int holdingIndex = userDao.indexOfHolding(currentUser, acronym, holdingType);
 
         if (holdingIndex >= 0) {
-            user
+            currentUser
                     .getHoldings()
                     .get(holdingIndex)
                     .addTransaction(transaction);
         } else {
-            List<UserHolding> userHoldings = user.getHoldings();
+            List<UserHolding> userHoldings = currentUser.getHoldings();
             userHoldings.add(
                     new UserHolding(
                             holdingNode.get("acronym").asText(),
@@ -106,11 +111,11 @@ public class UserService {
                     )
             );
 
-            user.setHoldings(userHoldings);
+            currentUser.setHoldings(userHoldings);
         }
 
-        user.configureChildren();
-        userDao.update(user);
+        currentUser.configureChildren();
+        userDao.update(currentUser);
     }
 
     public Map<String, List<GraphHoldingData>> getGraphHoldingData(String email) throws UnirestException, IOException, ParseException {
@@ -189,16 +194,14 @@ public class UserService {
     }
 
     public void deleteHolding(String acronym, HoldingType holdingType, double amountToRemove) throws IOException, UnirestException {
-        User user = get(currentUserEmail);
-
-        for (UserHolding userHolding : user.getHoldings()) {
+        for (UserHolding userHolding : currentUser.getHoldings()) {
             if (userHolding.getAcronym().equals(acronym) &&
                     userHolding.getHoldingType().equals(holdingType)) {
                 if (userHolding.getTotalQuantity() <= amountToRemove) {
                     //UserHolding's orphan will be deleted automatically
                     userHolding.setUser(null);
-                    user.getHoldings().remove(userHolding);
-                    update(user);
+                    currentUser.getHoldings().remove(userHolding);
+                    update(currentUser);
                     break;
                 } else {
                     Transaction transaction = new Transaction(
@@ -210,7 +213,7 @@ public class UserService {
                     transaction.setUserHolding(userHolding);
                     userHolding.addTransaction(transaction);
 
-                    update(user);
+                    update(currentUser);
                     break;
                 }
             }
@@ -242,14 +245,6 @@ public class UserService {
         return list;
     }
 
-    public void addSettings() throws IOException {
-        User user = get(currentUserEmail);
-        Settings settings = new Settings();
-        settings.setUserCurrency(fiatService.get("USD"));
-        user.setSettings(settings);
-        update(user);
-    }
-
     public void updateSettings(JsonNode settingsNode) throws IOException {
         Settings settings = new Settings(
                 fiatService.get(
@@ -266,5 +261,24 @@ public class UserService {
         user.setSettings(settings);
 
         update(user);
+    }
+
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+    public void addUser(String email, String name, String password) throws IOException, InvalidAccessAttemptException {
+        if(get(email) != null)
+            throw new InvalidAccessAttemptException("That email is already in use.");
+
+        User user = new User(
+                email,
+                name,
+                password,
+                new Settings(fiatService.get("USD"))
+        );
+
+        currentUser = user;
+        userDao.add(user);
     }
 }

@@ -79,6 +79,12 @@
             <artifactId>unirest-java</artifactId>
             <version>1.4.9</version>
         </dependency>
+
+        <!--session-->
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.session</groupId>-->
+            <!--<artifactId>spring-session-data-redis</artifactId>-->
+        <!--</dependency>-->
     </dependencies>
 
     <build>

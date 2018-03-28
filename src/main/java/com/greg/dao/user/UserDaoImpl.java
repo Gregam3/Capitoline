@@ -29,8 +29,8 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     }
 
     @Override
-    public int indexOfHolding(String email, String acronym, HoldingType holdingType) throws IOException {
-        List<UserHolding> userHoldings = get(email).getHoldings();
+    public int indexOfHolding(User user, String acronym, HoldingType holdingType) throws IOException {
+        List<UserHolding> userHoldings = user.getHoldings();
         for (int i = 0; i < userHoldings.size(); i++)
             if (userHoldings.get(i).getAcronym().equals(acronym) &&
                     userHoldings.get(i).getHoldingType().equals(holdingType))

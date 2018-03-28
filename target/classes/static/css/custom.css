@@ -24,3 +24,23 @@
     font-weight: bold;
     color: #ad0e00;
 }
+
+.login-background {
+    background-image: url('https://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-115232.jpg');
+    background-size: 100%;
+}
+
+.center {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    width: 0;
+    height: 0;
+}
+
+.login-text {
+    color: white;
+}
