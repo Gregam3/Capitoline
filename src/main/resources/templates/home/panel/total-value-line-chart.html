@@ -4,14 +4,13 @@
 
 <div th:fragment="total-value-line-chart">
     <div th:fragment="charts">
-        <div class="panel panel-default" style="height: 300px">
+        <div class="panel panel-default" style="height: 400px">
             <div class="panel-heading">
                 <h4><span class="fa fa-line-chart"></span>Historical Portfolio Value </h4>if holding is partially
                 removed its effect on your portfolio's history will linger.
             </div>
-            <div class="panel-body">
-                <linechart data="historicalPortfolio" options="lineOptions" style="height: 200px"
-                           ng-show="historicalPortfolio.total.length > 0"></linechart>
+            <div class="panel-body" ng-if="historicalPortfolio.total.length > 5">
+                <linechart data="historicalPortfolio" options="lineOptions" style="height: 250px"></linechart>
             </div>
             <div class="huge " ng-hide="historicalPortfolio.total.length > 0" style="text-align: center;">
                 <span class="fa fa-circle-o-notch fa-spin"></span> Loading

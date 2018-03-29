@@ -21,15 +21,14 @@ import java.util.*;
 public class CurrencyService {
     private final static String BASE_URL = "https://min-api.cryptocompare.com/data/";
     private final static String HISTORY_FIRST_PART = BASE_URL + "histoday?fsym=";
-    private final static String HISTORY_SECOND_PART = "&tsym=USD&limit=1825";
+    private final static String HISTORY_SECOND_PART = "&tsym=USD&limit=";
     private final static String PRICE_DAY = BASE_URL + "pricehistorical?fsym=";
 
     public Map<Date, Double> getCurrencyHistory(UserHolding userHolding, double userCurrencyModifier) throws UnirestException, IOException {
         Map<Date, Double> graphHoldingDataMap = new HashMap<>();
 
-
         JSONArray history =
-                Unirest.get(HISTORY_FIRST_PART + userHolding.getAcronym() + HISTORY_SECOND_PART)
+                Unirest.get(HISTORY_FIRST_PART + userHolding.getAcronym() + HISTORY_SECOND_PART + userHolding.getDistanceInDaysToEarliestTransactionDate())
                         .asJson()
                         .getBody()
                         .getObject()

@@ -63,7 +63,7 @@ public class UserController {
                 return new ResponseEntity<>("You must select a holding", HttpStatus.BAD_REQUEST);
 
             if (holdingNode.get("quantity") == null ||
-                    holdingNode.get("quantity").asDouble() <= 0 ||
+                    holdingNode.get("quantity").asDouble() < 0 ||
                     holdingNode.get("quantity").asDouble() >= 10000000000L)
                 return new ResponseEntity<>("A value must be provided for Quantity and between than 0 and 10BN.", HttpStatus.BAD_REQUEST);
 
@@ -78,6 +78,13 @@ public class UserController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping(value = "delete/{email:.+}")
+    public ResponseEntity deleteUser(@PathVariable("email") String email) {
+            userService.delete(email);
+            return new ResponseEntity(HttpStatus.OK);
+    }
+
 
     @GetMapping(value = "get/holding-graph-data/{email:.+}")
     public ResponseEntity<?> getGraphHoldingData(@PathVariable("email") String email) {

@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.greg.entity.holding.HoldingType;
 import com.greg.utils.JSONUtils;
+import org.apache.commons.lang3.time.DateUtils;
 
 import javax.persistence.*;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Greg Mitten (i7676925)
@@ -49,6 +49,15 @@ public class UserHolding {
     }
 
     public UserHolding() {
+    }
+
+    @Transient
+    @JsonIgnore
+    public long getDistanceInDaysToEarliestTransactionDate() {
+        Queue<Transaction> transactionStack = new PriorityQueue<>();
+        transactionStack.addAll(getTransactions());
+        return (new Date().getTime() - transactionStack.poll().getDate().getTime() / DateUtils.MILLIS_PER_DAY);
+
     }
 
     public Double getAcquisitionCost() {

@@ -11,8 +11,8 @@
 }
 
 .pie-chart-medium {
-    height: 150px;
-    max-height: 150px;
+    height: 150px !important;
+    max-height: 150px !important;
 }
 
 .holding-up {
@@ -32,15 +32,15 @@
 
 .center {
     position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    margin: auto;
-    width: 0;
-    height: 0;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
 }
 
 .login-text {
     color: white;
+}
+
+.chart-container, .pie-chart {
+    height:150px !important;
 }

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.io.IOException;
 import java.util.Map;
 
 @Controller
@@ -23,12 +24,14 @@ public class PageController {
     }
 
     @GetMapping("/")
-    public String welcome(Map<String, Object> model) {
+    public String welcome(Map<String, Object> model) throws IOException {
         model.put("systemVersion", systemVersion);
 
-        if(userService.getCurrentUser() == null) {
-            return "login/login";
-        }
+//        if(userService.getCurrentUser() == null) {
+//            return "login/login";
+//        }
+
+        userService.get("gregoryamitten@gmail.com");
 
         return "home/home";
     }

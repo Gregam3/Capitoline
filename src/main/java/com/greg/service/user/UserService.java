@@ -281,4 +281,8 @@ public class UserService {
         currentUser = user;
         userDao.add(user);
     }
+
+    public void delete(String email) {
+        userDao.delete(email);
+    }
 }

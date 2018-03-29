@@ -3,16 +3,15 @@
 <body>
 
 <div th:fragment="diversification-pie-chart">
-        <div class="panel-heading">
-            <h4>Portfolio Diversification <span class="fa fa-pie-chart"></span></h4>
-        </div>
-        <div class="panel-body">
-            <pie-chart class="pie-chart-medium" data="portfolioDiversification" options="pieOptions"
-            ng-show="portfolioDiversification.length > 0"></pie-chart>
-            <div class="huge " ng-hide="portfolioDiversification.length > 0" style="text-align: center;">
-                <span class="fa fa-circle-o-notch fa-spin"></span> Loading
-            </div>
-        </div>
+    <div class="panel-heading">
+        <h4>Portfolio Diversification <span class="fa fa-pie-chart"></span></h4>
     </div>
+    <div class="panel-body" style="height: 250px">
+            <pie-chart data="portfolioDiversification" options="pieOptions"></pie-chart>
+        <!--<div class="huge " ng-hide="portfolioDiversification.length > 0" style="text-align: center;">-->
+        <!--<span class="fa fa-circle-o-notch fa-spin"></span> Loading-->
+        <!--</div>-->
+    </div>
+</div>
 </body>
 </html>

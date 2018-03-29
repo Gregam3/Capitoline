@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.greg.entity.settings.Settings;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,13 +42,14 @@ public class User {
     }
 
     public User(String email,
-                String password,
                 String name,
+                String password,
                 Settings settings) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.settings = settings;
+        this.holdings = new ArrayList<>();
     }
 
     public String getPassword() {

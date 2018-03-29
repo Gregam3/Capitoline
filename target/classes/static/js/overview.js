@@ -4,7 +4,7 @@ app.run(function ($rootScope) {
     $rootScope.totalValue = 0.0;
     $rootScope.acquisitionCost = 0.0;
 
-    $rootScope.user = null;
+    $rootScope.user = {};
     $rootScope.profitting = null;
     $rootScope.userCurrency = {
         modifier: 1,
@@ -36,7 +36,7 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', functi
             $http.get('https://min-api.cryptocompare.com/data/price?fsym=USD&tsyms=' + $rootScope.user.settings.userCurrency.acronym)
                 .then(function (response) {
                     //a modifier used instead of changing requests as AlphaVantage does not provide currency support
-                    if($rootScope.user.settings.userCurrency.acronym !== "USD") {
+                    if ($rootScope.user.settings.userCurrency.acronym !== "USD") {
                         $rootScope.userCurrency.modifier = response.data[$rootScope.user.settings.userCurrency.acronym];
                         $rootScope.userCurrency.symbol = $rootScope.user.settings.userCurrency.symbol;
                     }
@@ -46,73 +46,78 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', functi
 }]);
 
 
-app.controller("totalValueLineChartCtrl", ['$scope', '$http', '$rootScope', function ($scope, $http, $rootScope) {
-    $scope.lineOptions = {
-        series: [
-            {
-                axis: "y",
-                dataset: "total",
-                key: "value",
-                label: "Total Value ($)",
-                color: "#7d7d7d",
-                type: ['line', 'area'],
-                id: 'mySeries0'
-            },
-            {
-                axis: "y",
-                dataset: "crypto",
-                key: "value",
-                label: "Crypto Value ($)",
-                color: "#008c00",
-                type: ['line', 'area'],
-                id: 'mySeries1'
-            },
-            {
-                axis: "y",
-                dataset: "stock",
-                key: "value",
-                label: "Stock Value ($)",
-                color: "#0000c8",
-                type: ['line', 'area'],
-                id: 'mySeries2'
-            },
-            {
-                axis: "y",
-                dataset: "fiat",
-                key: "value",
-                label: "Fiat Value ($)",
-                color: "#b40e00",
-                type: ['line', 'area'],
-                id: 'mySeries3'
+app.controller("totalValueLineChartCtrl", ['$scope', '$http', '$rootScope', '$window',
+    function ($scope, $http, $rootScope, $window) {
+        $scope.showHistory = false;
+
+        $scope.lineOptions = {
+            series: [
+                {
+                    axis: "y",
+                    dataset: "total",
+                    key: "value",
+                    label: "Total Value ($)",
+                    color: "#7d7d7d",
+                    type: ['line', 'area'],
+                    id: 'mySeries0'
+                },
+                {
+                    axis: "y",
+                    dataset: "crypto",
+                    key: "value",
+                    label: "Crypto Value ($)",
+                    color: "#008c00",
+                    type: ['line', 'area'],
+                    id: 'mySeries1'
+                },
+                {
+                    axis: "y",
+                    dataset: "stock",
+                    key: "value",
+                    label: "Stock Value ($)",
+                    color: "#0000c8",
+                    type: ['line', 'area'],
+                    id: 'mySeries2'
+                },
+                {
+                    axis: "y",
+                    dataset: "fiat",
+                    key: "value",
+                    label: "Fiat Value ($)",
+                    color: "#b40e00",
+                    type: ['line', 'area'],
+                    id: 'mySeries3'
+                }
+
+            ],
+            axes: {
+                x: {
+                    key: "time",
+                    type: 'date',
+                    tickFormat: d3.time.format("%d %b %y")
+                },
+                y: {}
             }
+        };
 
-        ],
-        axes: {
-            x: {
-                key: "time",
-                type: 'date',
-                tickFormat: d3.time.format("%d %b %y")
-            },
-            y: {}
+        //Fetch and process graph data
+        $rootScope.generateGraph = function () {
+            $http.get(
+                'http://localhost:8080/user/get/holding-graph-data/' + $rootScope.user.email
+            ).then(function (response) {
+                console.log("generated graph");
+
+                $rootScope.historicalPortfolio.total = response.data.total;
+                $rootScope.historicalPortfolio.crypto = response.data.crypto;
+                $rootScope.historicalPortfolio.fiat = response.data.fiat;
+                $rootScope.historicalPortfolio.stock = response.data.stock;
+
+                $scope.showHistory = true;
+            });
+
+            console.log($rootScope.historicalPortfolio);
         }
-    };
-
-    //Fetch and process graph data
-    $rootScope.generateGraph = function () {
-        $http.get(
-            'http://localhost:8080/user/get/holding-graph-data/'+ $rootScope.user.email
-        ).then(function (response) {
-            console.log("generated graph");
-
-            $rootScope.historicalPortfolio.total = response.data.total;
-            $rootScope.historicalPortfolio.crypto = response.data.crypto;
-            $rootScope.historicalPortfolio.fiat = response.data.fiat;
-            $rootScope.historicalPortfolio.stock = response.data.stock;
-        });
-
-        console.log($rootScope.historicalPortfolio);
-    }
-}]);
+    }]);
 
 app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', 'AlphaVantageKey',
     function ($scope, $http, $rootScope, toaster, AlphaVantageKey) {
@@ -274,8 +279,8 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', '
     }]);
 
 
-app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'AlphaVantageKey', 'toaster',
-    function ($scope, $http, $uibModal, $rootScope, AlphaVantageKey, toaster) {
+app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'AlphaVantageKey', 'toaster', '$route',
+    function ($scope, $http, $uibModal, $rootScope, AlphaVantageKey, toaster, $route) {
         $rootScope.updateUser = function () {
             $rootScope.cryptoValue = 0;
             $rootScope.stockValue = 0;
@@ -284,12 +289,26 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
             $rootScope.totalValue = 0;
 
             console.log("updating user");
-            $rootScope.portfolioDiversification = [];
-            if(!$rootScope.user.email) {
-                $rootScope.user.email = localStorage.getItem("email");
+
+            if (!$rootScope.user.email) {
+                $rootScope.user.email = localStorage.getItem('email');
             }
 
-            console.log("test" + localStorage.getItem("email"));
+            $scope.isObjectEmpty = function (object) {
+                return angular.equals(object, {});
+            };
+
+            // $scope.userHasNoHoldings = function () {
+            //     if($scope.isObjectEmpty($rootScope.holdings))
+            //         return false;
+            //
+            //     console.log($rootScope.holdings);
+            //
+            //     return $scope.isObjectEmpty($rootScope.holdings.stocks) &&
+            //         $scope.isObjectEmpty($rootScope.holdings.cryptos) &&
+            //         $scope.isObjectEmpty($rootScope.holdings.fiat)
+            // };
+
 
             $http.get('http://localhost:8080/user/get/' + $rootScope.user.email)
                 .then(function (response) {
@@ -359,6 +378,8 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
                         }
                     });
 
+                    console.log($rootScope.holdings);
+
                     //Get all User's stock prices
                     $http.get("https://www.alphavantage.co/query?function=BATCH_STOCK_QUOTES&symbols=" + $scope.convertHoldingsToUriVariables($scope.holdings.stocks)
                         + "&apikey=" + AlphaVantageKey).then(function (response) {
@@ -388,29 +409,29 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
                         $rootScope.profitting =
                             $rootScope.totalValue > $rootScope.acquisitionCost;
 
-                        $rootScope.portfolioDiversification.push(
+                        $rootScope.portfolioDiversification = [
                             {
-                                label: "Cryptos - " + (($scope.cryptoValue / $scope.totalValue) * 100).toFixed(2) + "%",
-                                value: $scope.cryptoValue.toFixed(2),
+                                label: "Cryptos",
+                                value: (($scope.cryptoValue / $rootScope.totalValue) * 100).toFixed(2),
                                 color: '#139000'
                             },
                             {
-                                label: "Fiat - " + (($scope.fiatValue / $scope.totalValue) * 100).toFixed(2) + "%",
-                                value: $scope.fiatValue,
+                                label: "Fiat",
+                                value: (($scope.fiatValue / $rootScope.totalValue) * 100).toFixed(2),
                                 color: '#ad0e00'
                             },
                             {
-                                label: "Stocks - " + (($scope.stockValue / $scope.totalValue) * 100).toFixed(2) + "%",
-                                value: $scope.stockValue,
+                                label: "Stocks",
+                                value: (($scope.stockValue / $rootScope.totalValue) * 100).toFixed(2),
                                 color: '#0000d6'
                             }
-                        );
+                        ];
+
+
+                        $route.reload();
                     });
-
-
                 }
             );
-            // $scope.$apply();
         };
 
         $rootScope.updateUser();
@@ -567,59 +588,60 @@ app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', '$rootSco
                 toaster.pop('error', "Failed to Add", response.data);
             });
         };
+    }]);
 
-        app.controller("loginCtrl", ['$scope', '$http', 'toaster', '$window', '$rootScope',
-            function ($scope, $http, toaster, $window, $rootScope) {
-                $scope.loginDetails = {
-                    email: null,
-                    password: null
-                };
-                $scope.registerDetails = {
-                    email: null,
-                    name: null,
-                    password: null,
-                    confirmedPassword: null
-                };
+app.controller("loginCtrl", ['$scope', '$http', 'toaster', '$window', '$rootScope',
+    function ($scope, $http, toaster, $window, $rootScope) {
+        $scope.loginDetails = {
+            email: null,
+            password: null
+        };
+        $scope.registerDetails = {
+            email: null,
+            name: null,
+            password: null,
+            confirmedPassword: null
+        };
 
-                $scope.heading = "Log In";
+        $scope.heading = "Log In";
 
-                $scope.login = function () {
-                    $http({
-                        method: 'POST',
-                        url: "http://localhost:8080/security/login/",
-                        data: $scope.loginDetails
-                    }).then(function successCallback(response) {
-                        toaster.pop('success', "Logged in", response.data);
-                        localStorage.setItem("email", $scope.registerDetails.email);
-                        $window.location.reload();
-                    }, function errorCallback(response) {
-                        console.log(response);
-                        toaster.pop('error', "Failed to Login", response.data);
-                    });
-                };
+        $scope.login = function () {
+            $http({
+                method: 'POST',
+                url: "http://localhost:8080/security/login/",
+                data: $scope.loginDetails
+            }).then(function successCallback(response) {
+                toaster.pop('success', "Logged in", response.data);
+                $window.localStorage.setItem('email', $scope.loginDetails.email);
+                console.log($window.localStorage.getItem('email'));
+                $window.location.reload();
+            }, function errorCallback(response) {
+                console.log(response);
+                toaster.pop('error', "Failed to Login", response.data);
+            });
+        };
 
-                $scope.register = function () {
-                    if ($scope.registerDetails.password !== $scope.registerDetails.confirmedPassword) {
-                        toaster.pop('error', "Failed to Register", "Password's did not match");
-                    } else {
-                        $http({
-                            method: 'POST',
-                            url: "http://localhost:8080/security/register/",
-                            data: $scope.registerDetails
-                        }).then(function successCallback(response) {
-                            toaster.pop('success', "You are now Registered", response.data);
-                            localStorage.setItem("email", $scope.registerDetails.email);
-                            $window.location.reload();
-                        }, function errorCallback(response) {
-                            console.log(response);
-                            toaster.pop('error', "Failed to Register", response.data);
-                        });
-                    }
-                };
+        $scope.register = function () {
+            if ($scope.registerDetails.password !== $scope.registerDetails.confirmedPassword) {
+                toaster.pop('error', "Failed to Register", "Password's did not match");
+            } else {
+                $http({
+                    method: 'POST',
+                    url: "http://localhost:8080/security/register/",
+                    data: $scope.registerDetails
+                }).then(function successCallback(response) {
+                    toaster.pop('success', "You are now Registered", response.data);
+                    $window.localStorage.setItem("email", $scope.registerDetails.email);
+                    $window.location.reload();
+                }, function errorCallback(response) {
+                    console.log(response);
+                    toaster.pop('error', "Failed to Register", response.data);
+                });
+            }
+        };
 
-                $scope.changeHeading = function (newHeading) {
-                    console.log(newHeading);
-                    $scope.heading = newHeading;
-                }
-            }]);
+        $scope.changeHeading = function (newHeading) {
+            console.log(newHeading);
+            $scope.heading = newHeading;
+        }
     }]);
