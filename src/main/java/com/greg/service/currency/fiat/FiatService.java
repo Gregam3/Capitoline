@@ -36,4 +36,29 @@ public class FiatService {
 
         return fiatList;
     }
+
+//    public String removeFiatNotOnApi() throws UnirestException {
+//        List<Fiat> list = list();
+//        StringBuilder stringBuilder = new StringBuilder();
+//
+//        for (Fiat fiat : list) {
+//            if(currencyService.getCurrentPrice(fiat.getAcronym(), "USD") == -1) {
+//                stringBuilder.append(fiat.getAcronym());
+//                fiatDao.delete(fiat.getAcronym());
+//            }
+//        }
+////
+////        String[] deleteThis = {
+////                "SVC USD",
+////                "UYU UYI",
+////                "ZAR LSL",
+////                "ZAR NAD"
+////        };
+////
+////        for (String deleteThi : deleteThis) {
+////            fiatDao.delete(deleteThi);
+////        }
+////
+//        return stringBuilder.toString();
+//    }
 }

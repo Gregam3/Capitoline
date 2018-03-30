@@ -45,4 +45,14 @@ public class FiatController {
         }
     }
 
+//    @GetMapping("delete")
+//    public ResponseEntity<String> delete() {
+//        try {
+//            return new ResponseEntity<>(fiatService.removeFiatNotOnApi(), HttpStatus.OK);
+//        } catch (Exception e) {
+//            LOG.error(e);
+//            System.err.println(e);
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//    }
 }

@@ -23,7 +23,7 @@ public class User {
 
     private String name;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private Settings settings = new Settings();
 
     @OneToMany(mappedBy = "user", cascade= CascadeType.ALL, orphanRemoval = true)

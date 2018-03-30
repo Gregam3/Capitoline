@@ -20,12 +20,158 @@ app.run(function ($rootScope) {
 });
 app.value('AlphaVantageKey', 'QVJRID55FX6HALQH');
 
-app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', function ($scope, $http, $uibModal, $rootScope) {
+app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'AlphaVantageKey',
+    function ($scope, $http, $uibModal, $rootScope, AlphaVantageKey) {
     $scope.openSettings = function () {
         $uibModal.open({
             templateUrl: 'templates/home/popups/settings-popup.html',
             controller: 'settingsCtrl'
         })
+    };
+
+    $rootScope.updateUser = function () {
+        $rootScope.cryptoValue = 0;
+        $rootScope.stockValue = 0;
+        $rootScope.fiatValue = 0;
+
+        $rootScope.totalValue = 0;
+
+        console.log("updating user");
+
+        if (!$rootScope.user.email) {
+            $rootScope.user.email = localStorage.getItem('email');
+        }
+
+        $http.get('http://localhost:8080/user/get/' + $rootScope.user.email)
+            .then(function (response) {
+                console.log(response.data);
+                $rootScope.user = response.data;
+
+                if ($rootScope.user.settings
+                    || $rootScope.user.settings.currency.acronym !== "USD") {
+                    $rootScope.userCurrencyModifier =
+                        $rootScope.setCurrencyModifier();
+                }
+
+                $rootScope.acquisitionCost = 0;
+                console.log(response.data);
+
+                $rootScope.holdings = {
+                    cryptos: {},
+                    stocks: {},
+                    fiats: {}
+                };
+
+                for (let i = 0; i < $rootScope.user.holdings.length; i++) {
+                    const currentHolding = $rootScope.user.holdings[i];
+
+                    if (currentHolding.holdingType === "STOCK") {
+                        $rootScope.holdings.stocks[currentHolding.acronym] = currentHolding;
+                    } else if (currentHolding.holdingType === "CRYPTO") {
+                        $rootScope.holdings.cryptos[currentHolding.acronym] = currentHolding;
+                    } else if (currentHolding.holdingType === "FIAT") {
+                        $rootScope.holdings.fiats[currentHolding.acronym] = currentHolding;
+                    }
+
+                    $rootScope.acquisitionCost += currentHolding.acquisitionCost;
+                }
+            }).then(function () {
+                $http.get(
+                    "https://min-api.cryptocompare.com/data/pricemulti?fsyms="
+                    + $scope.convertHoldingsToUriVariables($rootScope.holdings.cryptos) + ","
+                    + $scope.convertHoldingsToUriVariables($rootScope.holdings.fiats)
+                    + "&tsyms=USD"
+                ).then(function (response) {
+
+                    let holding;
+                    for (holding in $rootScope.holdings.cryptos) {
+                        console.log("converting cryptos");
+                        $rootScope.holdings.cryptos[holding].price =
+                            (response.data[holding]) ? response.data[holding]["USD"] : null;
+                        const currentValue = $rootScope.holdings.cryptos[holding].price * $rootScope.holdings.cryptos[holding].totalQuantity;
+
+                        $rootScope.holdings.cryptos[holding].totalValue = currentValue;
+                        $rootScope.totalValue += currentValue;
+                        $rootScope.cryptoValue += currentValue;
+
+                    }
+
+                    for (holding in $rootScope.holdings.fiats) {
+                        console.log("converting fiats");
+                        $rootScope.holdings.fiats[holding].price =
+                            (response.data[holding]) ? response.data[holding]["USD"] : null;
+
+                        const currentValue =
+                            $rootScope.holdings.fiats[holding].price * $rootScope.holdings.fiats[holding].totalQuantity;
+
+                        $rootScope.holdings.fiats[holding].totalValue = currentValue;
+                        $rootScope.totalValue += currentValue;
+                        $rootScope.fiatValue += currentValue;
+                    }
+                });
+
+                console.log($rootScope.holdings);
+
+                //Get all User's stock prices
+                $http.get("https://www.alphavantage.co/query?function=BATCH_STOCK_QUOTES&symbols=" + $scope.convertHoldingsToUriVariables($scope.holdings.stocks)
+                    + "&apikey=" + AlphaVantageKey).then(function (response) {
+
+                    let i = 0;
+
+                    for (const holding in $rootScope.holdings.stocks) {
+                        console.log("converting stocks");
+                        $rootScope.holdings.stocks[holding].price =
+                            (response.data["Stock Quotes"][i]["2. price"]) ?
+                                response.data["Stock Quotes"][i]["2. price"] : null;
+                        const currentValue = $rootScope.holdings.stocks[holding].price * $rootScope.holdings.stocks[holding].totalQuantity;
+
+                        if (currentValue === 0) {
+                            toaster.pop('warning', "Issue retrieving " + $rootScope.holdings.stocks[holding].acronym,
+                                "One of our data providers is currently not functioning properly, this may influence your portfolio's accuracy.");
+                        }
+
+                        $rootScope.holdings.stocks[holding].totalValue = currentValue;
+                        $rootScope.totalValue += currentValue;
+                        $rootScope.stockValue += currentValue;
+
+                        i++;
+                    }
+
+                    $rootScope.generateGraph();
+                    $rootScope.profitting =
+                        $rootScope.totalValue > $rootScope.acquisitionCost;
+
+                    $rootScope.portfolioDiversification = [
+                        {
+                            label: "Cryptos",
+                            value: (($scope.cryptoValue / $rootScope.totalValue) * 100).toFixed(2),
+                            color: '#139000'
+                        },
+                        {
+                            label: "Fiat",
+                            value: (($scope.fiatValue / $rootScope.totalValue) * 100).toFixed(2),
+                            color: '#ad0e00'
+                        },
+                        {
+                            label: "Stocks",
+                            value: (($scope.stockValue / $rootScope.totalValue) * 100).toFixed(2),
+                            color: '#0000d6'
+                        }
+                    ];
+                });
+            }
+        );
+    };
+
+    $scope.convertHoldingsToUriVariables = function (currentHoldingsList) {
+        let tickers = "";
+
+        for (const holding in currentHoldingsList) {
+            tickers += currentHoldingsList[holding].acronym + ",";
+        }
+
+        //Removing trailing comma for uri format
+        return tickers.substr(0, tickers.length - 1);
     };
 
     $rootScope.setCurrencyModifier = function () {
@@ -43,6 +189,8 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', functi
                 });
         }
     };
+
+    $rootScope.updateUser();
 }]);
 
 
@@ -126,6 +274,12 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', '
             thickness: 10
         };
 
+        $scope.test = true;
+
+        $scope.test = function () {
+          $scope.$apply();
+        };
+
         $rootScope.portfolioDiversification = [];
 
         $scope.btcChange = 0;
@@ -172,7 +326,7 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', '
 
         $scope.calculateCryptoPerformance = function () {
             if ($rootScope.historicalPortfolio.crypto.length < 30)
-                $scope.performanceNotReadyPopUp("crypto");
+                $scope.performanceNotReadyPopUp("cryptocurrency");
             else
                 $scope.portfolioCryptoChange =
                     ($rootScope.historicalPortfolio.crypto[$rootScope.historicalPortfolio.crypto.length - 1].value /
@@ -184,7 +338,7 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', '
 
         $scope.calculateFiatPerformance = function () {
             if ($rootScope.historicalPortfolio.fiat.length < 30)
-                $scope.performanceNotReadyPopUp("fiat");
+                $scope.performanceNotReadyPopUp("fiat currency");
             else
                 $scope.portfolioFiatChange =
                     ($rootScope.historicalPortfolio.fiat[$rootScope.historicalPortfolio.fiat.length - 1].value /
@@ -279,172 +433,10 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', '
     }]);
 
 
-app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'AlphaVantageKey', 'toaster', '$route',
-    function ($scope, $http, $uibModal, $rootScope, AlphaVantageKey, toaster, $route) {
-        $rootScope.updateUser = function () {
-            $rootScope.cryptoValue = 0;
-            $rootScope.stockValue = 0;
-            $rootScope.fiatValue = 0;
-
-            $rootScope.totalValue = 0;
-
-            console.log("updating user");
-
-            if (!$rootScope.user.email) {
-                $rootScope.user.email = localStorage.getItem('email');
-            }
-
-            $scope.isObjectEmpty = function (object) {
-                return angular.equals(object, {});
-            };
-
-            // $scope.userHasNoHoldings = function () {
-            //     if($scope.isObjectEmpty($rootScope.holdings))
-            //         return false;
-            //
-            //     console.log($rootScope.holdings);
-            //
-            //     return $scope.isObjectEmpty($rootScope.holdings.stocks) &&
-            //         $scope.isObjectEmpty($rootScope.holdings.cryptos) &&
-            //         $scope.isObjectEmpty($rootScope.holdings.fiat)
-            // };
-
-
-            $http.get('http://localhost:8080/user/get/' + $rootScope.user.email)
-                .then(function (response) {
-                    console.log(response.data);
-                    $rootScope.user = response.data;
-
-                    if ($rootScope.user.settings
-                        || $rootScope.user.settings.currency.acronym !== "USD") {
-                        $rootScope.userCurrencyModifier =
-                            $rootScope.setCurrencyModifier();
-                    }
-
-                    $rootScope.acquisitionCost = 0;
-                    console.log(response.data);
-
-                    $rootScope.holdings = {
-                        cryptos: {},
-                        stocks: {},
-                        fiats: {}
-                    };
-
-                    for (let i = 0; i < $rootScope.user.holdings.length; i++) {
-                        const currentHolding = $rootScope.user.holdings[i];
-
-                        if (currentHolding.holdingType === "STOCK") {
-                            $rootScope.holdings.stocks[currentHolding.acronym] = currentHolding;
-                        } else if (currentHolding.holdingType === "CRYPTO") {
-                            $rootScope.holdings.cryptos[currentHolding.acronym] = currentHolding;
-                        } else if (currentHolding.holdingType === "FIAT") {
-                            $rootScope.holdings.fiats[currentHolding.acronym] = currentHolding;
-                        }
-
-                        $rootScope.acquisitionCost += currentHolding.acquisitionCost;
-                    }
-                }).then(function () {
-                    $http.get(
-                        "https://min-api.cryptocompare.com/data/pricemulti?fsyms="
-                        + $scope.convertHoldingsToUriVariables($rootScope.holdings.cryptos) + ","
-                        + $scope.convertHoldingsToUriVariables($rootScope.holdings.fiats)
-                        + "&tsyms=USD"
-                    ).then(function (response) {
-
-                        let holding;
-                        for (holding in $rootScope.holdings.cryptos) {
-                            console.log("converting cryptos");
-                            $rootScope.holdings.cryptos[holding].price =
-                                (response.data[holding]) ? response.data[holding]["USD"] : null;
-                            const currentValue = $rootScope.holdings.cryptos[holding].price * $rootScope.holdings.cryptos[holding].totalQuantity;
-
-                            $rootScope.holdings.cryptos[holding].totalValue = currentValue;
-                            $rootScope.totalValue += currentValue;
-                            $rootScope.cryptoValue += currentValue;
-
-                        }
-
-                        for (holding in $rootScope.holdings.fiats) {
-                            console.log("converting fiats");
-                            $rootScope.holdings.fiats[holding].price =
-                                (response.data[holding]) ? response.data[holding]["USD"] : null;
-
-                            const currentValue =
-                                $rootScope.holdings.fiats[holding].price * $rootScope.holdings.fiats[holding].totalQuantity;
-
-                            $rootScope.holdings.fiats[holding].totalValue = currentValue;
-                            $rootScope.totalValue += currentValue;
-                            $rootScope.fiatValue += currentValue;
-                        }
-                    });
-
-                    console.log($rootScope.holdings);
-
-                    //Get all User's stock prices
-                    $http.get("https://www.alphavantage.co/query?function=BATCH_STOCK_QUOTES&symbols=" + $scope.convertHoldingsToUriVariables($scope.holdings.stocks)
-                        + "&apikey=" + AlphaVantageKey).then(function (response) {
-
-                        let i = 0;
-
-                        for (const holding in $rootScope.holdings.stocks) {
-                            console.log("converting stocks");
-                            $rootScope.holdings.stocks[holding].price =
-                                (response.data["Stock Quotes"][i]["2. price"]) ?
-                                    response.data["Stock Quotes"][i]["2. price"] : null;
-                            const currentValue = $rootScope.holdings.stocks[holding].price * $rootScope.holdings.stocks[holding].totalQuantity;
-
-                            if (currentValue === 0) {
-                                toaster.pop('warning', "Issue retrieving " + $rootScope.holdings.stocks[holding].acronym,
-                                    "One of our data providers is currently not functioning properly, this may influence your portfolio's accuracy.");
-                            }
-
-                            $rootScope.holdings.stocks[holding].totalValue = currentValue;
-                            $rootScope.totalValue += currentValue;
-                            $rootScope.stockValue += currentValue;
-
-                            i++;
-                        }
-
-                        $rootScope.generateGraph();
-                        $rootScope.profitting =
-                            $rootScope.totalValue > $rootScope.acquisitionCost;
-
-                        $rootScope.portfolioDiversification = [
-                            {
-                                label: "Cryptos",
-                                value: (($scope.cryptoValue / $rootScope.totalValue) * 100).toFixed(2),
-                                color: '#139000'
-                            },
-                            {
-                                label: "Fiat",
-                                value: (($scope.fiatValue / $rootScope.totalValue) * 100).toFixed(2),
-                                color: '#ad0e00'
-                            },
-                            {
-                                label: "Stocks",
-                                value: (($scope.stockValue / $rootScope.totalValue) * 100).toFixed(2),
-                                color: '#0000d6'
-                            }
-                        ];
-
-
-                        $route.reload();
-                    });
-                }
-            );
-        };
-
-        $rootScope.updateUser();
-
-        $scope.convertHoldingsToUriVariables = function (currentHoldingsList) {
-            let tickers = "";
-
-            for (const holding in currentHoldingsList) {
-                tickers += currentHoldingsList[holding].acronym + ",";
-            }
-
-            //Removing trailing comma for uri format
-            return tickers.substr(0, tickers.length - 1);
+app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'AlphaVantageKey', 'toaster',
+    function ($scope, $http, $uibModal, $rootScope, AlphaVantageKey, toaster) {
+        $scope.isObjectEmpty = function (object) {
+            return angular.equals(object, {});
         };
 
         $scope.addHolding = function () {
@@ -455,7 +447,6 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
         };
 
         $scope.removeHolding = function (acronym, holdingType, amountToRemove) {
-
             $http.delete('http://localhost:8080/user/delete/holding/' + acronym + '/' + holdingType + '/' + amountToRemove)
                 .then(function successCallback(response) {
                     toaster.pop('success', "Successfully removed", "Removed " + amountToRemove + " from " + acronym);
@@ -466,10 +457,10 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
         };
     }]);
 
-app.controller("settingsCtrl", ['$scope', '$http', '$uibModalStack', 'Email', 'toaster', '$rootScope',
-    function ($scope, $http, $uibModalStack, Email, toaster, $rootScope) {
+app.controller("settingsCtrl", ['$scope', '$http', '$uibModalStack', 'toaster', '$rootScope',
+    function ($scope, $http, $uibModalStack, toaster, $rootScope) {
         $scope.userSettings = {
-            email: Email,
+            email: null,
             settings: {
                 currency: null
             }
@@ -485,6 +476,8 @@ app.controller("settingsCtrl", ['$scope', '$http', '$uibModalStack', 'Email', 't
         });
 
         $scope.save = function () {
+            $scope.userSettings.email = $rootScope.user.email;
+
             $http({
                 method: 'PUT',
                 url: "http://localhost:8080/user/update/settings",
@@ -591,7 +584,7 @@ app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', '$rootSco
     }]);
 
 app.controller("loginCtrl", ['$scope', '$http', 'toaster', '$window', '$rootScope',
-    function ($scope, $http, toaster, $window, $rootScope) {
+    function ($scope, $http, toaster, $window) {
         $scope.loginDetails = {
             email: null,
             password: null

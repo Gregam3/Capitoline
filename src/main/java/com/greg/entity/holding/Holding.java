@@ -2,6 +2,7 @@ package com.greg.entity.holding;
 
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
 
 /**
  * @author Greg Mitten (i7676925)
@@ -12,22 +13,19 @@ public class Holding {
     @Id
     protected String acronym;
     private String name;
+
+    @Transient
     private HoldingType holdingType;
 
     public Holding() {
+        holdingType = HoldingType.FIAT;
     }
 
     public Holding(String acronym, String name) {
         this.acronym = acronym;
         this.name = name;
+        holdingType = HoldingType.FIAT;
     }
-
-    public Holding(String acronym, String name, HoldingType holdingType) {
-        this.acronym = acronym;
-        this.name = name;
-        this.holdingType = holdingType;
-    }
-
 
     public String getAcronym() {
         return acronym;

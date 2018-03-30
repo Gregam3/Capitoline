@@ -46,9 +46,12 @@
                     {{((stock.totalValue / stock.acquisitionCost) * 100 - 100).toFixed(2)}}%
                 </td>
                 <td>
-                    <input type="number" placeholder="Number to remove" ng-model="amountToRemove"/>
-                    <button ng-click="removeHolding(stock.acronym, stock.holdingType, amountToRemove)">Remove
-                    </button>
+                    <div class="col-xs-6">
+                        <input type="number" placeholder="Quantity" ng-model="amountToRemove"/>
+                    </div>
+                    <div class="col-xs-6">
+                        <button ng-click="removeHolding(stock.acronym, 'STOCK', amountToRemove)">Remove</button>
+                    </div>
                 </td>
             </tr>
             </tbody>
@@ -79,9 +82,12 @@
                     {{((crypto.totalValue / crypto.acquisitionCost) * 100 - 100).toFixed(2)}}%
                 </td>
                 <td>
-                    <input type="number" placeholder="Number to remove" ng-model="amountToRemove"/>
-                    <button ng-click="removeHolding(crypto.acronym, crypto.holdingType, amountToRemove)">Remove
-                    </button>
+                    <div class="col-xs-6">
+                        <input type="number" placeholder="Quantity" ng-model="amountToRemove"/>
+                    </div>
+                    <div class="col-xs-6">
+                        <button ng-click="removeHolding(crypto.acronym, 'CRYPTO', amountToRemove)">Remove</button>
+                    </div>
                 </td>
             </tr>
             </tbody>
@@ -112,8 +118,12 @@
                     {{((fiat.totalValue / fiat.acquisitionCost) * 100 - 100).toFixed(2)}}%
                 </td>
                 <td>
-                    <input type="number" placeholder="Number to remove" ng-model="amountToRemove"/>
-                    <button ng-click="removeHolding(fiat.acronym, fiat.holdingType, amountToRemove)">Remove</button>
+                    <div class="col-xs-6">
+                        <input type="number" placeholder="Quantity" ng-model="amountToRemove"/>
+                    </div>
+                    <div class="col-xs-6">
+                        <button ng-click="removeHolding(fiat.acronym, 'FIAT', amountToRemove)">Remove</button>
+                    </div>
                 </td>
             </tr>
             </tbody>
