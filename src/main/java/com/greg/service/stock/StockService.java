@@ -6,6 +6,7 @@ import com.greg.entity.holding.stock.Stock;
 import com.greg.entity.user.Transaction;
 import com.greg.entity.user.UserHolding;
 import com.greg.exceptions.InvalidHoldingException;
+import com.greg.service.user.UserService;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.apache.commons.lang3.time.DateUtils;
@@ -32,10 +33,12 @@ public class StockService {
     private static final String TIME_SERIES_DAILY_URL_2 = "&outputsize=full&apikey=" + API_KEY;
 
     private final StockDao stockDao;
+    private UserService userService;
 
     @Autowired
-    public StockService(StockDao stockDao) {
+    public StockService(StockDao stockDao, UserService userService) {
         this.stockDao = stockDao;
+        this.userService = userService;
     }
 
     public String clearStocksWithoutData() throws UnirestException {
@@ -207,5 +210,9 @@ public class StockService {
             return getClosestValue(stockHistory, unixIterator - DateUtils.MILLIS_PER_DAY);
 
         return value;
+    }
+
+    public double getPortfolioStockChangeOverMonth() {
+        userService.getCurrentUser().getHoldings()
     }
 }

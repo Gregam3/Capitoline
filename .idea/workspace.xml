@@ -4,31 +4,16 @@
     <bookmark url="file://$PROJECT_DIR$/src/main/resources/templates/home/home.html" line="17" />
     <bookmark url="file://$PROJECT_DIR$/src/main/resources/templates/home/home.html" line="14" />
     <bookmark url="file://$PROJECT_DIR$/src/main/java/com/greg/controller/security/UserSecurityController.java" line="57" />
-    <bookmark url="file://$PROJECT_DIR$/src/main/resources/static/js/overview.js" line="497" mnemonic="4" />
-    <bookmark url="file://$PROJECT_DIR$/src/main/resources/static/js/overview.js" line="616" mnemonic="2" />
-    <bookmark url="file://$PROJECT_DIR$/src/main/resources/static/js/overview.js" line="312" mnemonic="1" />
+    <bookmark url="file://$PROJECT_DIR$/src/main/resources/static/js/overview.js" line="159" mnemonic="1" />
+    <bookmark url="file://$PROJECT_DIR$/src/main/resources/static/js/overview.js" line="449" mnemonic="2" />
+    <bookmark url="file://$PROJECT_DIR$/src/main/resources/static/js/overview.js" line="490" mnemonic="4" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3dec054c-de66-4947-9717-84ac9ee916a5" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/greg/entity/holding/Holding.class" afterPath="$PROJECT_DIR$/target/classes/com/greg/entity/holding/Holding.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/greg/entity/user/User.class" afterPath="$PROJECT_DIR$/target/classes/com/greg/entity/user/User.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/greg/controller/holding/fiat/FiatController.java" afterPath="$PROJECT_DIR$/src/main/java/com/greg/controller/holding/fiat/FiatController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/greg/entity/holding/Holding.java" afterPath="$PROJECT_DIR$/src/main/java/com/greg/entity/holding/Holding.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/greg/entity/user/User.java" afterPath="$PROJECT_DIR$/src/main/java/com/greg/entity/user/User.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/greg/service/currency/fiat/FiatService.java" afterPath="$PROJECT_DIR$/src/main/java/com/greg/service/currency/fiat/FiatService.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/static/js/overview.js" afterPath="$PROJECT_DIR$/src/main/resources/static/js/overview.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/templates/home/home.html" afterPath="$PROJECT_DIR$/src/main/resources/templates/home/home.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/templates/home/panel/holding-management.html" afterPath="$PROJECT_DIR$/src/main/resources/templates/home/panel/holding-management.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/templates/home/panel/overview.html" afterPath="$PROJECT_DIR$/src/main/resources/templates/home/panel/overview.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/templates/home/panel/total-value-line-chart.html" afterPath="$PROJECT_DIR$/src/main/resources/templates/home/panel/total-value-line-chart.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/templates/home/tabs/diversification-pie-chart.html" afterPath="$PROJECT_DIR$/src/main/resources/templates/home/tabs/diversification-pie-chart.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/static/js/overview.js" afterPath="$PROJECT_DIR$/target/classes/static/js/overview.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/templates/home/home.html" afterPath="$PROJECT_DIR$/target/classes/templates/home/home.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/templates/home/panel/holding-management.html" afterPath="$PROJECT_DIR$/target/classes/templates/home/panel/holding-management.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/templates/home/panel/overview.html" afterPath="$PROJECT_DIR$/target/classes/templates/home/panel/overview.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/templates/home/panel/total-value-line-chart.html" afterPath="$PROJECT_DIR$/target/classes/templates/home/panel/total-value-line-chart.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/templates/home/tabs/diversification-pie-chart.html" afterPath="$PROJECT_DIR$/target/classes/templates/home/tabs/diversification-pie-chart.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/templates/home/tabs/fiat-performance.html" afterPath="$PROJECT_DIR$/src/main/resources/templates/home/tabs/fiat-performance.html" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -91,37 +76,31 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="overview.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="overview.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/resources/static/js/overview.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="409">
-              <caret line="192" column="20" lean-forward="false" selection-start-line="192" selection-start-column="15" selection-end-line="192" selection-end-column="20" />
-              <folding>
-                <element signature="e#10905#18451#0" expanded="false" />
-                <element signature="e#18652#19618#0" expanded="false" />
-                <element signature="e#19783#20924#0" expanded="false" />
-                <element signature="e#21091#23810#0" expanded="false" />
-                <element signature="e#23946#26014#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="overview.html" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/resources/templates/home/panel/overview.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="340">
-              <caret line="20" column="47" lean-forward="false" selection-start-line="20" selection-start-column="47" selection-end-line="20" selection-end-column="47" />
+            <state relative-caret-position="316">
+              <caret line="133" column="0" lean-forward="true" selection-start-line="133" selection-start-column="0" selection-end-line="133" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CurrencyService.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/service/currency/CurrencyService.java">
+      <file leaf-file-name="fiat-performance.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/resources/templates/home/tabs/fiat-performance.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="854">
-              <caret line="78" column="0" lean-forward="true" selection-start-line="78" selection-start-column="0" selection-end-line="78" selection-end-column="0" />
+            <state relative-caret-position="408">
+              <caret line="24" column="6" lean-forward="true" selection-start-line="24" selection-start-column="6" selection-end-line="24" selection-end-column="6" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="overview.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/resources/templates/home/panel/overview.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="170">
+              <caret line="10" column="18" lean-forward="true" selection-start-line="10" selection-start-column="18" selection-end-line="10" selection-end-column="18" />
               <folding />
             </state>
           </provider>
@@ -180,29 +159,26 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Holding.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/entity/holding/Holding.java">
+      <file leaf-file-name="home.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/resources/templates/home/home.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="32" lean-forward="true" selection-start-line="0" selection-start-column="32" selection-end-line="0" selection-end-column="32" />
+            <state relative-caret-position="354">
+              <caret line="42" column="42" lean-forward="true" selection-start-line="42" selection-start-column="42" selection-end-line="42" selection-end-column="42" />
               <folding>
-                <element signature="e#392#393#0" expanded="true" />
-                <element signature="e#438#439#0" expanded="true" />
+                <element signature="n#style#0;n#nav#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#1;n#div#1;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="home.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/resources/templates/home/home.html">
+      <file leaf-file-name="crypto-performance.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/resources/templates/home/tabs/crypto-performance.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="985">
-              <caret line="97" column="48" lean-forward="false" selection-start-line="97" selection-start-column="48" selection-end-line="97" selection-end-column="48" />
-              <folding>
-                <element signature="n#style#0;n#nav#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#0;n#div#1;n#div#1;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-              </folding>
+            <state relative-caret-position="374">
+              <caret line="22" column="66" lean-forward="false" selection-start-line="22" selection-start-column="66" selection-end-line="22" selection-end-column="66" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -223,36 +199,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>a</find>
-      <find>PUT</find>
-      <find>loginAttempt</find>
-      <find>grego</find>
-      <find>local</find>
-      <find>loginCtrl</find>
-      <find>rootScope.historical</find>
-      <find>apply</find>
-      <find>historical</find>
-      <find>show</find>
-      <find>lineChart</find>
-      <find>Collection.</find>
-      <find>Queue&lt;</find>
-      <find>history</find>
-      <find>divers</find>
-      <find>portfolioDi</find>
       <find>diver</find>
       <find>pieOp</find>
       <find>diversific</find>
       <find>active</find>
-      <find>update</find>
       <find>performance</find>
       <find>test</find>
       <find>performanceNotReadyPopUp</find>
       <find>SettingsCtrl</find>
       <find>&lt;select</find>
       <find>setCurrencyModifier</find>
-      <find>convert</find>
       <find>totalValue</find>
       <find>updat</find>
+      <find>\$scope.convertHoldingsToPathVariables</find>
+      <find>convert</find>
+      <find>Total Value</find>
+      <find>refresh</find>
+      <find>response\.data\[&quot;USD&quot;\]</find>
+      <find>performanceCtrl</find>
+      <find>generatePerfo</find>
+      <find>path</find>
+      <find>perofmrance</find>
+      <find>pathva</find>
+      <find>responseData</find>
+      <find>generatG</find>
+      <find>update</find>
+      <find>perfor</find>
+      <find>response.data</find>
+      <find>generatePerformance</find>
+      <find>generate</find>
+      <find>generateGr</find>
     </findStrings>
     <replaceStrings>
       <replace>/</replace>
@@ -268,6 +244,9 @@
       <replace>fiat</replace>
       <replace>currentUser</replace>
       <replace>register</replace>
+      <replace>\$rootScope.convertHoldingsToPathVariables</replace>
+      <replace>response.data</replace>
+      <replace>responseData</replace>
     </replaceStrings>
     <dirStrings>
       <dir>C:\Users\i7676925\IdeaProjects\PortfolioTracker</dir>
@@ -296,7 +275,6 @@
         <option value="$PROJECT_DIR$/src/main/java/com/greg/controller/holding/crypto/CryptoController.java" />
         <option value="$PROJECT_DIR$/src/main/resources/templates/home/panel/diversification-pie-chart.html" />
         <option value="$PROJECT_DIR$/src/main/resources/templates/home/tabs/crypto-performance.html" />
-        <option value="$PROJECT_DIR$/src/main/resources/templates/home/tabs/fiat-performance.html" />
         <option value="$PROJECT_DIR$/src/main/java/com/greg/entity/holding/fiat/Fiat.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/greg/exceptions/InvalidSettingsException.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/greg/entity/settings/Settings.java" />
@@ -326,15 +304,16 @@
         <option value="$PROJECT_DIR$/src/main/resources/templates/home/tabs/diversification-pie-chart.html" />
         <option value="$PROJECT_DIR$/src/main/resources/templates/home/panel/total-value-line-chart.html" />
         <option value="$PROJECT_DIR$/src/main/resources/templates/home/panel/holding-management.html" />
-        <option value="$PROJECT_DIR$/src/main/resources/static/js/overview.js" />
         <option value="$PROJECT_DIR$/src/main/java/com/greg/service/currency/CurrencyService.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/greg/entity/holding/Holding.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/templates/home/home.html" />
         <option value="$PROJECT_DIR$/src/main/java/com/greg/entity/user/User.java" />
         <option value="$APPLICATION_CONFIG_DIR$/consoles/db/76d5aecf-dc69-4b4e-860f-7012e46142d8/console.sql" />
         <option value="$PROJECT_DIR$/src/main/java/com/greg/service/currency/fiat/FiatService.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/greg/controller/holding/fiat/FiatController.java" />
         <option value="$PROJECT_DIR$/src/main/resources/templates/home/panel/overview.html" />
+        <option value="$PROJECT_DIR$/src/main/resources/templates/home/tabs/fiat-performance.html" />
+        <option value="$PROJECT_DIR$/src/main/resources/templates/home/home.html" />
+        <option value="$PROJECT_DIR$/src/main/resources/static/js/overview.js" />
       </list>
     </option>
   </component>
@@ -371,7 +350,8 @@
     <handled-path value="$PROJECT_DIR$/node_modules" />
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-7" />
+    <option name="x" value="290" />
+    <option name="y" value="-16" />
     <option name="width" value="554" />
     <option name="height" value="1087" />
   </component>
@@ -896,7 +876,7 @@
       <workItem from="1522161812618" duration="1740000" />
       <workItem from="1522228762239" duration="18270000" />
       <workItem from="1522314078953" duration="19515000" />
-      <workItem from="1522399186811" duration="7079000" />
+      <workItem from="1522399186811" duration="18869000" />
     </task>
     <servers />
   </component>
@@ -906,7 +886,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="747982000" />
+    <option name="totallyTimeSpent" value="759772000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1096" height="1936" extended-state="6" />
@@ -927,7 +907,7 @@
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Run Dashboard" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.275" sideWeight="0.4978678" order="12" side_tool="false" content_ui="combo" />
+      <window_info id="Run Dashboard" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.07777778" sideWeight="0.4978678" order="12" side_tool="false" content_ui="combo" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32492113" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Spring" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32708332" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
@@ -998,7 +978,7 @@
           <option name="timeStamp" value="10" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="405" />
+      <option name="time" value="407" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -1037,13 +1017,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="136">
           <caret line="16" column="8" lean-forward="false" selection-start-line="16" selection-start-column="8" selection-end-line="16" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/templates/home/tabs/crypto-performance.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="22" column="36" lean-forward="false" selection-start-line="22" selection-start-column="36" selection-end-line="22" selection-end-column="36" />
         </state>
       </provider>
     </entry>
@@ -1093,13 +1066,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
           <caret line="7" column="10" lean-forward="false" selection-start-line="7" selection-start-column="10" selection-end-line="7" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/templates/home/tabs/fiat-performance.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="19" column="60" lean-forward="false" selection-start-line="19" selection-start-column="60" selection-end-line="19" selection-end-column="60" />
         </state>
       </provider>
     </entry>
@@ -1174,6 +1140,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="170">
           <caret line="10" column="53" lean-forward="false" selection-start-line="10" selection-start-column="53" selection-end-line="10" selection-end-column="53" />
+          <folding>
+            <element signature="e#1042#1043#0" expanded="false" />
+            <element signature="e#1096#1097#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1195,6 +1165,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="117">
           <caret line="7" column="13" lean-forward="true" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1202,6 +1173,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
           <caret line="35" column="43" lean-forward="true" selection-start-line="35" selection-start-column="43" selection-end-line="35" selection-end-column="43" />
+          <folding>
+            <element signature="n#style#0;n#form#0;n#div#0;n#uib-tab#0;n#uib-tabset#0;n#div#1;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1295,39 +1269,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/static/js/overview.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="409">
-          <caret line="192" column="20" lean-forward="false" selection-start-line="192" selection-start-column="15" selection-end-line="192" selection-end-column="20" />
-          <folding>
-            <element signature="e#10905#18451#0" expanded="false" />
-            <element signature="e#18652#19618#0" expanded="false" />
-            <element signature="e#19783#20924#0" expanded="false" />
-            <element signature="e#21091#23810#0" expanded="false" />
-            <element signature="e#23946#26014#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/entity/holding/Holding.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="32" lean-forward="true" selection-start-line="0" selection-start-column="32" selection-end-line="0" selection-end-column="32" />
           <folding>
-            <element signature="e#392#393#0" expanded="true" />
-            <element signature="e#438#439#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/templates/home/home.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="985">
-          <caret line="97" column="48" lean-forward="false" selection-start-line="97" selection-start-column="48" selection-end-line="97" selection-end-column="48" />
-          <folding>
-            <element signature="n#style#0;n#nav#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#div#1;n#div#1;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="e#392#393#0" expanded="false" />
+            <element signature="e#438#439#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1385,8 +1333,44 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/templates/home/panel/overview.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="20" column="47" lean-forward="false" selection-start-line="20" selection-start-column="47" selection-end-line="20" selection-end-column="47" />
+        <state relative-caret-position="170">
+          <caret line="10" column="18" lean-forward="true" selection-start-line="10" selection-start-column="18" selection-end-line="10" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/templates/home/tabs/fiat-performance.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="408">
+          <caret line="24" column="6" lean-forward="true" selection-start-line="24" selection-start-column="6" selection-end-line="24" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/templates/home/tabs/crypto-performance.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="22" column="66" lean-forward="false" selection-start-line="22" selection-start-column="66" selection-end-line="22" selection-end-column="66" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/templates/home/home.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="354">
+          <caret line="42" column="42" lean-forward="true" selection-start-line="42" selection-start-column="42" selection-end-line="42" selection-end-column="42" />
+          <folding>
+            <element signature="n#style#0;n#nav#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#1;n#div#1;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/js/overview.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="316">
+          <caret line="133" column="0" lean-forward="true" selection-start-line="133" selection-start-column="0" selection-end-line="133" selection-end-column="0" />
           <folding />
         </state>
       </provider>
