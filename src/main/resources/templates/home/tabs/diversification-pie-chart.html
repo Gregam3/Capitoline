@@ -8,7 +8,7 @@
     </div>
     <div class="panel-body" style="height: 250px">
             <pie-chart data="portfolioDiversification" options="pieOptions"
-                       ng-if="portfolioDiversification.length > 0"></pie-chart>
+                       ng-show="portfolioDiversification.length > 0"></pie-chart>
         <div class="huge " ng-hide="portfolioDiversification.length > 0" style="text-align: center;">
         <span class="fa fa-circle-o-notch fa-spin"></span> Loading
         </div>

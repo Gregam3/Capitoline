@@ -2,11 +2,13 @@ package com.greg.entity.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.greg.entity.holding.HoldingType;
 import com.greg.entity.settings.Settings;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Greg Mitten (i7676925)
@@ -86,6 +88,22 @@ public class User {
 
     public List<UserHolding> getHoldings() {
         return holdings;
+    }
+
+    public List<UserHolding> getStocks() {
+        return filterHoldings(HoldingType.STOCK);
+    }
+
+    public List<UserHolding> getFiats() {
+        return filterHoldings(HoldingType.FIAT);
+    }
+
+    public List<UserHolding> getCryptos() {
+        return filterHoldings(HoldingType.CRYPTO);
+    }
+
+    private List<UserHolding> filterHoldings(HoldingType holdingType) {
+        return holdings.stream().filter( holding -> holding.getHoldingType().equals(holdingType)).collect(Collectors.toList());
     }
 
     public void setHoldings(List<UserHolding> holdings) {

@@ -218,9 +218,10 @@ public class StockService {
         double valueOneMonthAgo = 0;
         double valueToday = 0;
 
+        //fixme remove this for login
         userService.get("gregoryamitten@gmail.com");
 
-        for (UserHolding userHolding : userService.getCurrentUser().getHoldings()) {
+        for (UserHolding userHolding : userService.getCurrentUser().getStocks()) {
             valueOneMonthAgo += getStockPriceAtDate(userHolding.getAcronym(),
                     DateUtils.truncate(new Date(new Date().getTime() - DateUtils.MILLIS_PER_DAY * 30), Calendar.DAY_OF_MONTH).getTime())
                     * userHolding.getTotalQuantity() * userHolding.getTotalQuantity();

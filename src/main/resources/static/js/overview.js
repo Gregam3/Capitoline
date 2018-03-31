@@ -20,62 +20,74 @@ app.run(function ($rootScope) {
 });
 app.value('AlphaVantageKey', 'QVJRID55FX6HALQH');
 
-app.controller("totalValueLineChartCtrl", ['$scope', '$http', '$rootScope',
-    function ($scope, $http, $rootScope) {
-        $scope.showHistory = false;
+app.controller("loginCtrl", ['$scope', '$http', 'toaster', '$window', '$rootScope',
+    function ($scope, $http, toaster, $window) {
+        $scope.loginDetails = {
+            email: null,
+            password: null
+        };
+        $scope.registerDetails = {
+            email: null,
+            name: null,
+            password: null,
+            confirmedPassword: null
+        };
 
-        $scope.lineOptions = {
-            series: [
-                {
-                    axis: "y",
-                    dataset: "total",
-                    key: "value",
-                    label: "Total Value",
-                    color: "#7d7d7d",
-                    type: ['line', 'area'],
-                    id: 'mySeries0'
-                },
-                {
-                    axis: "y",
-                    dataset: "crypto",
-                    key: "value",
-                    label: "Crypto Value",
-                    color: "#008c00",
-                    type: ['line', 'area'],
-                    id: 'mySeries1'
-                },
-                {
-                    axis: "y",
-                    dataset: "stock",
-                    key: "value",
-                    label: "Stock Value",
-                    color: "#0000c8",
-                    type: ['line', 'area'],
-                    id: 'mySeries2'
-                },
-                {
-                    axis: "y",
-                    dataset: "fiat",
-                    key: "value",
-                    label: "Fiat Value",
-                    color: "#b40e00",
-                    type: ['line', 'area'],
-                    id: 'mySeries3'
-                }
+        $scope.heading = "Log In";
 
-            ],
-            axes: {
-                x: {
-                    key: "time",
-                    type: 'date',
-                    tickFormat: d3.time.format("%d %b %y")
-                },
-                y: {}
+        $scope.login = function () {
+            $http({
+                method: 'POST',
+                url: "http://localhost:8080/security/login/",
+                data: $scope.loginDetails
+            }).then(function successCallback(response) {
+                toaster.pop('success', "Logged in", response.data);
+                $window.localStorage.setItem('email', $scope.loginDetails.email);
+                console.log($window.localStorage.getItem('email'));
+                $window.location.reload();
+            }, function errorCallback(response) {
+                console.log(response);
+                toaster.pop('error', "Failed to Login", response.data);
+            });
+        };
+
+        $scope.register = function () {
+            if ($scope.registerDetails.password !== $scope.registerDetails.confirmedPassword) {
+                toaster.pop('error', "Failed to Register", "Password's did not match");
+            } else {
+                $http({
+                    method: 'POST',
+                    url: "http://localhost:8080/security/register/",
+                    data: $scope.registerDetails
+                }).then(function successCallback(response) {
+                    toaster.pop('success', "You are now Registered", response.data);
+                    $window.localStorage.setItem("email", $scope.registerDetails.email);
+                    $window.location.reload();
+                }, function errorCallback(response) {
+                    console.log(response);
+                    toaster.pop('error', "Failed to Register", response.data);
+                });
             }
         };
 
+        $scope.changeHeading = function (newHeading) {
+            console.log(newHeading);
+            $scope.heading = newHeading;
+        };
+    }]);
+
+
+app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'AlphaVantageKey', 'toaster',
+    function ($scope, $http, $uibModal, $rootScope, AlphaVantageKey, toaster) {
+        $scope.openSettings = function () {
+            $uibModal.open({
+                templateUrl: 'templates/home/popups/settings-popup.html',
+                controller: 'settingsCtrl'
+            })
+        };
+
         //Fetch and process graph data
-        $rootScope.generateGraph = function () {
+        $rootScope.fetchHistoricalPortfolioData = function () {
             $http.get(
                 'http://localhost:8080/user/get/holding-graph-data/' + $rootScope.user.email
             ).then(function (response) {
@@ -90,230 +102,6 @@ app.controller("totalValueLineChartCtrl", ['$scope', '$http', '$rootScope',
             });
 
             console.log($rootScope.historicalPortfolio);
-        }
-    }]);
-
-app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', 'AlphaVantageKey',
-    function ($scope, $http, $rootScope, toaster, AlphaVantageKey) {
-        //Diversification Tab
-        $scope.pieOptions = {
-            thickness: 10
-        };
-
-        $rootScope.portfolioDiversification = [];
-
-
-        //Crypto
-        let btcValueNow = 0;
-        let btcValueOneMonthAgo = 0;
-        $scope.btcChange = 0;
-
-        let userCryptoValueNow = 0;
-        let userCryptoValueOneMonthAgo = 0;
-        $scope.portfolioCryptoChange = 0;
-        $scope.volatility = [];
-
-        //Fiat
-        let fiatIndexValueNow = 0;
-        let fiatIndexValueOneMonthAgo = 0;
-        $scope.fiatIndexChange = 0;
-
-        let userFiatValueNow = 0;
-        let userFiatValueOneMonthAgo = 0;
-        $scope.portfolioFiatChange = 0;
-
-        //Stock
-        $scope.aggregateSectorChange = 0;
-        $scope.portfolioStockChange = 0;
-
-        $rootScope.generatePerformance = function () {
-            let currencyPathVariables = "";
-
-            const cryptosPathVariable = $rootScope.convertHoldingsToPathVariables($rootScope.holdings.cryptos);
-            const fiatsPathVariable = $rootScope.convertHoldingsToPathVariables($rootScope.holdings.fiats);
-
-            let userCryptoAcronyms = (cryptosPathVariable.length > 1) ? cryptosPathVariable.split(",") : [];
-            let userFiatAcronyms = (fiatsPathVariable.length > 1) ? fiatsPathVariable.split(",") : [];
-
-            currencyPathVariables = cryptosPathVariable + "," +
-                fiatsPathVariable;
-
-
-            console.log(currencyPathVariables);
-            if (currencyPathVariables !== "") {
-                $http.get("https://min-api.cryptocompare.com/data/price?fsym=USD&tsyms=BTC,JPY,EUR,GBP,CNY,CHF")
-                    .then(function (response) {
-                        btcValueNow = response.data["BTC"];
-                        fiatIndexValueNow =
-                            response.data["JPY"] +
-                            response.data["EUR"] +
-                            response.data["GBP"] +
-                            response.data["CNY"] +
-                            response.data["CHF"];
-
-
-                        $http.get('https://min-api.cryptocompare.com/data/price?fsym=USD&tsyms=' + currencyPathVariables)
-                            .then(function () {
-                                for (const index in userFiatAcronyms)
-                                    userFiatValueNow += response.data[userFiatAcronyms[index]];
-
-                                for (const index in userCryptoAcronyms)
-                                    userCryptoValueNow += response.data[userCryptoAcronyms[index]];
-                            });
-
-                        $http.get("https://min-api.cryptocompare.com/data/pricehistorical?fsym=USD&tsyms=BTC,JPY,EUR,GBP,CNY,CHF" +
-                            "&ts=" + (new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))
-                            .then(function (response) {
-                                const responseData = response.data["USD"];
-
-                                btcValueOneMonthAgo = responseData["BTC"];
-                                fiatIndexValueOneMonthAgo =
-                                    responseData["JPY"] +
-                                    responseData["EUR"] +
-                                    responseData["GBP"] +
-                                    responseData["CNY"] +
-                                    responseData["CHF"];
-
-                                $http.get("https://min-api.cryptocompare.com/data/pricehistorical?fsym=USD&tsyms=" + currencyPathVariables +
-                                    "&ts=" + (new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))
-                                    .then(function (responseTwo) {
-                                        const responseDataTwo = responseTwo.data["USD"];
-
-                                        for (const index in userFiatAcronyms)
-                                            userFiatValueOneMonthAgo += responseDataTwo[userFiatAcronyms[index]];
-
-                                        for (const index in userCryptoAcronyms)
-                                            userCryptoValueOneMonthAgo += responseDataTwo[userCryptoAcronyms[index]];
-                                    });
-
-                                $scope.btcChange = ((btcValueNow / btcValueOneMonthAgo) * 100 - 100).toFixed(3);
-                                $scope.fiatIndexChange = ((fiatIndexValueNow / fiatIndexValueOneMonthAgo) * 100 - 100).toFixed(3);
-                            });
-                    });
-
-            }
-        };
-
-
-        $scope.calculateCryptoPerformance = function () {
-            if (userCryptoValueNow === 0 || userCryptoValueOneMonthAgo === 0)
-                $scope.performanceNotReadyPopUp("cryptocurrency");
-            else
-                $scope.portfolioCryptoChange =
-                    ((userCryptoValueNow / userCryptoValueOneMonthAgo)
-                        * 100 - 100).toFixed(3);
-
-            $scope.generateCryptoVolatilityPieChart();
-        };
-
-        $scope.calculateFiatPerformance = function () {
-            console.log(userFiatValueNow, userFiatValueOneMonthAgo);
-            if (userFiatValueNow === 0 || userFiatValueOneMonthAgo === 0)
-                $scope.performanceNotReadyPopUp("fiat currency");
-            else
-                $scope.portfolioFiatChange =
-                    ((userFiatValueNow / userFiatValueOneMonthAgo)
-                        * 100 - 100).toFixed(3);
-
-            console.log($scope.portfolioFiatChange);
-        };
-
-        $scope.retrieveAndCalculateStockPerformance = function () {
-            if ($scope.portfolioStockChange !==  0 || $scope.aggregateSectorChange !== 0)
-                $scope.performanceNotReadyPopUp("stock");
-            else
-                $scope.portfolioStockChange =
-                    ($rootScope.historicalPortfolio.stock[$rootScope.historicalPortfolio.stock.length - 1].value /
-                        ($rootScope.historicalPortfolio.stock[$rootScope.historicalPortfolio.stock.length - 31].value)
-                        * 100 - 100).toFixed(3);
-
-            $http.get('https://www.alphavantage.co/query?function=SECTOR&apikey=' + AlphaVantageKey)
-                .then(function (response) {
-                    const sectorPerformance = response.data["Rank D: 1 Month Performance"];
-
-                    console.log(sectorPerformance);
-
-                    $http.get('http://localhost:8080/stock/portfolio-stock-change-over-month')
-                        .then( function (responseTwo) {
-                            $scope.portfolioStockChange = responseTwo.data.toFixed(3);
-                        });
-
-
-                    //AlphaVantage API sends data back with trailing '%', this needs to be removed in order for it to be treated as a number
-                    $scope.aggregateSectorChange =
-                        ((sectorPerformance["Utilities"].substr(0, sectorPerformance["Utilities"].length - 1) * 1 +
-                            sectorPerformance["Energy"].substr(0, sectorPerformance["Energy"].length - 1) * 1 +
-                            sectorPerformance["Information Technology"].substr(0, sectorPerformance["Information Technology"].length - 1) * 1 +
-                            sectorPerformance["Consumer Discretionary"].substr(0, sectorPerformance["Consumer Discretionary"].length - 1) * 1 +
-                            sectorPerformance["Telecommunication Services"].substr(0, sectorPerformance["Telecommunication Services"].length - 1) * 1 +
-                            sectorPerformance["Health Care"].substr(0, sectorPerformance["Health Care"].length - 1) * 1 +
-                            sectorPerformance["Industrials"].substr(0, sectorPerformance["Industrials"].length - 1) * 1 +
-                            sectorPerformance["Financials"].substr(0, sectorPerformance["Financials"].length - 1) * 1) / 8).toFixed(3);
-                });
-        };
-
-        $scope.performanceNotReadyPopUp = function (holdingType) {
-            toaster.pop('info', "Cannot do that yet", "We might still be loading your data, if not your oldest " + holdingType + " must be older than a month for this functionality.");
-            $scope.active = 0;
-        };
-
-        $scope.generateCryptoVolatilityPieChart = function () {
-            for (const holding in $rootScope.holdings.cryptos) {
-                $http.get("https://min-api.cryptocompare.com/data/histoday?fsym=USD&tsym=" + holding + "&limit=30")
-                    .then(function (response) {
-                        const currentHoldingHistory = response.data.Data;
-
-                        let high = 0;
-                        let low = 1000000;
-
-                        for (const day in currentHoldingHistory) {
-                            const currentPrice = currentHoldingHistory[day]["close"];
-                            if (currentPrice > high) {
-                                high = currentPrice
-                            } else if (currentPrice < low) {
-                                low = currentPrice;
-                            }
-                        }
-                        const volatility = (high / low);
-
-                        if (volatility < 1.25) $scope.volatility[0].value++;
-                        else if (volatility > 1.25 && volatility < 1.5) $scope.volatility[1].value++;
-                        else if (volatility > 1.5 && volatility < 2) $scope.volatility[2].value++;
-                        else $scope.volatility[3].value++;
-                    });
-            }
-
-            $scope.volatility = [
-                {
-                    label: "<25%",
-                    value: 0,
-                    color: '#0000d6'
-                },
-                {
-                    label: "25%-50%",
-                    value: 0,
-                    color: '#5ab4c6'
-                },
-                {
-                    label: "50%-100%",
-                    value: 0,
-                    color: '#d65e21'
-                },
-                {
-                    label: ">100%",
-                    value: 0,
-                    color: '#d61700'
-                }];
-        };
-    }]);
-
-app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'AlphaVantageKey',
-    function ($scope, $http, $uibModal, $rootScope, AlphaVantageKey) {
-        $scope.openSettings = function () {
-            $uibModal.open({
-                templateUrl: 'templates/home/popups/settings-popup.html',
-                controller: 'settingsCtrl'
-            })
         };
 
         $rootScope.updateUser = function () {
@@ -427,6 +215,7 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
                         $rootScope.profitting =
                             $rootScope.totalValue > $rootScope.acquisitionCost;
 
+
                         $rootScope.portfolioDiversification = [
                             {
                                 label: "Cryptos",
@@ -445,7 +234,9 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
                             }
                         ];
 
-                        $rootScope.generateGraph();
+                        console.log("generated diversification pie chart", $rootScope.portfolioDiversification);
+
+                        $rootScope.fetchHistoricalPortfolioData();
                         $rootScope.generatePerformance();
                     });
                 }
@@ -478,9 +269,277 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
                     });
             }
         };
+    }]);
+
+app.controller("totalValueLineChartCtrl", ['$scope', '$http', '$rootScope',
+    function ($scope, $http, $rootScope) {
+
+    }]);
+
+app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', 'AlphaVantageKey',
+    function ($scope, $http, $rootScope, toaster, AlphaVantageKey) {
+
+        $scope.showHistory = false;
+
+        $scope.lineOptions = {
+            series: [
+                {
+                    axis: "y",
+                    dataset: "total",
+                    key: "value",
+                    label: "Total Value",
+                    color: "#7d7d7d",
+                    type: ['line', 'area'],
+                    id: 'mySeries0'
+                },
+                {
+                    axis: "y",
+                    dataset: "crypto",
+                    key: "value",
+                    label: "Crypto Value",
+                    color: "#008c00",
+                    type: ['line', 'area'],
+                    id: 'mySeries1'
+                },
+                {
+                    axis: "y",
+                    dataset: "stock",
+                    key: "value",
+                    label: "Stock Value",
+                    color: "#0000c8",
+                    type: ['line', 'area'],
+                    id: 'mySeries2'
+                },
+                {
+                    axis: "y",
+                    dataset: "fiat",
+                    key: "value",
+                    label: "Fiat Value",
+                    color: "#b40e00",
+                    type: ['line', 'area'],
+                    id: 'mySeries3'
+                }
+
+            ],
+            axes: {
+                x: {
+                    key: "time",
+                    type: 'date',
+                    tickFormat: d3.time.format("%d %b %y")
+                },
+                y: {}
+            }
+        };
+
+        $scope.pieOptions = {
+            thickness: 10
+        };
+
+        $rootScope.portfolioDiversification = [];
+
+
+        //Crypto
+        let btcValueNow = 0;
+        let btcValueOneMonthAgo = 0;
+        $scope.btcChange = 0;
+
+        let userCryptoValueNow = 0;
+        let userCryptoValueOneMonthAgo = 0;
+        $scope.portfolioCryptoChange = 0;
+        $scope.volatility = [];
+
+        //Fiat
+        let fiatIndexValueNow = 0;
+        let fiatIndexValueOneMonthAgo = 0;
+        $scope.fiatIndexChange = 0;
+
+        let userFiatValueNow = 0;
+        let userFiatValueOneMonthAgo = 0;
+        $scope.portfolioFiatChange = 0;
+
+        //Stock
+        $scope.aggregateSectorChange = 0;
+        $scope.portfolioStockChange = 0;
+
+        $rootScope.generatePerformance = function () {
+            let currencyPathVariables = "";
+
+            const cryptosPathVariable = $rootScope.convertHoldingsToPathVariables($rootScope.holdings.cryptos);
+            const fiatsPathVariable = $rootScope.convertHoldingsToPathVariables($rootScope.holdings.fiats);
+
+            let userCryptoAcronyms = (cryptosPathVariable.length > 1) ? cryptosPathVariable.split(",") : [];
+            let userFiatAcronyms = (fiatsPathVariable.length > 1) ? fiatsPathVariable.split(",") : [];
+
+            currencyPathVariables = cryptosPathVariable + "," +
+                fiatsPathVariable;
+
+            if (currencyPathVariables !== "") {
+                $http.get("https://min-api.cryptocompare.com/data/price?fsym=USD&tsyms=BTC,JPY,EUR,GBP,CNY,CHF")
+                    .then(function (response) {
+                        btcValueNow = response.data["BTC"];
+                        fiatIndexValueNow =
+                            response.data["JPY"] +
+                            response.data["EUR"] +
+                            response.data["GBP"] +
+                            response.data["CNY"] +
+                            response.data["CHF"];
+
+
+                        $http.get('https://min-api.cryptocompare.com/data/price?fsym=USD&tsyms=' + currencyPathVariables)
+                            .then(function (innerResponse) {
+                                for (const index in userFiatAcronyms)
+                                    userFiatValueNow += innerResponse.data[userFiatAcronyms[index]];
+
+                                for (const index in userCryptoAcronyms)
+                                    userCryptoValueNow += innerResponse.data[userCryptoAcronyms[index]];
+                            });
+
+                        $http.get("https://min-api.cryptocompare.com/data/pricehistorical?fsym=USD&tsyms=BTC,JPY,EUR,GBP,CNY,CHF" +
+                            "&ts=" + (new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))
+                            .then(function (response) {
+                                const responseData = response.data["USD"];
+
+                                btcValueOneMonthAgo = responseData["BTC"];
+                                fiatIndexValueOneMonthAgo =
+                                    responseData["JPY"] +
+                                    responseData["EUR"] +
+                                    responseData["GBP"] +
+                                    responseData["CNY"] +
+                                    responseData["CHF"];
+
+                                $http.get("https://min-api.cryptocompare.com/data/pricehistorical?fsym=USD&tsyms=" + currencyPathVariables +
+                                    "&ts=" + (new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))
+                                    .then(function (innerResponse) {
+                                        const innerResponseData = innerResponse.data["USD"];
+
+                                        for (const index in userFiatAcronyms)
+                                            userFiatValueOneMonthAgo += innerResponseData[userFiatAcronyms[index]];
+
+                                        for (const index in userCryptoAcronyms)
+                                            userCryptoValueOneMonthAgo += innerResponseData[userCryptoAcronyms[index]];
+                                    });
+
+                                $scope.btcChange = ((btcValueNow / btcValueOneMonthAgo) * 100 - 100).toFixed(3);
+                                $scope.fiatIndexChange = ((fiatIndexValueNow / fiatIndexValueOneMonthAgo) * 100 - 100).toFixed(3);
+                            });
+                    });
+
+            }
+        };
+
+
+        $scope.calculateCryptoPerformance = function () {
+            console.log(userCryptoValueNow, userCryptoValueOneMonthAgo);
+            if (userCryptoValueNow === 0 || userCryptoValueOneMonthAgo === 0)
+                $scope.performanceNotReadyPopUp("cryptocurrency");
+            else
+                $scope.portfolioCryptoChange =
+                    ((userCryptoValueNow / userCryptoValueOneMonthAgo)
+                        * 100 - 100).toFixed(3);
+
+            $scope.generateCryptoVolatilityPieChart();
+        };
+
+        $scope.calculateFiatPerformance = function () {
+            console.log(userFiatValueNow, userFiatValueOneMonthAgo);
+            if (userFiatValueNow === 0 || userFiatValueOneMonthAgo === 0)
+                $scope.performanceNotReadyPopUp("fiat currency");
+            else
+                $scope.portfolioFiatChange =
+                    ((userFiatValueNow / userFiatValueOneMonthAgo)
+                        * 100 - 100).toFixed(3);
+
+            console.log($scope.portfolioFiatChange);
+        };
+
+        $scope.retrieveAndCalculateStockPerformance = function () {
+            if ($scope.portfolioStockChange === 0 || $scope.aggregateSectorChange === 0)
+                $scope.performanceNotReadyPopUp("stock");
+            else {
+
+                $http.get('https://www.alphavantage.co/query?function=SECTOR&apikey=' + AlphaVantageKey)
+                    .then(function (response) {
+                        const sectorPerformance = response.data["Rank D: 1 Month Performance"];
+
+                        console.log(sectorPerformance);
+
+                        $http.get('http://localhost:8080/stock/portfolio-stock-change-over-month')
+                            .then(function (responseTwo) {
+                                console.log(responseTwo);
+                                $scope.portfolioStockChange = responseTwo.data.toFixed(3);
+                            });
+
+
+                        //AlphaVantage API sends data back with trailing '%', this needs to be removed in order for it to be treated as a number
+                        $scope.aggregateSectorChange =
+                            ((sectorPerformance["Utilities"].substr(0, sectorPerformance["Utilities"].length - 1) * 1 +
+                                sectorPerformance["Energy"].substr(0, sectorPerformance["Energy"].length - 1) * 1 +
+                                sectorPerformance["Information Technology"].substr(0, sectorPerformance["Information Technology"].length - 1) * 1 +
+                                sectorPerformance["Consumer Discretionary"].substr(0, sectorPerformance["Consumer Discretionary"].length - 1) * 1 +
+                                sectorPerformance["Telecommunication Services"].substr(0, sectorPerformance["Telecommunication Services"].length - 1) * 1 +
+                                sectorPerformance["Health Care"].substr(0, sectorPerformance["Health Care"].length - 1) * 1 +
+                                sectorPerformance["Industrials"].substr(0, sectorPerformance["Industrials"].length - 1) * 1 +
+                                sectorPerformance["Financials"].substr(0, sectorPerformance["Financials"].length - 1) * 1) / 8).toFixed(3);
+                    });
+            }
+        };
+
+        $scope.performanceNotReadyPopUp = function (holdingType) {
+            toaster.pop('info', "Cannot do that yet", "We might still be loading your data, if not your oldest " + holdingType + " must be older than a month for this functionality.");
+
+            $scope.active = 0;
+        };
+
+        $scope.generateCryptoVolatilityPieChart = function () {
+            for (const holding in $rootScope.holdings.cryptos) {
+                $http.get("https://min-api.cryptocompare.com/data/histoday?fsym=USD&tsym=" + holding + "&limit=30")
+                    .then(function (response) {
+                        const currentHoldingHistory = response.data.Data;
+
+                        let high = 0;
+                        let low = 1000000;
+
+                        for (const day in currentHoldingHistory) {
+                            const currentPrice = currentHoldingHistory[day]["close"];
+                            if (currentPrice > high) {
+                                high = currentPrice
+                            } else if (currentPrice < low) {
+                                low = currentPrice;
+                            }
+                        }
+                        const volatility = (high / low);
+
+                        if (volatility < 1.25) $scope.volatility[0].value++;
+                        else if (volatility > 1.25 && volatility < 1.5) $scope.volatility[1].value++;
+                        else if (volatility > 1.5 && volatility < 2) $scope.volatility[2].value++;
+                        else $scope.volatility[3].value++;
+                    });
+            }
+
+            $scope.volatility = [
+                {
+                    label: "<25%",
+                    value: 0,
+                    color: '#0000d6'
+                },
+                {
+                    label: "25%-50%",
+                    value: 0,
+                    color: '#5ab4c6'
+                },
+                {
+                    label: "50%-100%",
+                    value: 0,
+                    color: '#d65e21'
+                },
+                {
+                    label: ">100%",
+                    value: 0,
+                    color: '#d61700'
+                }];
+        };
 
         $rootScope.updateUser();
-
     }]);
 
 
@@ -508,41 +567,6 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
         };
     }]);
 
-app.controller("settingsCtrl", ['$scope', '$http', '$uibModalStack', 'toaster', '$rootScope',
-    function ($scope, $http, $uibModalStack, toaster, $rootScope) {
-        $scope.userSettings = {
-            email: null,
-            settings: {
-                currency: null
-            }
-        };
-
-        $scope.currencies = null;
-
-        $http.get(
-            "http://localhost:8080/fiat/list"
-        ).then(function (response) {
-            $scope.currencies = response.data;
-        });
-
-        $scope.save = function () {
-            $scope.userSettings.email = $rootScope.user.email;
-
-            $http({
-                method: 'PUT',
-                url: "http://localhost:8080/user/update/settings",
-                data: $scope.userSettings
-            }).then(function successCallback(response) {
-                toaster.pop('success', "Successfully changed currency",
-                    "Currency changed to " + $scope.userSettings.settings.currency.name);
-                $rootScope.updateUser();
-                $uibModalStack.dismissAll();
-            }, function failureCallback(response) {
-                console.log(response);
-                toaster.pop('error', "Failed to Change currency", response.data);
-            });
-        }
-    }]);
 
 app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', '$rootScope', 'toaster',
     function ($scope, $http, $uibModalStack, $rootScope, toaster) {
@@ -633,58 +657,39 @@ app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', '$rootSco
         };
     }]);
 
-app.controller("loginCtrl", ['$scope', '$http', 'toaster', '$window', '$rootScope',
-    function ($scope, $http, toaster, $window) {
-        $scope.loginDetails = {
+app.controller("settingsCtrl", ['$scope', '$http', '$uibModalStack', 'toaster', '$rootScope',
+    function ($scope, $http, $uibModalStack, toaster, $rootScope) {
+        $scope.userSettings = {
             email: null,
-            password: null
-        };
-        $scope.registerDetails = {
-            email: null,
-            name: null,
-            password: null,
-            confirmedPassword: null
-        };
-
-        $scope.heading = "Log In";
-
-        $scope.login = function () {
-            $http({
-                method: 'POST',
-                url: "http://localhost:8080/security/login/",
-                data: $scope.loginDetails
-            }).then(function successCallback(response) {
-                toaster.pop('success', "Logged in", response.data);
-                $window.localStorage.setItem('email', $scope.loginDetails.email);
-                console.log($window.localStorage.getItem('email'));
-                $window.location.reload();
-            }, function errorCallback(response) {
-                console.log(response);
-                toaster.pop('error', "Failed to Login", response.data);
-            });
-        };
-
-        $scope.register = function () {
-            if ($scope.registerDetails.password !== $scope.registerDetails.confirmedPassword) {
-                toaster.pop('error', "Failed to Register", "Password's did not match");
-            } else {
-                $http({
-                    method: 'POST',
-                    url: "http://localhost:8080/security/register/",
-                    data: $scope.registerDetails
-                }).then(function successCallback(response) {
-                    toaster.pop('success', "You are now Registered", response.data);
-                    $window.localStorage.setItem("email", $scope.registerDetails.email);
-                    $window.location.reload();
-                }, function errorCallback(response) {
-                    console.log(response);
-                    toaster.pop('error', "Failed to Register", response.data);
-                });
+            settings: {
+                currency: null
             }
         };
 
-        $scope.changeHeading = function (newHeading) {
-            console.log(newHeading);
-            $scope.heading = newHeading;
-        }
+        $scope.currencies = null;
+
+        $http.get(
+            "http://localhost:8080/fiat/list"
+        ).then(function (response) {
+            $scope.currencies = response.data;
+        });
+
+        $scope.save = function () {
+            $scope.userSettings.email = $rootScope.user.email;
+
+            $http({
+                method: 'PUT',
+                url: "http://localhost:8080/user/update/settings",
+                data: $scope.userSettings
+            }).then(function successCallback(response) {
+                toaster.pop('success', "Successfully changed currency",
+                    "Currency changed to " + $scope.userSettings.settings.currency.name);
+                $rootScope.updateUser();
+                $uibModalStack.dismissAll();
+            }, function failureCallback(response) {
+                console.log(response);
+                toaster.pop('error', "Failed to Change currency", response.data);
+            });
+        };
     }]);
+
