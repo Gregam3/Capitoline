@@ -140,8 +140,7 @@ public class StockService {
             }
         }
 
-        return addMissingDates(stockHistory, earliestDateInRange);
-//        return stockHistory;
+        return addWeekends(stockHistory, earliestDateInRange);
     }
 
     private JSONArray sortStringDates(JSONArray names) throws ParseException {
@@ -223,11 +222,10 @@ public class StockService {
 
         for (UserHolding userHolding : userService.getCurrentUser().getStocks()) {
             valueOneMonthAgo += getStockPriceAtDate(userHolding.getAcronym(),
-                    DateUtils.truncate(new Date(new Date().getTime() - DateUtils.MILLIS_PER_DAY * 30), Calendar.DAY_OF_MONTH).getTime())
-                    * userHolding.getTotalQuantity() * userHolding.getTotalQuantity();
-            valueToday += getCurrentStockPrice(userHolding.getAcronym()) * userHolding.getTotalQuantity();
+                    DateUtils.truncate(new Date(new Date().getTime() - DateUtils.MILLIS_PER_DAY * 30), Calendar.DAY_OF_MONTH).getTime());
+            valueToday += getCurrentStockPrice(userHolding.getAcronym());
         }
 
-        return (valueToday/valueOneMonthAgo) * 100 - 100;
+        return (valueToday / valueOneMonthAgo) * 100 - 100;
     }
 }

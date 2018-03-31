@@ -4,21 +4,24 @@
 
 <div th:fragment="stock-performance">
     <div class="panel-heading">
-        <h4>Stock Performance</h4>
+        <h4>Stock Performance <span class="fa fa-newspaper-o"></span></h4>
     </div>
     <div class="panel-body">
         <div class="row">
             <div class="col-lg-12">
-                <p style="font-size: 14px;">Over the month the Stock sectors, Utilities, Energy, IT,
+                <p style="font-size: 14px;" ng-show="portfolioStockChange !== 0">Over the month the Stock sectors: Utilities, Energy, IT,
                     Consumer Discretionary, Telecommunication Services, Health Care, Industrials and
-                    Financials were was {{((aggregateSectorChange > 0 ) ? "up" :
+                    Financials were {{((aggregateSectorChange > 0 ) ? "up" :
                     "down")}} <b>{{aggregateSectorChange}}%</b>
-                    relative to your Stocks which were {{((portfolioStockChange > 0 ) ?
+                    relative to your Stock's prices which were {{((portfolioStockChange > 0 ) ?
                     "up"
                     :
                     "down")}} <b>{{portfolioStockChange}}%</b> (a <b>{{(portfolioStockChange -
                         btcChange).toFixed(3)}}%</b> difference)
                 </p>
+                <div class="huge " ng-hide="portfolioStockChange !== 0" style="text-align: center;">
+                    <span class="fa fa-circle-o-notch fa-spin"></span> Loading
+                </div>
             </div>
         </div>
     </div>

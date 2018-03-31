@@ -39,12 +39,15 @@
         <nav class="navbar navbar-default navbar-fixed-top"
              role="navigation" style="margin-bottom:0">
             <div class="row">
-                <div class="col-xs-9">
-                    <a class="navbar-brand"><span class="fa fa-bar-chart"></span> Capitoline - A Portfolio
+                <div class="col-md-5 hidden-xs">
+                    <a class="navbar-brand"><span class="fa fa-university"></span> Capitoline - A Portfolio
                         Tracker</a>
                 </div>
-                <div class="col-xs-3 navbar-brand">
-                    <div class="col-xs-5">
+                <div class="col-md-4 hidden-xs">
+                    <a class="navbar-brand">{{user.name}}'s Portfolio </a>
+                </div>
+                <div class="col-md-3 navbar-brand">
+                    <div class="col-xs-5" style="color: black">
                         Currency
                     </div>
                     <div class="col-xs-7">
@@ -78,18 +81,28 @@
             <!--ng-if reloads chart completely fixing sizing issue as such it has been used below, uibtabs emulated by this.-->
             <div class="col-lg-3">
                 <uib-tabset active="active">
-                    <uib-tab index="0" heading="Diversification">
-                    </uib-tab>
-                    <uib-tab index="1" heading="Crypto" ng-click="calculateCryptoPerformance()">
-                    </uib-tab>
-                    <uib-tab index="2" heading="Stock" ng-disabled="1 > 0"
-                             ng-click="retrieveAndCalculateStockPerformance()">
-                    </uib-tab>
-                    <uib-tab index="3" heading="Fiat" ng-click="calculateFiatPerformance()">
-                    </uib-tab>
+                    <b>
+                        <div class="col-xs-4">
+                            <uib-tab index="0" heading="Diversification">
+                            </uib-tab>
+                        </div>
+                        <div class="col-xs-3">
+                            <uib-tab index="1" heading="Crypto" ng-click="calculateCryptoPerformance()">
+                            </uib-tab>
+                        </div>
+                        <div class="col-xs-3">
+                            <uib-tab index="2" heading="Stock" ng-disabled="1 > 0"
+                                     ng-click="retrieveAndCalculateStockPerformance()">
+                            </uib-tab>
+                        </div>
+                        <div class="col-xs-2">
+                            <uib-tab index="3" heading="Fiat" ng-click="calculateFiatPerformance()">
+                            </uib-tab>
+                        </div>
+                    </b>
                 </uib-tabset>
 
-                <div class="panel panel-default" style="height: 368px;">
+                <div class="panel panel-default" style="height: 384px;">
                     <div ng-if="active === 0">
                         <div th:replace="/home/tabs/diversification-pie-chart :: diversification-pie-chart"></div>
                     </div>

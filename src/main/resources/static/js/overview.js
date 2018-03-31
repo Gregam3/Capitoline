@@ -76,7 +76,6 @@ app.controller("loginCtrl", ['$scope', '$http', 'toaster', '$window', '$rootScop
         };
     }]);
 
-
 app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'AlphaVantageKey', 'toaster',
     function ($scope, $http, $uibModal, $rootScope, AlphaVantageKey, toaster) {
         $scope.openSettings = function () {
@@ -453,10 +452,9 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', '
         };
 
         $scope.retrieveAndCalculateStockPerformance = function () {
-            if ($scope.portfolioStockChange === 0 || $scope.aggregateSectorChange === 0)
+            if ($rootScope.historicalPortfolio.stock.length === 0)
                 $scope.performanceNotReadyPopUp("stock");
             else {
-
                 $http.get('https://www.alphavantage.co/query?function=SECTOR&apikey=' + AlphaVantageKey)
                     .then(function (response) {
                         const sectorPerformance = response.data["Rank D: 1 Month Performance"];
@@ -485,7 +483,7 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', '
         };
 
         $scope.performanceNotReadyPopUp = function (holdingType) {
-            toaster.pop('info', "Cannot do that yet", "We might still be loading your data, if not your oldest " + holdingType + " must be older than a month for this functionality.");
+            toaster.pop('info', "Cannot do that yet", "We might still be loading your " + holdingType + " data.");
 
             $scope.active = 0;
         };
@@ -542,7 +540,6 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', '
         $rootScope.updateUser();
     }]);
 
-
 app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'AlphaVantageKey', 'toaster',
     function ($scope, $http, $uibModal, $rootScope, AlphaVantageKey, toaster) {
         $scope.isObjectEmpty = function (object) {
@@ -566,7 +563,6 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
                 });
         };
     }]);
-
 
 app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', '$rootScope', 'toaster',
     function ($scope, $http, $uibModalStack, $rootScope, toaster) {
@@ -648,7 +644,8 @@ app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', '$rootSco
                 url: "http://localhost:8080/user/add-holding",
                 data: newHolding
             }).then(function (response) {
-                toaster.pop('success', "Successfully Added", "Added " + newHolding.quantity + " instance of " + newHolding.name);
+                if (newHolding.quantity === 0) toaster.pop('success', "Successfully Watched", "Began watching " + newHolding.name);
+                else toaster.pop('success', "Successfully Added", "Added " + newHolding.quantity + " instance of " + newHolding.name);
                 $rootScope.updateUser();
                 $uibModalStack.dismissAll();
             }, function (response) {
@@ -692,4 +689,3 @@ app.controller("settingsCtrl", ['$scope', '$http', '$uibModalStack', 'toaster', 
             });
         };
     }]);
-

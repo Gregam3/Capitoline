@@ -4,14 +4,14 @@
 
 <div th:fragment="crypto-performance">
     <div class="panel-heading">
-        <h4>Crypto Performance</h4>
+        <h4>Crypto Performance <span class="fa fa-btc"></span></h4>
     </div>
     <div class="panel-body">
         <div class="row">
             <div class="col-lg-5">
                 <p style="font-size: 14px;">Over the month BitCoin was {{((btcChange > 0 ) ? "up" :
                     "down")}} <b>{{btcChange}}%</b>
-                    relative to your Cryptocurrencies which were {{((portfolioCryptoChange > 0 ) ?
+                    relative to your Cryptocurrencies' prices which were {{((portfolioCryptoChange > 0 ) ?
                     "up"
                     :
                     "down")}} <b>{{portfolioCryptoChange}}%</b> (a <b>{{(portfolioCryptoChange -
