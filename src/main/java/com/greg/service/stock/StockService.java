@@ -13,8 +13,10 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -36,7 +38,7 @@ public class StockService {
     private UserService userService;
 
     @Autowired
-    public StockService(StockDao stockDao, UserService userService) {
+    public StockService(StockDao stockDao, @Lazy UserService userService) {
         this.stockDao = stockDao;
         this.userService = userService;
     }
@@ -212,7 +214,19 @@ public class StockService {
         return value;
     }
 
-    public double getPortfolioStockChangeOverMonth() {
-        userService.getCurrentUser().getHoldings()
+    public double getPortfolioStockChangeOverMonth() throws ParseException, InvalidHoldingException, UnirestException, IOException {
+        double valueOneMonthAgo = 0;
+        double valueToday = 0;
+
+        userService.get("gregoryamitten@gmail.com");
+
+        for (UserHolding userHolding : userService.getCurrentUser().getHoldings()) {
+            valueOneMonthAgo += getStockPriceAtDate(userHolding.getAcronym(),
+                    DateUtils.truncate(new Date(new Date().getTime() - DateUtils.MILLIS_PER_DAY * 30), Calendar.DAY_OF_MONTH).getTime())
+                    * userHolding.getTotalQuantity() * userHolding.getTotalQuantity();
+            valueToday += getCurrentStockPrice(userHolding.getAcronym()) * userHolding.getTotalQuantity();
+        }
+
+        return (valueToday/valueOneMonthAgo) * 100 - 100;
     }
 }

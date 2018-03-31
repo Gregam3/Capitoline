@@ -219,7 +219,7 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', '
         };
 
         $scope.retrieveAndCalculateStockPerformance = function () {
-            if ($rootScope.historicalPortfolio.stock.length < 30)
+            if ($scope.portfolioStockChange !==  0 || $scope.aggregateSectorChange !== 0)
                 $scope.performanceNotReadyPopUp("stock");
             else
                 $scope.portfolioStockChange =
@@ -233,17 +233,22 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', '
 
                     console.log(sectorPerformance);
 
+                    $http.get('http://localhost:8080/stock/portfolio-stock-change-over-month')
+                        .then( function (responseTwo) {
+                            $scope.portfolioStockChange = responseTwo.data.toFixed(3);
+                        });
+
 
                     //AlphaVantage API sends data back with trailing '%', this needs to be removed in order for it to be treated as a number
                     $scope.aggregateSectorChange =
-                        (sectorPerformance["Utilities"].substr(0, sectorPerformance["Utilities"].length - 1) * 1 +
+                        ((sectorPerformance["Utilities"].substr(0, sectorPerformance["Utilities"].length - 1) * 1 +
                             sectorPerformance["Energy"].substr(0, sectorPerformance["Energy"].length - 1) * 1 +
                             sectorPerformance["Information Technology"].substr(0, sectorPerformance["Information Technology"].length - 1) * 1 +
                             sectorPerformance["Consumer Discretionary"].substr(0, sectorPerformance["Consumer Discretionary"].length - 1) * 1 +
                             sectorPerformance["Telecommunication Services"].substr(0, sectorPerformance["Telecommunication Services"].length - 1) * 1 +
                             sectorPerformance["Health Care"].substr(0, sectorPerformance["Health Care"].length - 1) * 1 +
                             sectorPerformance["Industrials"].substr(0, sectorPerformance["Industrials"].length - 1) * 1 +
-                            sectorPerformance["Financials"].substr(0, sectorPerformance["Financials"].length - 1) * 1) / 8;
+                            sectorPerformance["Financials"].substr(0, sectorPerformance["Financials"].length - 1) * 1) / 8).toFixed(3);
                 });
         };
 
