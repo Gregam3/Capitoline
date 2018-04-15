@@ -71,9 +71,9 @@
             <tr ng-repeat="crypto in holdings.cryptos">
                 <td>{{crypto.name}} ({{crypto.acronym}})</td>
                 <td>{{(crypto.totalQuantity !== 0 ) ? crypto.totalQuantity : "Watch only"}}</td>
-                <td>{{userCurrency.symbol}}{{(crypto.price * userCurrency.modifier).toFixed(2) | number}}</td>
+                <td>{{userCurrency.symbol}}{{(crypto.price * userCurrency.modifier).toFixed(4) | number}}</td>
                 <td>{{userCurrency.symbol}}{{((crypto.totalQuantity * crypto.price) *
-                    userCurrency.modifier).toFixed(2)
+                    userCurrency.modifier).toFixed(4)
                     | number}}
                 </td>
                 <td ng-class="{'holding-up': crypto.totalValue > crypto.acquisitionCost,

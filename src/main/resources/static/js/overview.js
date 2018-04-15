@@ -42,8 +42,10 @@ app.controller("loginCtrl", ['$scope', '$http', 'toaster', '$window', '$rootScop
                 data: $scope.loginDetails
             }).then(function successCallback(response) {
                 toaster.pop('success', "Logged in", response.data);
+                //Cache details necessary to retrieve profile
                 $window.localStorage.setItem('email', $scope.loginDetails.email);
-                console.log($window.localStorage.getItem('email'));
+                $window.localStorage.setItem('password', $scope.loginDetails.password);
+
                 $window.location.reload();
             }, function errorCallback(response) {
                 console.log(response);
@@ -88,7 +90,7 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
         //Fetch and process graph data
         $rootScope.fetchHistoricalPortfolioData = function () {
             $http.get(
-                'http://localhost:8080/user/get/holding-graph-data/' + $rootScope.user.email
+                'http://localhost:8080/user/get/holding-graph-data/'
             ).then(function (response) {
                 console.log("generated graph");
 
@@ -112,11 +114,15 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
 
             console.log("updating user");
 
+            let userPassword = null;
+
             if (!$rootScope.user.email) {
                 $rootScope.user.email = localStorage.getItem('email');
+                userPassword = localStorage.getItem('password');
+
             }
 
-            $http.get('http://localhost:8080/user/get/' + $rootScope.user.email)
+            $http.get('http://localhost:8080/user/get/' + $rootScope.user.email + '/' + userPassword)
                 .then(function (response) {
                     console.log(response.data);
                     $rootScope.user = response.data;

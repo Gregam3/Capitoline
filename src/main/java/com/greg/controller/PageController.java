@@ -27,11 +27,9 @@ public class PageController {
     public String welcome(Map<String, Object> model) throws IOException {
         model.put("systemVersion", systemVersion);
 
-//        if(userService.getCurrentUser() == null) {
-//            return "login/login";
-//        }
-
-        userService.get("gregoryamitten@gmail.com");
+        if(userService.getCurrentUser() == null) {
+            return "login/login";
+        }
 
         return "home/home";
     }

@@ -1,7 +1,6 @@
 package com.greg.service.security;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.greg.entity.user.User;
 import com.greg.exceptions.InvalidAccessAttemptException;
 import com.greg.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +29,7 @@ public class SecurityService {
         if (email == null || password == null)
             throw new InvalidAccessAttemptException("Email and password must be provided");
 
-        User user = userService.get(email.asText());
-        return (user != null && user.getPassword().equals(password.asText()));
+        return userService.get(email.asText(), password.asText()) != null;
     }
 
     public void register(JsonNode registerNode) throws InvalidAccessAttemptException, IOException {
@@ -41,6 +39,9 @@ public class SecurityService {
 
         if (email == null || password == null)
             throw new InvalidAccessAttemptException("Email and password must be provided");
+
+        if(email.asText().length() < 6 || email.asText().length() > 254)
+            throw new InvalidAccessAttemptException("Email length must between 6-254 characters");
 
         userService.addUser(email.asText(),
                 (name == null) ? null : name.asText(),

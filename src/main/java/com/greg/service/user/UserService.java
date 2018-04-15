@@ -8,13 +8,15 @@ import com.greg.entity.settings.Settings;
 import com.greg.entity.user.Transaction;
 import com.greg.entity.user.User;
 import com.greg.entity.user.UserHolding;
-import com.greg.exceptions.InvalidHoldingException;
 import com.greg.exceptions.InvalidAccessAttemptException;
+import com.greg.exceptions.InvalidHoldingException;
 import com.greg.service.currency.CurrencyService;
 import com.greg.service.currency.fiat.FiatService;
 import com.greg.service.stock.StockService;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -26,7 +28,7 @@ import java.util.*;
  * gregoryamitten@gmail.com
  */
 @Service
-//@Scope(proxyMode= ScopedProxyMode.TARGET_CLASS, value="session")
+@Scope(proxyMode= ScopedProxyMode.TARGET_CLASS, value="session")
 public class UserService {
 
     private UserDao userDao;
@@ -49,8 +51,14 @@ public class UserService {
         this.fiatService = fiatService;
     }
 
-    public User get(String email) throws IOException {
+    public User get(String email, String password) throws IOException, InvalidAccessAttemptException {
         currentUser = userDao.get(email);
+        if(currentUser == null)
+            return null;
+
+        if (!currentUser.getPassword().equals(password))
+            throw new InvalidAccessAttemptException("Password is incorrect");
+
         return currentUser;
     }
 
@@ -118,21 +126,19 @@ public class UserService {
         userDao.update(currentUser);
     }
 
-    public Map<String, List<GraphHoldingData>> getGraphHoldingData(String email) throws UnirestException, IOException, ParseException {
+    public Map<String, List<GraphHoldingData>> getGraphHoldingData() throws UnirestException, IOException, ParseException {
         //Map used as only one instance of a day should be in each map
         Map<Date, Double> graphHoldingDataMap = new HashMap<>();
         Map<Date, Double> cryptoGraphHoldingDataMap = new HashMap<>();
         Map<Date, Double> stockGraphHoldingDataMap = new HashMap<>();
         Map<Date, Double> fiatGraphHoldingDataMap = new LinkedHashMap<>();
 
-        User user = userDao.get(email);
-
         double userCurrencyModifier = currencyService.getCurrentPrice(
                 "USD",
-                user.getSettings().getUserCurrency().getAcronym()
+                currentUser.getSettings().getUserCurrency().getAcronym()
         );
 
-        for (UserHolding userHolding : user.getHoldings()) {
+        for (UserHolding userHolding : currentUser.getHoldings()) {
             Map<Date, Double> currentDataHoldingMap = new HashMap<>();
             switch (userHolding.getHoldingType()) {
                 case CRYPTO:
@@ -193,7 +199,7 @@ public class UserService {
         return holdingsMap;
     }
 
-    public void deleteHolding(String acronym, HoldingType holdingType, double amountToRemove) throws IOException, UnirestException {
+    public void removeItemsFromHolding(String acronym, HoldingType holdingType, double amountToRemove) throws IOException, UnirestException {
         for (UserHolding userHolding : currentUser.getHoldings()) {
             if (userHolding.getAcronym().equals(acronym) &&
                     userHolding.getHoldingType().equals(holdingType)) {
@@ -255,12 +261,8 @@ public class UserService {
                                 .asText()
                 )
         );
-
-        String email = settingsNode.get("email").asText();
-        User user = get(email);
-        user.setSettings(settings);
-
-        update(user);
+        currentUser.setSettings(settings);
+        update(currentUser);
     }
 
     public User getCurrentUser() {
@@ -268,7 +270,7 @@ public class UserService {
     }
 
     public void addUser(String email, String name, String password) throws IOException, InvalidAccessAttemptException {
-        if(get(email) != null)
+        if(get(email, password) != null)
             throw new InvalidAccessAttemptException("That email is already in use.");
 
         User user = new User(
