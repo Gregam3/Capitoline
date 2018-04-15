@@ -64,6 +64,7 @@ app.controller("loginCtrl", ['$scope', '$http', 'toaster', '$window', '$rootScop
                 }).then(function successCallback(response) {
                     toaster.pop('success', "You are now Registered", response.data);
                     $window.localStorage.setItem("email", $scope.registerDetails.email);
+                    $window.localStorage.setItem("password", $scope.registerDetails.password);
                     $window.location.reload();
                 }, function errorCallback(response) {
                     console.log(response);

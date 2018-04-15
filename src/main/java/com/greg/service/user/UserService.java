@@ -10,6 +10,8 @@ import com.greg.entity.user.User;
 import com.greg.entity.user.UserHolding;
 import com.greg.exceptions.InvalidAccessAttemptException;
 import com.greg.exceptions.InvalidHoldingException;
+import com.greg.exceptions.InvalidRegisterCredentialsException;
+import com.greg.service.AbstractService;
 import com.greg.service.currency.CurrencyService;
 import com.greg.service.currency.fiat.FiatService;
 import com.greg.service.stock.StockService;
@@ -28,8 +30,8 @@ import java.util.*;
  * gregoryamitten@gmail.com
  */
 @Service
-@Scope(proxyMode= ScopedProxyMode.TARGET_CLASS, value="session")
-public class UserService {
+@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "session")
+public class UserService extends AbstractService<User> {
 
     private UserDao userDao;
     private StockService stockService;
@@ -49,25 +51,26 @@ public class UserService {
         this.stockService = stockService;
         this.currencyService = currencyService;
         this.fiatService = fiatService;
+        this.setDao(userDao);
     }
 
-    public User get(String email, String password) throws IOException, InvalidAccessAttemptException {
+    public User getUserSecure(String email, String password) throws IOException, InvalidAccessAttemptException {
         currentUser = userDao.get(email);
-        if(currentUser == null)
+        if (currentUser == null)
             return null;
 
-        if (!currentUser.getPassword().equals(password))
+        if (!currentUser.getPassword().equals(password)) {
+            currentUser = null;
             throw new InvalidAccessAttemptException("Password is incorrect");
+        }
 
         return currentUser;
     }
 
-    public void update(User user) {
-        userDao.update(user);
+    @Override
+    public User get(String email) {
+        throw new AssertionError("getUserSecure() method should be used instead.");
     }
-
-
-
 
     public void addTransaction(JsonNode holdingNode) throws Exception {
         double price = 0;
@@ -252,16 +255,18 @@ public class UserService {
     }
 
     public void updateSettings(JsonNode settingsNode) throws IOException {
-        Settings settings = new Settings(
-                fiatService.get(
-                        settingsNode
-                                .get("settings")
-                                .get("currency")
-                                .get("acronym")
-                                .asText()
+        currentUser.setSettings(
+                new Settings(
+                        fiatService.get(
+                                settingsNode
+                                        .get("settings")
+                                        .get("currency")
+                                        .get("acronym")
+                                        .asText()
+                        )
                 )
         );
-        currentUser.setSettings(settings);
+
         update(currentUser);
     }
 
@@ -269,9 +274,10 @@ public class UserService {
         return currentUser;
     }
 
-    public void addUser(String email, String name, String password) throws IOException, InvalidAccessAttemptException {
-        if(get(email, password) != null)
-            throw new InvalidAccessAttemptException("That email is already in use.");
+    public void addUser(String email, String name, String password)
+            throws IOException, InvalidRegisterCredentialsException, InvalidAccessAttemptException {
+        if (getUserSecure(email, password) != null)
+            throw new InvalidRegisterCredentialsException("That email is already in use.");
 
         User user = new User(
                 email,
@@ -282,9 +288,5 @@ public class UserService {
 
         currentUser = user;
         userDao.add(user);
-    }
-
-    public void delete(String email) {
-        userDao.delete(email);
     }
 }

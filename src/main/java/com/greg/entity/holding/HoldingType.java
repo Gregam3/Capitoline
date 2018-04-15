@@ -5,5 +5,5 @@ package com.greg.entity.holding;
  * gregoryamitten@gmail.com
  */
 public enum HoldingType {
-    STOCK, FIAT, CRYPTO, CUSTOM
+    STOCK, FIAT, CRYPTO
 }

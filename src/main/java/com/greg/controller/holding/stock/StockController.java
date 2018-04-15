@@ -43,7 +43,7 @@ public class StockController {
     @GetMapping("portfolio-stock-change-over-month")
     public ResponseEntity<Double> getPortfolioStockChangeOverMonth() {
         try {
-            return new ResponseEntity<>(stockService.getPortfolioStockChangeOverMonth(), HttpStatus.OK);
+            return new ResponseEntity<>(stockService.getAverageMonthlyChange(), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(0.0, HttpStatus.BAD_REQUEST);

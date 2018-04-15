@@ -39,7 +39,7 @@ public class UserController {
             @PathVariable("password") String password
     ) throws JsonProcessingException {
         try {
-            return new ResponseEntity<>(userService.get(email, password), HttpStatus.OK);
+            return new ResponseEntity<>(userService.getUserSecure(email, password), HttpStatus.OK);
         } catch (Exception e) {
             LOG.error(e.getMessage());
             System.err.println(e);
