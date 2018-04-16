@@ -28,7 +28,7 @@ import java.util.*;
 @Service
 public class StockService extends AbstractService<Stock> {
 
-    private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+    private final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
     private static final String API_KEY = "&apikey=QVJRID55FX6HALQH";
     private static final String BATCH_QUOTE_URL = "https://www.alphavantage.co/query?function=BATCH_STOCK_QUOTES&symbols=";
     private static final String TIME_SERIES_DAILY_URL_1 = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=";
@@ -74,7 +74,7 @@ public class StockService extends AbstractService<Stock> {
         Long earliestDate = new Date().getTime();
 
         for (int i = 0; i < stringDates.length(); i++) {
-            long currentIndexUnixTime = formatter.parse(stringDates.get(i).toString()).getTime();
+            long currentIndexUnixTime = dateFormatter.parse(stringDates.get(i).toString()).getTime();
 
             if (earliestDate > currentIndexUnixTime)
                 earliestDate = currentIndexUnixTime;
@@ -95,6 +95,7 @@ public class StockService extends AbstractService<Stock> {
         JSONObject historyJson = Unirest.get(TIME_SERIES_DAILY_URL_1 + userHolding.getAcronym() + TIME_SERIES_DAILY_URL_2)
                 .asJson().getBody().getObject().getJSONObject("Time Series (Daily)");
 
+        //Initialised with current time so when comparison is done later every date will be earlier, comparison referenced with *1.
         long earliestDateInRange = new Date().getTime();
 
         Queue<Transaction> transactionQueue = new PriorityQueue<>();
@@ -110,7 +111,7 @@ public class StockService extends AbstractService<Stock> {
             JSONObject day = historyJson.getJSONObject(stringDates.get(i).toString());
             double price = day.getDouble("4. close");
 
-            Date currentItemUnixDate = formatter.parse(stringDates.get(i).toString());
+            Date currentItemUnixDate = dateFormatter.parse(stringDates.get(i).toString());
 
             if (currentItemUnixDate.getTime() > nextDateUnix) {
                 currentTransaction = transactionQueue.poll();
@@ -120,7 +121,7 @@ public class StockService extends AbstractService<Stock> {
             }
 
             if (currentItemUnixDate.getTime() > currentTransaction.getDate().getTime()) {
-                //Necessary for populating weekend data
+                // *1 Necessary for populating weekend data
                 if (currentItemUnixDate.getTime() < earliestDateInRange)
                     earliestDateInRange = currentItemUnixDate.getTime();
 
