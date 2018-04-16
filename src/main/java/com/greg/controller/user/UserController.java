@@ -33,13 +33,11 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping(value = "get/{email:.+}/{password:.+}")
-    public ResponseEntity<User> getUser(
-            @PathVariable("email") String email,
-            @PathVariable("password") String password
+    @GetMapping(value = "get")
+    public ResponseEntity<User> getCurrentUser(
     ) throws JsonProcessingException {
         try {
-            return new ResponseEntity<>(userService.getUserSecure(email, password), HttpStatus.OK);
+            return new ResponseEntity<>(userService.getCurrentUser(), HttpStatus.OK);
         } catch (Exception e) {
             LOG.error(e.getMessage());
             System.err.println(e);
@@ -48,7 +46,7 @@ public class UserController {
     }
 
 //    @GetMapping(value = "post")
-//    public ResponseEntity<User> getUser() throws JsonProcessingException {
+//    public ResponseEntity<User> getCurrentUser() throws JsonProcessingException {
 //        try {
 //            userService.addSettings();
 //            return new ResponseEntity<>(HttpStatus.OK);
@@ -84,11 +82,11 @@ public class UserController {
 
     @GetMapping(value = "delete/{email:.+}")
     public ResponseEntity deleteUser(@PathVariable("email") String email) {
-            userService.delete(email);
-            return new ResponseEntity(HttpStatus.OK);
+        userService.delete(email);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
-    @GetMapping(value = "get/holding-graph-data/")
+    @GetMapping(value = "get/holding-graph-data")
     public ResponseEntity<?> getGraphHoldingData() {
         try {
             return new ResponseEntity<>(userService.getGraphHoldingData(), HttpStatus.OK);
@@ -110,7 +108,7 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 

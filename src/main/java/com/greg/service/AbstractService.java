@@ -34,5 +34,5 @@ public abstract class AbstractService<T> {
     public List<T> list() {
         return dao.list();
     }
-
 }
+

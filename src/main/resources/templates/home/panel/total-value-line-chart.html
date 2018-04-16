@@ -5,13 +5,20 @@
 <div th:fragment="total-value-line-chart">
     <div class="panel panel-default" style="height: 400px;">
         <div class="panel-heading">
-            <h4><span class="fa fa-line-chart"></span> Historical Portfolio Value </h4>if holding is partially
-            removed its effect on your portfolio's history will linger.
+            <h4><span class="fa fa-line-chart"></span> Historical Portfolio Value </h4>
+            <div ng-show="user.settings.currency.acronym != 'USD'">Values based off current exchange rate between USD
+                and
+                {{user.settings.userCurrency.acronym}} ({{userCurrency.symbol + userCurrency.modifier}})
+            </div>
         </div>
-        <div class="panel-body" ng-if="historicalPortfolio.total.length > 5">
+        <div class="panel-body" ng-if="historicalPortfolio.total.length > 7">
             <linechart data="historicalPortfolio" options="lineOptions" style="height: 250px"></linechart>
         </div>
-        <div class="huge " ng-hide="historicalPortfolio.total.length > 0" style="text-align: center;">
+        <div class="huge" ng-show="portfolioNotOldEnough()"
+             style="text-align: center;">
+            Oldest holding must exceed a week to see History Graph
+        </div>
+        <div class="huge" ng-hide="historicalPortfolio.total.length > 0" style="text-align: center;">
             <span class="fa fa-circle-o-notch fa-spin"></span> Generating Portfolio History
         </div>
     </div>

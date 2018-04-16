@@ -71,49 +71,50 @@
             </div>
         </div>
 
-        <div class="row" ng-controller="performanceCtrl">
-            <div class="col-lg-9" ng-if="totalValue > 0">
-                <div th:replace="/home/panel/total-value-line-chart :: total-value-line-chart"
-                     ng-show="showHistory"></div>
-            </div>
+        <div ng-controller="performanceCtrl">
+            <div class="row" ng-if="totalValue > 0">
+                <div class="col-lg-9" >
+                    <div th:replace="/home/panel/total-value-line-chart :: total-value-line-chart"></div>
+                </div>
 
-            <!--emulating uibtabs as n3-pie-chart has documented sizing issue with pie charts that are initially hidden, -->
-            <!--ng-if reloads chart completely fixing sizing issue as such it has been used below, uibtabs emulated by this.-->
-            <div class="col-lg-3">
-                <uib-tabset active="active">
-                    <b>
-                        <div class="col-xs-4">
-                            <uib-tab index="0" heading="Diversification">
-                            </uib-tab>
-                        </div>
-                        <div class="col-xs-3">
-                            <uib-tab index="1" heading="Crypto" ng-click="calculateCryptoPerformance()">
-                            </uib-tab>
-                        </div>
-                        <div class="col-xs-3">
-                            <uib-tab index="2" heading="Stock" ng-disabled="1 > 0"
-                                     ng-click="retrieveAndCalculateStockPerformance()">
-                            </uib-tab>
-                        </div>
-                        <div class="col-xs-2">
-                            <uib-tab index="3" heading="Fiat" ng-click="calculateFiatPerformance()">
-                            </uib-tab>
-                        </div>
-                    </b>
-                </uib-tabset>
+                <!--emulating uibtabs as n3-pie-chart has documented sizing issue with pie charts that are initially hidden, -->
+                <!--ng-if reloads chart completely fixing sizing issue as such it has been used below, uibtabs emulated by this.-->
+                <div class="col-lg-3">
+                    <uib-tabset active="active">
+                        <b>
+                            <div class="col-xs-4">
+                                <uib-tab index="0" heading="Diversification">
+                                </uib-tab>
+                            </div>
+                            <div class="col-xs-3">
+                                <uib-tab index="1" heading="Crypto" ng-click="calculateCryptoPerformance()">
+                                </uib-tab>
+                            </div>
+                            <div class="col-xs-3">
+                                <uib-tab index="2" heading="Stock" ng-disabled="1 > 0"
+                                         ng-click="retrieveAndCalculateStockPerformance()">
+                                </uib-tab>
+                            </div>
+                            <div class="col-xs-2">
+                                <uib-tab index="3" heading="Fiat" ng-click="calculateFiatPerformance()">
+                                </uib-tab>
+                            </div>
+                        </b>
+                    </uib-tabset>
 
-                <div class="panel panel-default" style="height: 384px;">
-                    <div ng-if="active === 0">
-                        <div th:replace="/home/tabs/diversification-pie-chart :: diversification-pie-chart"></div>
-                    </div>
-                    <div ng-if="active === 1">
-                        <div th:replace="/home/tabs/crypto-performance :: crypto-performance"></div>
-                    </div>
-                    <div ng-if="active === 2">
-                        <div th:replace="/home/tabs/stock-performance :: stock-performance"></div>
-                    </div>
-                    <div ng-if="active === 3">
-                        <div th:replace="/home/tabs/fiat-performance :: fiat-performance"></div>
+                    <div class="panel panel-default" style="height: 384px;">
+                        <div ng-if="active === 0">
+                            <div th:replace="/home/tabs/diversification-pie-chart :: diversification-pie-chart"></div>
+                        </div>
+                        <div ng-if="active === 1">
+                            <div th:replace="/home/tabs/crypto-performance :: crypto-performance"></div>
+                        </div>
+                        <div ng-if="active === 2">
+                            <div th:replace="/home/tabs/stock-performance :: stock-performance"></div>
+                        </div>
+                        <div ng-if="active === 3">
+                            <div th:replace="/home/tabs/fiat-performance :: fiat-performance"></div>
+                        </div>
                     </div>
                 </div>
             </div>

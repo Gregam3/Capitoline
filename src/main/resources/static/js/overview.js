@@ -1,8 +1,8 @@
 var app = angular.module("capitoline", ['ui.bootstrap', 'smart-table', 'n3-line-chart', 'n3-pie-chart', 'toaster']);
 
 app.run(function ($rootScope) {
-    $rootScope.totalValue = 0.0;
-    $rootScope.acquisitionCost = 0.0;
+    $rootScope.totalValue = 0;
+    $rootScope.acquisitionCost = 0;
 
     $rootScope.user = {};
     $rootScope.profitting = null;
@@ -107,23 +107,16 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
         };
 
         $rootScope.updateUser = function () {
+            console.log("updating user");
+
             $rootScope.cryptoValue = 0;
             $rootScope.stockValue = 0;
             $rootScope.fiatValue = 0;
 
             $rootScope.totalValue = 0;
 
-            console.log("updating user");
 
-            let userPassword = null;
-
-            if (!$rootScope.user.email) {
-                $rootScope.user.email = localStorage.getItem('email');
-                userPassword = localStorage.getItem('password');
-
-            }
-
-            $http.get('http://localhost:8080/user/get/' + $rootScope.user.email + '/' + userPassword)
+            $http.get('http://localhost:8080/user/get')
                 .then(function (response) {
                     console.log(response.data);
                     $rootScope.user = response.data;
@@ -146,17 +139,22 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
                     for (let i = 0; i < $rootScope.user.holdings.length; i++) {
                         const currentHolding = $rootScope.user.holdings[i];
 
-                        if (currentHolding.holdingType === "STOCK") {
+                        if (currentHolding.holdingType === "STOCK")
                             $rootScope.holdings.stocks[currentHolding.acronym] = currentHolding;
-                        } else if (currentHolding.holdingType === "CRYPTO") {
+                        else if (currentHolding.holdingType === "CRYPTO")
                             $rootScope.holdings.cryptos[currentHolding.acronym] = currentHolding;
-                        } else if (currentHolding.holdingType === "FIAT") {
+                        else if (currentHolding.holdingType === "FIAT")
                             $rootScope.holdings.fiats[currentHolding.acronym] = currentHolding;
-                        }
+
 
                         $rootScope.acquisitionCost += currentHolding.acquisitionCost;
                     }
+                    $rootScope.fetchHistoricalPortfolioData();
+                    $rootScope.generatePerformance();
                 }).then(function () {
+                console.log($rootScope.holdings);
+
+                if (angular.equals($rootScope.holdings.cryptos, {}) || angular.equals($rootScope.holdings.fiats, {})) {
                     $http.get(
                         "https://min-api.cryptocompare.com/data/pricemulti?fsyms="
                         + $rootScope.convertHoldingsToPathVariables($rootScope.holdings.cryptos) + ","
@@ -189,11 +187,14 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
                             $rootScope.totalValue += currentValue;
                             $rootScope.fiatValue += currentValue;
                         }
+
+                        generateDiversificationPieChart();
+                        generateIsProfiting();
                     });
+                }
 
-                    console.log($rootScope.holdings);
-
-                    //Get all User's stock prices
+                //Get all User's stock prices
+                if (!angular.equals($rootScope.holdings.stocks, {})) {
                     $http.get("https://www.alphavantage.co/query?function=BATCH_STOCK_QUOTES&symbols=" + $rootScope.convertHoldingsToPathVariables($scope.holdings.stocks)
                         + "&apikey=" + AlphaVantageKey).then(function (response) {
 
@@ -217,36 +218,40 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
 
                             i++;
                         }
-
-                        $rootScope.profitting =
-                            $rootScope.totalValue > $rootScope.acquisitionCost;
-
-
-                        $rootScope.portfolioDiversification = [
-                            {
-                                label: "Cryptos",
-                                value: (($scope.cryptoValue / $rootScope.totalValue) * 100).toFixed(2),
-                                color: '#139000'
-                            },
-                            {
-                                label: "Fiat",
-                                value: (($scope.fiatValue / $rootScope.totalValue) * 100).toFixed(2),
-                                color: '#ad0e00'
-                            },
-                            {
-                                label: "Stocks",
-                                value: (($scope.stockValue / $rootScope.totalValue) * 100).toFixed(2),
-                                color: '#0000d6'
-                            }
-                        ];
-
-                        console.log("generated diversification pie chart", $rootScope.portfolioDiversification);
-
-                        $rootScope.fetchHistoricalPortfolioData();
-                        $rootScope.generatePerformance();
                     });
                 }
-            );
+
+                const generateDiversificationPieChart = function () {
+                    $rootScope.portfolioDiversification = [
+                        {
+                            label: "Cryptos",
+                            value: (($scope.cryptoValue / $rootScope.totalValue) * 100).toFixed(2),
+                            color: '#139000'
+                        },
+                        {
+                            label: "Fiat",
+                            value: (($scope.fiatValue / $rootScope.totalValue) * 100).toFixed(2),
+                            color: '#ad0e00'
+                        },
+                        {
+                            label: "Stocks",
+                            value: (($scope.stockValue / $rootScope.totalValue) * 100).toFixed(2),
+                            color: '#0000d6'
+                        }
+                    ];
+                };
+
+                //fixme rename to isProfiting
+                const generateIsProfiting = function () {
+                    $rootScope.profitting =
+                        $rootScope.totalValue > $rootScope.acquisitionCost;
+                };
+
+                console.log("generated diversification pie chart", $rootScope.portfolioDiversification);
+
+
+                console.log($rootScope.holdings);
+            });
         };
 
         $rootScope.convertHoldingsToPathVariables = function (currentHoldingsList) {
@@ -285,7 +290,11 @@ app.controller("totalValueLineChartCtrl", ['$scope', '$http', '$rootScope',
 app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', 'AlphaVantageKey',
     function ($scope, $http, $rootScope, toaster, AlphaVantageKey) {
 
-        $scope.showHistory = false;
+        //Cannot have expression in html due to SAX Parsing not accepting &
+        $scope.portfolioNotOldEnough = function () {
+            console.log("test");
+          return $rootScope.historicalPortfolio.total.length > 0 && $rootScope.historicalPortfolio.total.length < 7;
+        };
 
         $scope.lineOptions = {
             series: [
@@ -435,7 +444,6 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', '
 
 
         $scope.calculateCryptoPerformance = function () {
-            console.log(userCryptoValueNow, userCryptoValueOneMonthAgo);
             if (userCryptoValueNow === 0 || userCryptoValueOneMonthAgo === 0)
                 $scope.performanceNotReadyPopUp("cryptocurrency");
             else
@@ -447,15 +455,12 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', '
         };
 
         $scope.calculateFiatPerformance = function () {
-            console.log(userFiatValueNow, userFiatValueOneMonthAgo);
             if (userFiatValueNow === 0 || userFiatValueOneMonthAgo === 0)
                 $scope.performanceNotReadyPopUp("fiat currency");
             else
                 $scope.portfolioFiatChange =
                     ((userFiatValueNow / userFiatValueOneMonthAgo)
                         * 100 - 100).toFixed(3);
-
-            console.log($scope.portfolioFiatChange);
         };
 
         $scope.retrieveAndCalculateStockPerformance = function () {
@@ -656,6 +661,7 @@ app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', '$rootSco
                 $rootScope.updateUser();
                 $uibModalStack.dismissAll();
             }, function (response) {
+                console.log("test");
                 toaster.pop('error', "Failed to Add", response.data);
             });
         };
