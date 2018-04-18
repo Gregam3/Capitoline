@@ -89,17 +89,26 @@ public class StockService extends AbstractService<Stock> {
     }
 
 
-    public Map<Date, Double> getStockHistory(UserHolding userHolding, double userCurrencyModifier) throws UnirestException, ParseException {
-        Map<Date, Double> stockHistory = new HashMap<>();
-
+    public Map<Date, Double> getStockHistory(UserHolding userHolding, double userCurrencyModifier) throws UnirestException, ParseException, InvalidHoldingException {
         JSONObject historyJson = Unirest.get(TIME_SERIES_DAILY_URL_1 + userHolding.getAcronym() + TIME_SERIES_DAILY_URL_2)
                 .asJson().getBody().getObject().getJSONObject("Time Series (Daily)");
+
+        Queue<Transaction> transactionQueue = new PriorityQueue<>();
+        transactionQueue.addAll(userHolding.getTransactions());
+
+        //Ensures first transaction is not a watched transaction
+        transactionQueue = getNextTrackedTransaction(transactionQueue);
+
+        //If there are no non-watched transactions skip over this item
+        if(transactionQueue.size() < 1)
+            return null;
+
+        //Initialising local variables after we know that processing needs to take place
+        Map<Date, Double> stockHistory = new HashMap<>();
 
         //Initialised with current time so when comparison is done later every date will be earlier, comparison referenced with *1.
         long earliestDateInRange = new Date().getTime();
 
-        Queue<Transaction> transactionQueue = new PriorityQueue<>();
-        transactionQueue.addAll(userHolding.getTransactions());
         Transaction currentTransaction = null;
 
         double cumulativeQuantity = 0;
@@ -132,11 +141,18 @@ public class StockService extends AbstractService<Stock> {
             }
         }
 
-        return addWeekendsToStockHistory(stockHistory, earliestDateInRange);
+        return addMissingDates(stockHistory, earliestDateInRange);
+    }
+
+    private Queue<Transaction> getNextTrackedTransaction(Queue<Transaction> queue) {
+        while (queue.peek() != null && queue.peek().getQuantity() == 0)
+            queue.poll();
+
+        return queue;
     }
 
     //Stock markets close on weekends but in order for data to line up with other holdings data must be inserted on a day to day basis
-    private Map<Date, Double> addWeekendsToStockHistory(Map<Date, Double> stockHistory, long earliestDateInRange) {
+    private Map<Date, Double> addWeekendsToStockHistory(Map<Date, Double> stockHistory, long earliestDateInRange) throws InvalidHoldingException {
         long currentUnixTime = new Date().getTime();
 
         //Works out how far friday is away from current day
@@ -146,7 +162,7 @@ public class StockService extends AbstractService<Stock> {
              unixIterator < currentUnixTime;
             //Iterate by week rather than by day to speed up processing
              unixIterator += DateUtils.MILLIS_PER_DAY * 7) {
-            double valueBeforeWeekend = getClosestPopulatedValue(stockHistory, unixIterator + DateUtils.MILLIS_PER_DAY * baseMultiplier);
+            double valueBeforeWeekend = getClosestPopulatedValue(stockHistory, unixIterator + DateUtils.MILLIS_PER_DAY * baseMultiplier, 1);
 
             //Add saturday value
             stockHistory.put(
@@ -163,32 +179,47 @@ public class StockService extends AbstractService<Stock> {
         return stockHistory;
     }
 
-//    private Map<Date, Double> addMissingDates(Map<Date, Double> stockHistory, long earliestDateInRange) {
-//        long currentUnixTime = new Date().getTime();
-//        double lastValue = 0;
-//
-//        for (long unixIterator = earliestDateInRange;
-//             unixIterator < currentUnixTime;
-//             unixIterator += DateUtils.MILLIS_PER_DAY) {
-//            Date date = DateUtils.round(new Date(unixIterator), Calendar.DAY_OF_MONTH);
-//            Double currentValue = stockHistory.get(date);
-//
-//            if (currentValue != null)
-//                lastValue = currentValue;
-//            else
-//                stockHistory.put(date, lastValue);
-//
-//        }
-//
-//        return stockHistory;
-//    }
+    private Map<Date, Double> addMissingDates(Map<Date, Double> stockHistory, long earliestDateInRange) throws InvalidHoldingException {
+        long currentUnixTime = new Date().getTime();
+        double lastValue = 0;
 
-    //If the date on the friday cannot be retrieved then it will recurse backwards until it finds the next closest value
-    private double getClosestPopulatedValue(Map<Date, Double> stockHistory, long unixIterator) {
+        int lastValueDaysAway = 0;
+
+        for (long unixIterator = earliestDateInRange;
+             unixIterator < currentUnixTime;
+             unixIterator += DateUtils.MILLIS_PER_DAY) {
+            Date date = DateUtils.round(new Date(unixIterator), Calendar.DAY_OF_MONTH);
+            Double currentValue = stockHistory.get(date);
+
+            if(lastValueDaysAway > 50)
+                throw new InvalidHoldingException(
+                        "{\"data\": \"The provider is missing a portion of their data for your stock(s), please try again after the date: "
+                    + new Date(unixIterator) +"\" }");
+
+            if (currentValue != null) {
+                lastValue = currentValue;
+                lastValueDaysAway = 0;
+            } else
+                stockHistory.put(date, lastValue);
+
+            lastValueDaysAway++;
+        }
+
+        return stockHistory;
+    }
+
+    //If the date on the friday cannot be retrieved then it will recurse backwards until it finds the next closest value.
+    // Max recursion 20.
+    private double getClosestPopulatedValue(Map<Date, Double> stockHistory, long unixIterator, int recurseCount) throws InvalidHoldingException {
+        recurseCount++;
         Double value = stockHistory.get(DateUtils.round(new Date(unixIterator), Calendar.DAY_OF_MONTH));
 
+//        if(recurseCount > 50)
+//            throw new InvalidHoldingException("The provider is missing a portion of their data, please try again after the date "
+//                    + new Date(unixIterator - DateUtils.MILLIS_PER_DAY * 50));
+
         if (value == null)
-            return getClosestPopulatedValue(stockHistory, unixIterator - DateUtils.MILLIS_PER_DAY);
+            return getClosestPopulatedValue(stockHistory, unixIterator - DateUtils.MILLIS_PER_DAY, recurseCount);
 
         return value;
     }

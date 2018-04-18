@@ -81,29 +81,36 @@ app.controller("loginCtrl", ['$scope', '$http', 'toaster', '$window', '$rootScop
 
 app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'AlphaVantageKey', 'toaster',
     function ($scope, $http, $uibModal, $rootScope, AlphaVantageKey, toaster) {
-        $scope.openSettings = function () {
-            $uibModal.open({
-                templateUrl: 'templates/home/popups/settings-popup.html',
-                controller: 'settingsCtrl'
-            })
-        };
-
         //Fetch and process graph data
         $rootScope.fetchHistoricalPortfolioData = function () {
             $http.get(
                 'http://localhost:8080/user/get/holding-graph-data/'
-            ).then(function (response) {
+            ).then(function successCallback(response) {
                 console.log("generated graph");
 
                 $rootScope.historicalPortfolio.total = response.data.total;
                 $rootScope.historicalPortfolio.crypto = response.data.crypto;
                 $rootScope.historicalPortfolio.fiat = response.data.fiat;
                 $rootScope.historicalPortfolio.stock = response.data.stock;
-
-                $scope.showHistory = true;
+            }, function errorCallback(response) {
+                console.log(response);
+                toaster.pop('error', "Error Fetching Stock History", response.data.data)
             });
 
             console.log($rootScope.historicalPortfolio);
+        };
+
+        $rootScope.formatOverviewValues = function (value) {
+            if(value > 1000000000)
+                return (value / 1000000000).toFixed(3) + "BN";
+
+            if(value > 1000000)
+                return (value / 1000000).toFixed(3) + "MM";
+
+            if(value > 1000)
+                return (value/1000).toFixed(3) + "k";
+
+            return value.toFixed(2);
         };
 
         $rootScope.updateUser = function () {
@@ -114,7 +121,6 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
             $rootScope.fiatValue = 0;
 
             $rootScope.totalValue = 0;
-
 
             $http.get('http://localhost:8080/user/get')
                 .then(function (response) {
@@ -154,7 +160,7 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
                 }).then(function () {
                 console.log($rootScope.holdings);
 
-                if (angular.equals($rootScope.holdings.cryptos, {}) || angular.equals($rootScope.holdings.fiats, {})) {
+                if (!angular.equals($rootScope.holdings.cryptos, {}) || !angular.equals($rootScope.holdings.fiats, {})) {
                     $http.get(
                         "https://min-api.cryptocompare.com/data/pricemulti?fsyms="
                         + $rootScope.convertHoldingsToPathVariables($rootScope.holdings.cryptos) + ","
@@ -197,7 +203,7 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
                 if (!angular.equals($rootScope.holdings.stocks, {})) {
                     $http.get("https://www.alphavantage.co/query?function=BATCH_STOCK_QUOTES&symbols=" + $rootScope.convertHoldingsToPathVariables($scope.holdings.stocks)
                         + "&apikey=" + AlphaVantageKey).then(function (response) {
-
+                        console.log(response);
                         let i = 0;
 
                         for (const holding in $rootScope.holdings.stocks) {
@@ -207,10 +213,10 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
                                     response.data["Stock Quotes"][i]["2. price"] : null;
                             const currentValue = $rootScope.holdings.stocks[holding].price * $rootScope.holdings.stocks[holding].totalQuantity;
 
-                            if (currentValue === 0) {
+                            // two = are intentional for conversion
+                            if ($rootScope.holdings.stocks[holding].price == 0 || !$rootScope.holdings.stocks[holding].price)
                                 toaster.pop('warning', "Issue retrieving " + $rootScope.holdings.stocks[holding].acronym,
-                                    "One of our data providers is currently not functioning properly, this may influence your portfolio's accuracy.");
-                            }
+                                    "The AlphaVantage API used in Capitoline is currently experiencing problems, this may influence your portfolio's accuracy.");
 
                             $rootScope.holdings.stocks[holding].totalValue = currentValue;
                             $rootScope.totalValue += currentValue;
@@ -226,17 +232,17 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
                         {
                             label: "Cryptos",
                             value: (($scope.cryptoValue / $rootScope.totalValue) * 100).toFixed(2),
-                            color: '#139000'
+                            color: '#f7931a'
                         },
                         {
                             label: "Fiat",
                             value: (($scope.fiatValue / $rootScope.totalValue) * 100).toFixed(2),
-                            color: '#ad0e00'
+                            color: '#c47472'
                         },
                         {
                             label: "Stocks",
                             value: (($scope.stockValue / $rootScope.totalValue) * 100).toFixed(2),
-                            color: '#0000d6'
+                            color: '#35b2c8'
                         }
                     ];
                 };
@@ -282,18 +288,12 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
         };
     }]);
 
-app.controller("totalValueLineChartCtrl", ['$scope', '$http', '$rootScope',
-    function ($scope, $http, $rootScope) {
-
-    }]);
-
 app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', 'AlphaVantageKey',
     function ($scope, $http, $rootScope, toaster, AlphaVantageKey) {
 
         //Cannot have expression in html due to SAX Parsing not accepting &
         $scope.portfolioNotOldEnough = function () {
-            console.log("test");
-          return $rootScope.historicalPortfolio.total.length > 0 && $rootScope.historicalPortfolio.total.length < 7;
+            return $rootScope.historicalPortfolio.total.length > 0 && $rootScope.historicalPortfolio.total.length < 7;
         };
 
         $scope.lineOptions = {
@@ -303,7 +303,7 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', '
                     dataset: "total",
                     key: "value",
                     label: "Total Value",
-                    color: "#7d7d7d",
+                    color: "#636363",
                     type: ['line', 'area'],
                     id: 'mySeries0'
                 },
@@ -312,7 +312,7 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', '
                     dataset: "crypto",
                     key: "value",
                     label: "Crypto Value",
-                    color: "#008c00",
+                    color: "#f7931a",
                     type: ['line', 'area'],
                     id: 'mySeries1'
                 },
@@ -321,7 +321,7 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', '
                     dataset: "stock",
                     key: "value",
                     label: "Stock Value",
-                    color: "#0000c8",
+                    color: "#35b2c8",
                     type: ['line', 'area'],
                     id: 'mySeries2'
                 },
@@ -330,7 +330,7 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', '
                     dataset: "fiat",
                     key: "value",
                     label: "Fiat Value",
-                    color: "#b40e00",
+                    color: "#c47472",
                     type: ['line', 'area'],
                     id: 'mySeries3'
                 }
@@ -342,7 +342,9 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', '
                     type: 'date',
                     tickFormat: d3.time.format("%d %b %y")
                 },
-                y: {}
+                y: {
+                    type: ''
+                }
             }
         };
 
@@ -403,10 +405,17 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', '
                         $http.get('https://min-api.cryptocompare.com/data/price?fsym=USD&tsyms=' + currencyPathVariables)
                             .then(function (innerResponse) {
                                 for (const index in userFiatAcronyms)
-                                    userFiatValueNow += innerResponse.data[userFiatAcronyms[index]];
+                                    userFiatValueNow += innerResponse.data[userFiatAcronyms[index]]
+                                        * $rootScope.holdings.fiats[userFiatAcronyms[index]].totalQuantity;
 
-                                for (const index in userCryptoAcronyms)
-                                    userCryptoValueNow += innerResponse.data[userCryptoAcronyms[index]];
+
+                                for (const index in userCryptoAcronyms) {
+                                    console.log(userCryptoAcronyms[index], $rootScope.holdings.cryptos);
+
+                                    userCryptoValueNow += innerResponse.data[userCryptoAcronyms[index]] *
+                                        +$rootScope.holdings.cryptos[userCryptoAcronyms[index]].totalQuantity;
+
+                                }
                             });
 
                         $http.get("https://min-api.cryptocompare.com/data/pricehistorical?fsym=USD&tsyms=BTC,JPY,EUR,GBP,CNY,CHF" +
@@ -428,10 +437,12 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', '
                                         const innerResponseData = innerResponse.data["USD"];
 
                                         for (const index in userFiatAcronyms)
-                                            userFiatValueOneMonthAgo += innerResponseData[userFiatAcronyms[index]];
+                                            userFiatValueOneMonthAgo += innerResponseData[userFiatAcronyms[index]]
+                                                * $rootScope.holdings.fiats[userFiatAcronyms[index]].totalQuantity;
 
                                         for (const index in userCryptoAcronyms)
-                                            userCryptoValueOneMonthAgo += innerResponseData[userCryptoAcronyms[index]];
+                                            userCryptoValueOneMonthAgo += innerResponseData[userCryptoAcronyms[index]]
+                                                * $rootScope.holdings.cryptos[userCryptoAcronyms[index]].totalQuantity;
                                     });
 
                                 $scope.btcChange = ((btcValueNow / btcValueOneMonthAgo) * 100 - 100).toFixed(3);
@@ -444,6 +455,7 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', '
 
 
         $scope.calculateCryptoPerformance = function () {
+            console.log(userCryptoValueNow, userCryptoValueOneMonthAgo);
             if (userCryptoValueNow === 0 || userCryptoValueOneMonthAgo === 0)
                 $scope.performanceNotReadyPopUp("cryptocurrency");
             else
@@ -455,6 +467,7 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', '
         };
 
         $scope.calculateFiatPerformance = function () {
+            console.log(userFiatValueNow, userFiatValueOneMonthAgo);
             if (userFiatValueNow === 0 || userFiatValueOneMonthAgo === 0)
                 $scope.performanceNotReadyPopUp("fiat currency");
             else
@@ -550,6 +563,7 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', '
         };
 
         $rootScope.updateUser();
+        $rootScope.loaded = true;
     }]);
 
 app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'AlphaVantageKey', 'toaster',
@@ -645,11 +659,14 @@ app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', '$rootSco
                 name: $scope.holding.name,
                 holdingType: $scope.holding.holdingType,
                 quantity: $scope.quantity,
-                dateBought: $scope.holding.dateBought * 1
+                //* 1 to get unix time
+                dateBought: ($scope.holding.dateBought) ? $scope.holding.dateBought * 1 : new Date() * 1
             };
 
-
             console.log(newHolding);
+
+            toaster.pop('info', "Fetching History",
+                "We are currently fetching the history of this stock, on some occasions this may take a little while.");
 
             $http({
                 method: 'PUT',
@@ -661,7 +678,6 @@ app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', '$rootSco
                 $rootScope.updateUser();
                 $uibModalStack.dismissAll();
             }, function (response) {
-                console.log("test");
                 toaster.pop('error', "Failed to Add", response.data);
             });
         };

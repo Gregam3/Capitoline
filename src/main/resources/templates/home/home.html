@@ -35,94 +35,99 @@
 </head>
 <body>
 <div id="page-wrapper" ng-app="capitoline">
-    <div ng-controller="settingsCtrl">
-        <nav class="navbar navbar-default navbar-fixed-top"
-             role="navigation" style="margin-bottom:0">
-            <div class="row">
-                <div class="col-md-5 hidden-xs">
-                    <a class="navbar-brand"><span class="fa fa-university"></span> Capitoline - A Portfolio
-                        Tracker</a>
-                </div>
-                <div class="col-md-4 hidden-xs">
-                    <a class="navbar-brand">{{user.name}}'s Portfolio </a>
-                </div>
-                <div class="col-md-3 navbar-brand">
-                    <div class="col-xs-5" style="color: black">
-                        Currency
+    <div ng-show="loaded">
+        <div ng-controller="settingsCtrl">
+            <nav class="navbar navbar-default navbar-fixed-top"
+                 role="navigation" style="margin-bottom:0">
+                <div class="row">
+                    <div class="col-md-4 hidden-xs">
+                        <a class="navbar-brand"><span class="fa fa-university"></span> Capitoline - A Portfolio
+                            Tracker</a>
                     </div>
-                    <div class="col-xs-7">
-                        <select ng-model="userSettings.settings.currency"
-                                ng-options="currency.acronym for currency in currencies"
-                                ng-change="save()"></select>
+                    <div class="col-md-5 hidden-xs">
+                        <a class="navbar-brand" ng-show="user.name">{{user.name}}'s Portfolio </a>
+                    </div>
+                    <div class="col-md-3 navbar-brand">
+                        <div class="col-xs-8" style="color: black">
+                            Swap Currency
+                        </div>
+                        <div class="col-xs-4">
+                            <select ng-model="userSettings.settings.currency"
+                                    ng-options="currency.acronym for currency in currencies"
+                                    ng-change="save()">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+
+        <div style="padding-top: 60px;">
+            <div ng-controller="homeCtrl">
+                <div class="row" ng-show="totalValue > 0">
+                    <div class="col-lg-12">
+                        <toaster-container toaster-options="{'time-out': 5500, 'position-class': 'toast-top-center'}"></toaster-container>
+                        <div th:replace="/home/panel/overview :: overview"></div>
                     </div>
                 </div>
             </div>
-        </nav>
-    </div>
 
+            <div ng-controller="performanceCtrl">
+                <div class="row" ng-if="totalValue > 0">
+                    <div class="col-lg-9">
+                        <div th:replace="/home/panel/total-value-line-chart :: total-value-line-chart"></div>
+                    </div>
 
-    <div style="padding-top: 60px;">
-        <div ng-controller="homeCtrl">
-            <div class="row" ng-show="totalValue > 0">
-                <toaster-container toaster-options="{'time-out': 4000}"></toaster-container>
-                <div class="col-lg-12">
-                    <div th:replace="/home/panel/overview :: overview"></div>
+                    <!--emulating uibtabs as n3-pie-chart has documented sizing issue with pie charts that are initially hidden, -->
+                    <!--ng-if reloads chart completely fixing sizing issue as such it has been used below, uibtabs emulated by this.-->
+                    <div class="col-lg-3">
+                        <uib-tabset active="active">
+                            <b>
+                                <div class="col-xs-4">
+                                    <uib-tab index="0" heading="Diversification">
+                                    </uib-tab>
+                                </div>
+                                <div class="col-xs-3">
+                                    <uib-tab index="1" heading="Crypto" ng-click="calculateCryptoPerformance()">
+                                    </uib-tab>
+                                </div>
+                                <div class="col-xs-3">
+                                    <uib-tab index="2" heading="Stock" ng-disabled="1 > 0"
+                                             ng-click="retrieveAndCalculateStockPerformance()">
+                                    </uib-tab>
+                                </div>
+                                <div class="col-xs-2">
+                                    <uib-tab index="3" heading="Fiat" ng-click="calculateFiatPerformance()">
+                                    </uib-tab>
+                                </div>
+                            </b>
+                        </uib-tabset>
+
+                        <div class="panel panel-default" style="height: 350px;">
+                            <div ng-if="active === 0">
+                                <div th:replace="/home/tabs/diversification-pie-chart :: diversification-pie-chart"></div>
+                            </div>
+                            <div ng-if="active === 1">
+                                <div th:replace="/home/tabs/crypto-performance :: crypto-performance"></div>
+                            </div>
+                            <div ng-if="active === 2">
+                                <div th:replace="/home/tabs/stock-performance :: stock-performance"></div>
+                            </div>
+                            <div ng-if="active === 3">
+                                <div th:replace="/home/tabs/fiat-performance :: fiat-performance"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div ng-controller="performanceCtrl">
-            <div class="row" ng-if="totalValue > 0">
-                <div class="col-lg-9" >
-                    <div th:replace="/home/panel/total-value-line-chart :: total-value-line-chart"></div>
-                </div>
-
-                <!--emulating uibtabs as n3-pie-chart has documented sizing issue with pie charts that are initially hidden, -->
-                <!--ng-if reloads chart completely fixing sizing issue as such it has been used below, uibtabs emulated by this.-->
-                <div class="col-lg-3">
-                    <uib-tabset active="active">
-                        <b>
-                            <div class="col-xs-4">
-                                <uib-tab index="0" heading="Diversification">
-                                </uib-tab>
-                            </div>
-                            <div class="col-xs-3">
-                                <uib-tab index="1" heading="Crypto" ng-click="calculateCryptoPerformance()">
-                                </uib-tab>
-                            </div>
-                            <div class="col-xs-3">
-                                <uib-tab index="2" heading="Stock" ng-disabled="1 > 0"
-                                         ng-click="retrieveAndCalculateStockPerformance()">
-                                </uib-tab>
-                            </div>
-                            <div class="col-xs-2">
-                                <uib-tab index="3" heading="Fiat" ng-click="calculateFiatPerformance()">
-                                </uib-tab>
-                            </div>
-                        </b>
-                    </uib-tabset>
-
-                    <div class="panel panel-default" style="height: 384px;">
-                        <div ng-if="active === 0">
-                            <div th:replace="/home/tabs/diversification-pie-chart :: diversification-pie-chart"></div>
-                        </div>
-                        <div ng-if="active === 1">
-                            <div th:replace="/home/tabs/crypto-performance :: crypto-performance"></div>
-                        </div>
-                        <div ng-if="active === 2">
-                            <div th:replace="/home/tabs/stock-performance :: stock-performance"></div>
-                        </div>
-                        <div ng-if="active === 3">
-                            <div th:replace="/home/tabs/fiat-performance :: fiat-performance"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <div th:replace="/home/panel/holding-management :: holding-management"></div>
     </div>
-
-    <div th:replace="/home/panel/holding-management :: holding-management"></div>
-
+    <div ng-hide="loaded">
+        <span class="fa fa-circle-o-notch fa-spin"></span> Loading Portfolio
+    </div>
 </div>
 </body>
 </html>

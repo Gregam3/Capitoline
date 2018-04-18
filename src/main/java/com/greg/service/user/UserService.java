@@ -129,7 +129,7 @@ public class UserService extends AbstractService<User> {
         userDao.update(currentUser);
     }
 
-    public Map<String, List<GraphHoldingData>> getGraphHoldingData() throws UnirestException, IOException, ParseException {
+    public Map<String, List<GraphHoldingData>> getGraphHoldingData() throws UnirestException, IOException, ParseException, InvalidHoldingException {
         //Map used as only one instance of a day should be in each map
         Map<Date, Double> graphHoldingDataMap = new HashMap<>();
         Map<Date, Double> cryptoGraphHoldingDataMap = new HashMap<>();
@@ -146,11 +146,13 @@ public class UserService extends AbstractService<User> {
             switch (userHolding.getHoldingType()) {
                 case CRYPTO:
                 case FIAT:
-                    currentDataHoldingMap =
-                            currencyService.getCurrencyHistory(
-                                    userHolding,
-                                    userCurrencyModifier
-                            );
+                    currentDataHoldingMap = currencyService.getCurrencyHistory(
+                            userHolding,
+                            userCurrencyModifier
+                    );
+
+                    if (currentDataHoldingMap == null)
+                        break;
 
                     if (userHolding.getHoldingType().equals(HoldingType.CRYPTO))
                         cryptoGraphHoldingDataMap = mergeHoldingMap(cryptoGraphHoldingDataMap, currentDataHoldingMap);
@@ -159,16 +161,20 @@ public class UserService extends AbstractService<User> {
 
                     break;
                 case STOCK:
-                    currentDataHoldingMap =
-                            stockService.getStockHistory(
-                                    userHolding,
-                                    userCurrencyModifier
-                            );
+                    currentDataHoldingMap = stockService.getStockHistory(
+                            userHolding,
+                            userCurrencyModifier
+                    );
+
+                    if (currentDataHoldingMap == null)
+                        break;
+
                     stockGraphHoldingDataMap = mergeHoldingMap(stockGraphHoldingDataMap, currentDataHoldingMap);
                     break;
             }
 
-            graphHoldingDataMap = mergeHoldingMap(graphHoldingDataMap, currentDataHoldingMap);
+            if (currentDataHoldingMap != null)
+                graphHoldingDataMap = mergeHoldingMap(graphHoldingDataMap, currentDataHoldingMap);
         }
 
         //Converts Maps into sorted lists so it can be put into the n3 charts

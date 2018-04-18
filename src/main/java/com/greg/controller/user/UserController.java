@@ -5,16 +5,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.greg.entity.holding.HoldingType;
 import com.greg.entity.user.User;
 import com.greg.service.user.UserService;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
-import java.text.ParseException;
 
 /**
  * @author Greg Mitten (i7676925)
@@ -90,7 +86,7 @@ public class UserController {
     public ResponseEntity<?> getGraphHoldingData() {
         try {
             return new ResponseEntity<>(userService.getGraphHoldingData(), HttpStatus.OK);
-        } catch (UnirestException | IOException | ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

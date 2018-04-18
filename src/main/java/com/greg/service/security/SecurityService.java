@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 /**
  * @author Greg Mitten (i7676925)
@@ -17,6 +18,8 @@ import java.io.IOException;
 public class SecurityService {
 
     private UserService userService;
+    private final Pattern emailPattern = Pattern.compile("([A-Za-z]+@[A-Za-z]+\\.[A-Za-z]{2,})");
+    private final Pattern passwordPattern = Pattern.compile("([^/^\\s])+");
 
     @Autowired
     public SecurityService(UserService userService) {
@@ -34,25 +37,34 @@ public class SecurityService {
     }
 
     public void register(JsonNode registerNode) throws InvalidRegisterCredentialsException, IOException, InvalidAccessAttemptException {
-        JsonNode email = registerNode.get("email");
-        JsonNode name = registerNode.get("name");
-        JsonNode password = registerNode.get("password");
+        JsonNode emailNode = registerNode.get("email");
+        JsonNode nameNode = registerNode.get("name");
+        JsonNode passwordNode = registerNode.get("password");
 
-        if (email == null || password == null)
+        if (emailNode == null || passwordNode == null || passwordNode.isNull())
             throw new InvalidRegisterCredentialsException("Email and password must be provided");
 
-        if(name != null && name.asText().length() > 50)
+        String email = emailNode.asText();
+        String password = passwordNode.asText();
+
+        if(nameNode.asText().length() > 50)
             throw new InvalidRegisterCredentialsException("Name cannot exceed 50 characters, consider inputting a nickname.");
 
-        if(email.asText().length() < 6 || email.asText().length() > 254)
+        if(email.length() < 6 || email.length() > 254)
             throw new InvalidRegisterCredentialsException("Email length must between 6-254 characters");
 
-        if(password.asText().length() < 1 || password.asText().length() > 50)
+        if(password.length() < 1 || password.length() > 50)
             throw new InvalidRegisterCredentialsException("Password length must between 1-50 characters");
 
-        userService.addUser(email.asText(),
-                (name == null) ? null : name.asText(),
-                password.asText()
+        if(!emailPattern.matcher(email).find())
+            throw new InvalidRegisterCredentialsException("Not a Valid Email.");
+
+        if(!passwordPattern.matcher(password).find())
+            throw new InvalidRegisterCredentialsException("Password cannot be empty or contain spaces or '/'.");
+
+        userService.addUser(emailNode.asText(),
+                (nameNode.asText().equals("null")) ? null : nameNode.asText(),
+                password
         );
     }
 }

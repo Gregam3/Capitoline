@@ -1,4 +1,4 @@
-package com.greg.controller.holding.crypto;
+package com.greg.controller.holding.currency.crypto;
 
 import com.greg.entity.holding.crypto.Crypto;
 import com.greg.service.currency.CurrencyService;

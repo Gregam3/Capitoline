@@ -1,4 +1,4 @@
-package com.greg.controller.holding.fiat;
+package com.greg.controller.holding.currency.fiat;
 
 import com.greg.entity.holding.fiat.Fiat;
 import com.greg.service.currency.fiat.FiatService;
