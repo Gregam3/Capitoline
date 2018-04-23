@@ -4,6 +4,7 @@
   "dependencies": {
     "angular": "^1.6.8",
     "angular-smart-table": "^2.1.11",
+    "angular-websocket": "^2.0.1",
     "gulp": "*",
     "gulp-concat": "*",
     "gulp-livereload": "*",

@@ -134,7 +134,7 @@ public class UserService extends AbstractService<User> {
         Map<Date, Double> graphHoldingDataMap = new HashMap<>();
         Map<Date, Double> cryptoGraphHoldingDataMap = new HashMap<>();
         Map<Date, Double> stockGraphHoldingDataMap = new HashMap<>();
-        Map<Date, Double> fiatGraphHoldingDataMap = new LinkedHashMap<>();
+        Map<Date, Double> fiatGraphHoldingDataMap = new HashMap<>();
 
         double userCurrencyModifier = currencyService.getCurrentPrice(
                 "USD",

@@ -192,6 +192,7 @@ public class StockService extends AbstractService<Stock> {
             Double currentValue = stockHistory.get(date);
 
             if(lastValueDaysAway > 50)
+                //Passed in JSON format as the controller cannot return JSON/plain text
                 throw new InvalidHoldingException(
                         "{\"data\": \"The provider is missing a portion of their data for your stock(s), please try again after the date: "
                     + new Date(unixIterator) +"\" }");

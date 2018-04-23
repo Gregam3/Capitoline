@@ -22,11 +22,11 @@ import java.util.*;
  */
 @Service
 public class CurrencyService {
-    private final static String BASE_URL = "https://min-api.cryptocompare.com/data/";
-    private final static String HISTORY_FIRST_PART = BASE_URL + "histoday?fsym=";
+    private final static String CURRENCY_BASE_URL = "https://min-api.cryptocompare.com/data/";
+    private final static String HISTORY_FIRST_PART = CURRENCY_BASE_URL + "histoday?fsym=";
     private final static String HISTORY_SECOND_PART = "&tsym=USD&limit=";
-    private final static String PRICE_DAY = BASE_URL + "pricehistorical?fsym=";
-    private final static String PRICE_MULTI = BASE_URL + "pricemulti?fsyms=";
+    private final static String PRICE_DAY = CURRENCY_BASE_URL + "pricehistorical?fsym=";
+    private final static String PRICE_MULTI = CURRENCY_BASE_URL + "pricemulti?fsyms=";
     private UserService userService;
 
     @Autowired
@@ -111,7 +111,7 @@ public class CurrencyService {
             return 1;
 
         JSONObject response =
-                Unirest.get(BASE_URL + "price?fsym=" + acronym + "&tsyms=" + currencyDesired)
+                Unirest.get(CURRENCY_BASE_URL + "price?fsym=" + acronym + "&tsyms=" + currencyDesired)
                         .asJson()
                         .getBody()
                         .getObject();

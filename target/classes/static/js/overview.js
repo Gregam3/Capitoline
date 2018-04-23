@@ -79,8 +79,8 @@ app.controller("loginCtrl", ['$scope', '$http', 'toaster', '$window', '$rootScop
         };
     }]);
 
-app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'AlphaVantageKey', 'toaster',
-    function ($scope, $http, $uibModal, $rootScope, AlphaVantageKey, toaster) {
+app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'AlphaVantageKey', 'toaster', '$timeout', '$q',
+    function ($scope, $http, $uibModal, $rootScope, AlphaVantageKey, toaster, $timeout, $q) {
         //Fetch and process graph data
         $rootScope.fetchHistoricalPortfolioData = function () {
             $http.get(
@@ -101,14 +101,17 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
         };
 
         $rootScope.formatOverviewValues = function (value) {
-            if(value > 1000000000)
+            if (value > 1000000000)
+                return (value / 1000000000000).toFixed(3) + "TN";
+
+            if (value > 1000000000)
                 return (value / 1000000000).toFixed(3) + "BN";
 
-            if(value > 1000000)
+            if (value > 1000000)
                 return (value / 1000000).toFixed(3) + "MM";
 
-            if(value > 1000)
-                return (value/1000).toFixed(3) + "k";
+            if (value > 1000)
+                return (value / 1000).toFixed(3) + "k";
 
             return value.toFixed(2);
         };
@@ -159,106 +162,164 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
                     $rootScope.generatePerformance();
                 }).then(function () {
                 console.log($rootScope.holdings);
-
-                if (!angular.equals($rootScope.holdings.cryptos, {}) || !angular.equals($rootScope.holdings.fiats, {})) {
-                    $http.get(
-                        "https://min-api.cryptocompare.com/data/pricemulti?fsyms="
-                        + $rootScope.convertHoldingsToPathVariables($rootScope.holdings.cryptos) + ","
-                        + $rootScope.convertHoldingsToPathVariables($rootScope.holdings.fiats)
-                        + "&tsyms=USD"
-                    ).then(function (response) {
-
-                        let holding;
-                        for (holding in $rootScope.holdings.cryptos) {
-                            console.log("converting cryptos");
-                            $rootScope.holdings.cryptos[holding].price =
-                                (response.data[holding]) ? response.data[holding]["USD"] : null;
-                            const currentValue = $rootScope.holdings.cryptos[holding].price * $rootScope.holdings.cryptos[holding].totalQuantity;
-
-                            $rootScope.holdings.cryptos[holding].totalValue = currentValue;
-                            $rootScope.totalValue += currentValue;
-                            $rootScope.cryptoValue += currentValue;
-
-                        }
-
-                        for (holding in $rootScope.holdings.fiats) {
-                            console.log("converting fiats");
-                            $rootScope.holdings.fiats[holding].price =
-                                (response.data[holding]) ? response.data[holding]["USD"] : null;
-
-                            const currentValue =
-                                $rootScope.holdings.fiats[holding].price * $rootScope.holdings.fiats[holding].totalQuantity;
-
-                            $rootScope.holdings.fiats[holding].totalValue = currentValue;
-                            $rootScope.totalValue += currentValue;
-                            $rootScope.fiatValue += currentValue;
-                        }
-
-                        generateDiversificationPieChart();
-                        generateIsProfiting();
-                    });
-                }
-
-                //Get all User's stock prices
-                if (!angular.equals($rootScope.holdings.stocks, {})) {
-                    $http.get("https://www.alphavantage.co/query?function=BATCH_STOCK_QUOTES&symbols=" + $rootScope.convertHoldingsToPathVariables($scope.holdings.stocks)
-                        + "&apikey=" + AlphaVantageKey).then(function (response) {
-                        console.log(response);
-                        let i = 0;
-
-                        for (const holding in $rootScope.holdings.stocks) {
-                            console.log("converting stocks");
-                            $rootScope.holdings.stocks[holding].price =
-                                (response.data["Stock Quotes"][i]["2. price"]) ?
-                                    response.data["Stock Quotes"][i]["2. price"] : null;
-                            const currentValue = $rootScope.holdings.stocks[holding].price * $rootScope.holdings.stocks[holding].totalQuantity;
-
-                            // two = are intentional for conversion
-                            if ($rootScope.holdings.stocks[holding].price == 0 || !$rootScope.holdings.stocks[holding].price)
-                                toaster.pop('warning', "Issue retrieving " + $rootScope.holdings.stocks[holding].acronym,
-                                    "The AlphaVantage API used in Capitoline is currently experiencing problems, this may influence your portfolio's accuracy.");
-
-                            $rootScope.holdings.stocks[holding].totalValue = currentValue;
-                            $rootScope.totalValue += currentValue;
-                            $rootScope.stockValue += currentValue;
-
-                            i++;
-                        }
-                    });
-                }
-
-                const generateDiversificationPieChart = function () {
-                    $rootScope.portfolioDiversification = [
-                        {
-                            label: "Cryptos",
-                            value: (($scope.cryptoValue / $rootScope.totalValue) * 100).toFixed(2),
-                            color: '#f7931a'
-                        },
-                        {
-                            label: "Fiat",
-                            value: (($scope.fiatValue / $rootScope.totalValue) * 100).toFixed(2),
-                            color: '#c47472'
-                        },
-                        {
-                            label: "Stocks",
-                            value: (($scope.stockValue / $rootScope.totalValue) * 100).toFixed(2),
-                            color: '#35b2c8'
-                        }
-                    ];
-                };
-
-                //fixme rename to isProfiting
-                const generateIsProfiting = function () {
-                    $rootScope.profitting =
-                        $rootScope.totalValue > $rootScope.acquisitionCost;
-                };
-
-                console.log("generated diversification pie chart", $rootScope.portfolioDiversification);
-
-
-                console.log($rootScope.holdings);
+                updateHoldingValue();
             });
         };
+
+        const updateHoldingValue = function () {
+            let tempHoldings = $rootScope.holdings;
+            let tempTotalValue = 0;
+            let tempCryptoValue = 0;
+            let tempFiatValue = 0;
+            let tempStockValue = 0;
+
+            $scope.currencyCall = null;
+            $scope.stockCall = null;
+
+
+            if (!angular.equals(tempHoldings.cryptos, {}) || !angular.equals(tempHoldings.fiats, {})) {
+                $scope.currencyCall = $http.get(
+                    "https://min-api.cryptocompare.com/data/pricemulti?fsyms="
+                    + $rootScope.convertHoldingsToPathVariables(tempHoldings.cryptos) + ","
+                    + $rootScope.convertHoldingsToPathVariables(tempHoldings.fiats)
+                    + "&tsyms=USD"
+                ).then(function (response) {
+
+                    let holding;
+                    for (holding in tempHoldings.cryptos) {
+                        console.log("converting cryptos");
+                        tempHoldings.cryptos[holding].price =
+                            (response.data[holding]) ? response.data[holding]["USD"] : null;
+                        const currentValue = tempHoldings.cryptos[holding].price * tempHoldings.cryptos[holding].totalQuantity;
+
+                        tempHoldings.cryptos[holding].totalValue = currentValue;
+                        tempTotalValue += currentValue;
+                        tempCryptoValue += currentValue;
+
+                    }
+
+                    for (holding in tempHoldings.fiats) {
+                        console.log("converting fiats");
+                        tempHoldings.fiats[holding].price =
+                            (response.data[holding]) ? response.data[holding]["USD"] : null;
+
+                        const currentValue =
+                            tempHoldings.fiats[holding].price * tempHoldings.fiats[holding].totalQuantity;
+
+                        tempHoldings.fiats[holding].totalValue = currentValue;
+                        tempTotalValue += currentValue;
+                        tempFiatValue += currentValue;
+                    }
+                })
+            }
+
+            //Get all User's stock prices
+            if (!angular.equals(tempHoldings.stocks, {})) {
+                $scope.stockCall = $http.get("https://www.alphavantage.co/query?function=BATCH_STOCK_QUOTES&symbols=" + $rootScope.convertHoldingsToPathVariables($scope.holdings.stocks)
+                    + "&apikey=" + AlphaVantageKey).then(function (response) {
+                    console.log(response);
+                    let i = 0;
+
+                    for (const holding in tempHoldings.stocks) {
+                        console.log("converting stocks");
+                        tempHoldings.stocks[holding].price =
+                            (response.data["Stock Quotes"][i]["2. price"]) ?
+                                response.data["Stock Quotes"][i]["2. price"] : null;
+                        const currentValue = tempHoldings.stocks[holding].price * tempHoldings.stocks[holding].totalQuantity;
+
+                        // two = are intentional for conversion
+                        if (tempHoldings.stocks[holding].price == 0 || !tempHoldings.stocks[holding].price)
+                            toaster.pop('warning', "Issue retrieving " + tempHoldings.stocks[holding].acronym,
+                                "The AlphaVantage API used in Capitoline is currently experiencing problems, this may influence your portfolio's accuracy.");
+
+                        tempHoldings.stocks[holding].totalValue = currentValue;
+                        tempTotalValue += currentValue;
+                        tempStockValue += currentValue;
+
+                        i++;
+                    }
+                })
+
+
+            }
+
+            if ($scope.currencyCall && $scope.stockCall)
+                $q.all([$scope.currencyCall, $scope.stockCall])
+                    .then(function () {
+                        callUpdateMethods(tempTotalValue, tempCryptoValue, tempFiatValue, tempStockValue);
+                    });
+            else if ($scope.currencyCall)
+                $q.all([$scope.currencyCall])
+                    .then(function () {
+                        callUpdateMethods(tempTotalValue, tempCryptoValue, tempFiatValue, tempStockValue);
+                    });
+            else if ($scope.stockCall)
+                $q.all([$scope.currencyCall])
+                    .then(function () {
+                        callUpdateMethods(tempTotalValue, tempCryptoValue, tempFiatValue, tempStockValue);
+                    });
+        };
+
+        const callUpdateMethods = function (totalValue, tempCryptoValue, tempFiatValue, tempStockValue) {
+            $rootScope.totalValue = totalValue;
+            $rootScope.cryptoValue = tempCryptoValue;
+            $rootScope.fiatValue = tempFiatValue;
+            $rootScope.stockValue = tempStockValue;
+
+            updateHoldingsAfterDelay();
+            generateDiversificationPieChart();
+            generateIsProfiting();
+        };
+
+        const updateHoldingsAfterDelay = function () {
+            $timeout(updateHoldingValue, 10000);
+        };
+
+        const generateDiversificationPieChart = function () {
+            $rootScope.portfolioDiversification = [
+                {
+                    label: "Cryptos",
+                    value: (($scope.cryptoValue / $rootScope.totalValue) * 100).toFixed(2),
+                    color: '#f7931a'
+                },
+                {
+                    label: "Fiat",
+                    value: (($scope.fiatValue / $rootScope.totalValue) * 100).toFixed(2),
+                    color: '#c47472'
+                },
+                {
+                    label: "Stocks",
+                    value: (($scope.stockValue / $rootScope.totalValue) * 100).toFixed(2),
+                    color: '#35b2c8'
+                }
+            ];
+            console.log("generated diversification pie chart", $rootScope.portfolioDiversification);
+        };
+
+
+        //fixme rename to isProfiting
+        const generateIsProfiting = function () {
+            console.log($rootScope.totalValue, $rootScope.acquisitionCost);
+
+            $rootScope.profitting =
+                $rootScope.totalValue > $rootScope.acquisitionCost;
+        };
+
+        // const openCurrencyWebSocket = function() {
+        //     const ws = $websocket.$new('wss://streamer.cryptocompare.com');
+        //
+        //      ws.$on('$open', function() {
+        //         ws.$emit('hello', 'world');
+        //      })
+        //          .$on('incoming event', function(message) {
+        //              console.log(message);
+        //          })
+        // };
+        //
+        // openCurrencyWebSocket();
+
+        console.log($rootScope.holdings);
+
 
         $rootScope.convertHoldingsToPathVariables = function (currentHoldingsList) {
             let tickers = "";
