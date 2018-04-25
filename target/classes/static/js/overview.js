@@ -672,13 +672,30 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
     }]);
 
 app.controller("holdingInfoCtrl", ['$scope', '$uibModalStack', '$rootScope', function ($scope, $uibModalStack, $rootScope) {
-    }]);
+}]);
 
 app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', '$rootScope', 'toaster',
     function ($scope, $http, $uibModalStack, $rootScope, toaster) {
         $scope.holding = {};
 
+        $scope.showHoldingToReduce = false;
+        $scope.holdingToReduce = null;
         $scope.holdingsLoaded = false;
+
+        $scope.setHoldingToReduceAsSelectedCurrency = function () {
+            const selectedCurrencyAsUserHolding = getSelectedCurrencyAsUserHolding();
+
+            if (selectedCurrencyAsUserHolding)
+                $scope.holdingToReduce = $rootScope.user.settings.currency;
+        };
+
+        const getSelectedCurrencyAsUserHolding = function () {
+            for (let i = 0; i < $rootScope.user.holdings; i++)
+                if ($rootScope.user.holdings[i].acronym === $rootScope.user.settings.currency.acronym)
+                    return $rootScope.user.holdings[i];
+
+            return null;
+        };
 
         let newHolding = {
             email: $rootScope.user.email,
@@ -752,7 +769,8 @@ app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', '$rootSco
                 holdingType: $scope.holding.holdingType,
                 quantity: $scope.quantity,
                 //* 1 to get unix time
-                dateBought: ($scope.holding.dateBought) ? $scope.holding.dateBought * 1 : new Date() * 1
+                dateBought: ($scope.holding.dateBought) ? $scope.holding.dateBought * 1 : new Date() * 1,
+                holdingToReduce: $scope.holdingToReduce
             };
 
             $scope.addingHolding = true;

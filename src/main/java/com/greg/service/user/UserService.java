@@ -104,7 +104,7 @@ public class UserService extends AbstractService<User> {
                 date
         );
 
-        int holdingIndex = userDao.indexOfHolding(currentUser, acronym, holdingType);
+        int holdingIndex = indexOfHolding(acronym, holdingType);
 
         if (holdingIndex >= 0) {
             currentUser
@@ -125,8 +125,53 @@ public class UserService extends AbstractService<User> {
             currentUser.setHoldings(userHoldings);
         }
 
+        JsonNode holdingToReduce = holdingNode.get("holdingToReduce");
+
+        if (holdingToReduce != null)
+            removeValueFromOtherHolding(
+                    indexOfHolding(
+                            holdingToReduce.get("acronym").asText(),
+                            HoldingType.valueOf(holdingToReduce.get("holdingType").asText())
+                    ),
+                    transaction.getQuantity() * transaction.getPrice()
+            );
+
+
         currentUser.configureChildren();
         userDao.update(currentUser);
+    }
+
+    //If the user chooses to remove the value from another holding when buying this keeps track of it.
+    private void removeValueFromOtherHolding(int holdingIndexToReduce, double valueToReduce) throws UnirestException, IOException {
+        UserHolding holdingToReduce = currentUser.getHoldings().get(holdingIndexToReduce);
+        double price;
+
+        if (holdingToReduce.getHoldingType().equals(HoldingType.STOCK))
+            price = stockService.getCurrentStockPrice(holdingToReduce.getAcronym());
+        else
+            price = currencyService.getCurrentPrice(holdingToReduce.getAcronym(), "USD");
+
+
+        if (valueToReduce > (holdingToReduce.getTotalQuantity() * price)) {
+            currentUser.getHoldings().get(holdingIndexToReduce).setUser(null);
+            currentUser.getHoldings().remove(holdingIndexToReduce);
+        }
+
+        holdingToReduce.setTotalQuantity(
+                holdingToReduce.getTotalQuantity() - (valueToReduce / price)
+        );
+
+        currentUser.getHoldings().set(holdingIndexToReduce, holdingToReduce);
+        update(currentUser);
+    }
+
+    private int indexOfHolding(String acronym, HoldingType holdingType) {
+        List<UserHolding> userHoldings = currentUser.getHoldings();
+        for (int i = 0; i < userHoldings.size(); i++)
+            if (userHoldings.get(i).getAcronym().equals(acronym) &&
+                    userHoldings.get(i).getHoldingType().equals(holdingType))
+                return i;
+        return -1;
     }
 
     public Map<String, List<GraphHoldingData>> getGraphHoldingData() throws UnirestException, IOException, ParseException, InvalidHoldingException {

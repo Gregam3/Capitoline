@@ -9,9 +9,12 @@
                 <label>Holding</label>
             </div>
             <div class="col-xs-12">
-                <select ng-model="holding" ng-show="holdingsLoaded" ng-change="changeDatesAvailable(holding.holdingType)"
+                <select ng-model="holding" ng-show="holdingsLoaded"
+                        ng-change="changeDatesAvailable(holding.holdingType)"
                         ng-options="(holding.name+ ' (' + holding.acronym + ') - ' +holding.holdingType) for holding in holdingList | orderBy: 'name'"></select>
-                <span class="fa fa-circle-o-notch fa-spin" ng-hide="holdingsLoaded"></span> Loading
+                <div ng-hide="holdingsLoaded">
+                    <span class="fa fa-circle-o-notch fa-spin"></span> Loading
+                </div>
             </div>
             <div class="col-xs-12">
                 <label>Quantity</label>
@@ -24,7 +27,17 @@
                 <div uib-datepicker ng-model="holding.dateBought" class="well well-sm"
                      datepicker-options="options" date-disabled="disabled(date, mode)"></div>
             </div>
-            <div class="col-md-12 col-xs-12">
+            <div class="col-xs-12">
+                <label>Remove value from current Holding? </label>
+                <input type="checkbox" ng-model="showHoldingToReduce"
+                       ng-change="setHoldingToReduceAsSelectedCurrency()"/>
+            </div>
+            <div class="col-xs-12" style="padding-bottom: 5px;">
+                <select ng-model="holdingToReduce" ng-show="showHoldingToReduce"
+                        ng-options="holding.name for holding in user.holdings | orderBy: 'name'"></select>
+            </div>
+
+            <div class="col-xs-12">
                 <button ng-click="add()">
                     Add
                     <span class="fa fa-plus" ng-hide="addingHolding"></span>
