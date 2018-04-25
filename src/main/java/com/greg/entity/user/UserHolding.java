@@ -1,9 +1,7 @@
 package com.greg.entity.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.greg.entity.holding.HoldingType;
-import com.greg.utils.JSONUtils;
 import org.apache.commons.lang3.time.DateUtils;
 
 import javax.persistence.*;
@@ -123,26 +121,28 @@ public class UserHolding {
     @Transient
     public double getTotalQuantity() throws IOException {
         double totalQuantity = 0;
+
         if (transactions != null)
             for (Transaction transaction : transactions)
                 totalQuantity += transaction.getQuantity();
 
         this.totalQuantity = totalQuantity;
 
-        return this.totalQuantity;
+        return totalQuantity;
     }
 
-    public String asJson() throws JsonProcessingException {
-        return JSONUtils.OBJECT_MAPPER.writeValueAsString(this);
+    public void addTransaction(Transaction newTransaction) throws IOException {
+        if (newTransaction.getQuantity() > 0)
+            acquisitionCost += newTransaction.getQuantity() * newTransaction.getPrice();
+        else
+            acquisitionCost = acquisitionCost * ((newTransaction.getQuantity() / getTotalQuantity()) * -1);
+
+        transactions.add(newTransaction);
+        Collections.sort(transactions);
+
     }
 
-    public void addTransaction(Transaction transaction) throws JsonProcessingException {
-        this.acquisitionCost +=
-                transaction.getQuantity() * transaction.getPrice();
-        transactions.add(transaction);
-    }
-
-    public void configureChildren() {
+    void configureChildren() {
         for (Transaction transaction : transactions) {
             transaction.setUserHolding(this);
         }

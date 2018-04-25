@@ -28,10 +28,10 @@
     </div>
     <div class="col-md-4 col-sm-12">
         <div class="panel">
-            <div ng-class="{'panel-success': profitting, 'panel-danger': !profitting}">
+            <div ng-class="{'panel-success': isProfiting, 'panel-danger': !isProfiting}">
                 <div class="panel-heading">
                     <div class="huge">
-                        {{(totalValue > acquisitionCost) ? "▲" : "▼" }}
+                        {{(isProfiting) ? "▲" : "▼" }}
                         <b>{{(((totalValue/acquisitionCost)*100) - 100).toFixed(2)}}%</b>
                     </div>
                 </div>

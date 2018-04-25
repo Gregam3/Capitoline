@@ -12,6 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ConcurrentModificationException;
+
 /**
  * @author Greg Mitten (i7676925)
  * gregoryamitten@gmail.com
@@ -86,6 +88,11 @@ public class UserController {
     public ResponseEntity<?> getGraphHoldingData() {
         try {
             return new ResponseEntity<>(userService.getGraphHoldingData(), HttpStatus.OK);
+        } catch (ConcurrentModificationException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(
+                    "You have modified your portfolio whilst it is loading as such history may not be correct.",
+                    HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -93,9 +100,9 @@ public class UserController {
     }
 
     @DeleteMapping(value = "delete/holding/{acronym}/{holdingType}/{amountToRemove:.+}", produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<String> deleteHolding(@PathVariable("acronym") String acronym,
-                                                @PathVariable("holdingType") String holdingType,
-                                                @PathVariable("amountToRemove") Double amountToRemove) {
+    public ResponseEntity<String> removeFromHolding(@PathVariable("acronym") String acronym,
+                                                    @PathVariable("holdingType") String holdingType,
+                                                    @PathVariable("amountToRemove") Double amountToRemove) {
         try {
             if (amountToRemove == null || amountToRemove <= 0)
                 return new ResponseEntity<>("Amount to remove must be greater than 0.", HttpStatus.BAD_REQUEST);

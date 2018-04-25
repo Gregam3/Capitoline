@@ -1,0 +1,41 @@
+<div ng-controller="holdingInfoCtrl">
+    <div class="modal-header">
+        <h3 class="modal-title" id="modal-title">Information for your {{currentHoldingInfo.name}} Holding
+            <span class="fa fa-info-circle"></span></h3>
+    </div>
+    <div class="modal-body" id="modal-body">
+        <h4>Total Acquisition Cost: {{
+            (currentHoldingInfo.acquisitionCost > 0) ? (userCurrency.symbol) + (currentHoldingInfo.acquisitionCost *
+            userCurrency.modifier).toFixed(2) :
+            'Cannot be fetched'}}</h4>
+        <table st-table="rowCollection" class="table table-striped table-large-font">
+            <thead>
+            <tr>
+                <th class="fixed-column">Transaction type</th>
+                <th class="fixed-column">Date</th>
+                <th class="fixed-column">Quantity</th>
+                <th class="fixed-column">Price</th>
+                <th class="fixed-column">Total Value</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="transaction in currentHoldingInfo.transactions">
+                <td>{{(transaction.quantity > 0) ? "Bought" :
+                    (transaction.quantity === 0) ? "Watched" : "Sold"}}
+                </td>
+                <td>{{transaction.date}}</td>
+                <td>{{(transaction.quantity !== 0 ) ? transaction.quantity.toFixed(4) : "Watch only"}}</td>
+                <td>{{userCurrency.symbol}}{{(transaction.price * userCurrency.modifier).toFixed(4) | number}}</td>
+                <td>{{userCurrency.symbol}}{{((transaction.quantity < 0) ? ((transaction.quantity * transaction.price) *
+                    userCurrency.modifier).toFixed(2) * -1 : (transaction.quantity * transaction.price) *
+                    userCurrency.modifier).toFixed(2)
+                    | number}}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="modal-footer">
+
+    </div>
+</div>

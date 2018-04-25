@@ -2,17 +2,15 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <body>
 
-<div th:fragment="diversification-pie-chart">
+<div th:fragment="diversification-pie-chart" style="height:240px;">
     <div class="panel-heading">
         <h4>
             Portfolio Diversification (%) <span class="fa fa-balance-scale"></span></h4>
     </div>
-    <div class="panel-body" style="height: 250px">
-        <pie-chart data="portfolioDiversification" options="pieOptions"
-                   ng-show="portfolioDiversification.length > 0"></pie-chart>
-        <div class="huge " ng-hide="portfolioDiversification.length > 0" style="text-align: center;">
-            <span class="fa fa-circle-o-notch fa-spin"></span> Loading
-        </div>
+    <pie-chart data="portfolioDiversification" options="pieOptions"
+               ng-show="portfolioDiversification.length > 0"></pie-chart>
+    <div class="huge" ng-hide="portfolioDiversification.length > 0" style="text-align: center;">
+        <span class="fa fa-circle-o-notch fa-spin"></span> Loading
     </div>
 </div>
 </body>

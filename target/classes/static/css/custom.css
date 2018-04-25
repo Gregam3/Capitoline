@@ -49,3 +49,7 @@
 .chart-container, .pie-chart {
     height:150px !important;
 }
+
+.modal-md {
+    width: 400px;
+}

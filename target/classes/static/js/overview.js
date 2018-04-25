@@ -5,7 +5,7 @@ app.run(function ($rootScope) {
     $rootScope.acquisitionCost = 0;
 
     $rootScope.user = {};
-    $rootScope.profitting = null;
+    $rootScope.isProfiting = null;
     $rootScope.userCurrency = {
         modifier: 1,
         symbol: '$'
@@ -86,7 +86,10 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
             $http.get(
                 'http://localhost:8080/user/get/holding-graph-data/'
             ).then(function successCallback(response) {
-                console.log("generated graph");
+                console.log("Behind the Scenes: Based on the user's current holdings and the date(s) they were added, the back-end " +
+                    "fetches and parses this into a format able to be displayed on a graph. Some data takes far longer than " +
+                    "others based on whether or not the holding is a stock (more parsing necessary) and based on how much history " +
+                    "needs to be fetched", $rootScope.historicalPortfolio);
 
                 $rootScope.historicalPortfolio.total = response.data.total;
                 $rootScope.historicalPortfolio.crypto = response.data.crypto;
@@ -96,8 +99,6 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
                 console.log(response);
                 toaster.pop('error', "Error Fetching Stock History", response.data.data)
             });
-
-            console.log($rootScope.historicalPortfolio);
         };
 
         $rootScope.formatOverviewValues = function (value) {
@@ -116,8 +117,11 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
             return value.toFixed(2);
         };
 
+        let shownWarning = false;
+
         $rootScope.updateUser = function () {
-            console.log("updating user");
+            $rootScope.loaded = false;
+            shownWarning = false;
 
             $rootScope.cryptoValue = 0;
             $rootScope.stockValue = 0;
@@ -127,7 +131,10 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
 
             $http.get('http://localhost:8080/user/get')
                 .then(function (response) {
-                    console.log(response.data);
+                    console.log("Behind the Scenes: Capitoline has fetched user data based on the login, " +
+                        "after a user logs in it sets the server-side variable \"currentUser\" " +
+                        "to their user data. This is also retrieved when a change is made to the user " +
+                        "on the client-side. Their user data looks like the following: ", response.data);
                     $rootScope.user = response.data;
 
                     if ($rootScope.user.settings
@@ -137,7 +144,6 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
                     }
 
                     $rootScope.acquisitionCost = 0;
-                    console.log(response.data);
 
                     $rootScope.holdings = {
                         cryptos: {},
@@ -166,7 +172,11 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
             });
         };
 
+        console.log("Behind the Scenes: Updated user prices and anything reliant on them, Capitoline updates its data every 10 seconds." +
+            " the data retrieved from the APIs updates roughly ever 30 seconds.");
+
         const updateHoldingValue = function () {
+
             let tempHoldings = $rootScope.holdings;
             let tempTotalValue = 0;
             let tempCryptoValue = 0;
@@ -187,7 +197,6 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
 
                     let holding;
                     for (holding in tempHoldings.cryptos) {
-                        console.log("converting cryptos");
                         tempHoldings.cryptos[holding].price =
                             (response.data[holding]) ? response.data[holding]["USD"] : null;
                         const currentValue = tempHoldings.cryptos[holding].price * tempHoldings.cryptos[holding].totalQuantity;
@@ -199,7 +208,6 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
                     }
 
                     for (holding in tempHoldings.fiats) {
-                        console.log("converting fiats");
                         tempHoldings.fiats[holding].price =
                             (response.data[holding]) ? response.data[holding]["USD"] : null;
 
@@ -217,20 +225,20 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
             if (!angular.equals(tempHoldings.stocks, {})) {
                 $scope.stockCall = $http.get("https://www.alphavantage.co/query?function=BATCH_STOCK_QUOTES&symbols=" + $rootScope.convertHoldingsToPathVariables($scope.holdings.stocks)
                     + "&apikey=" + AlphaVantageKey).then(function (response) {
-                    console.log(response);
                     let i = 0;
 
                     for (const holding in tempHoldings.stocks) {
-                        console.log("converting stocks");
                         tempHoldings.stocks[holding].price =
                             (response.data["Stock Quotes"][i]["2. price"]) ?
                                 response.data["Stock Quotes"][i]["2. price"] : null;
                         const currentValue = tempHoldings.stocks[holding].price * tempHoldings.stocks[holding].totalQuantity;
 
                         // two = are intentional for conversion
-                        if (tempHoldings.stocks[holding].price == 0 || !tempHoldings.stocks[holding].price)
+                        if ((tempHoldings.stocks[holding].price == 0 || !tempHoldings.stocks[holding].price) && !shownWarning) {
                             toaster.pop('warning', "Issue retrieving " + tempHoldings.stocks[holding].acronym,
                                 "The AlphaVantage API used in Capitoline is currently experiencing problems, this may influence your portfolio's accuracy.");
+                            shownWarning = true;
+                        }
 
                         tempHoldings.stocks[holding].totalValue = currentValue;
                         tempTotalValue += currentValue;
@@ -258,6 +266,8 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
                     .then(function () {
                         callUpdateMethods(tempTotalValue, tempCryptoValue, tempFiatValue, tempStockValue);
                     });
+            else
+                $rootScope.loaded = true;
         };
 
         const callUpdateMethods = function (totalValue, tempCryptoValue, tempFiatValue, tempStockValue) {
@@ -269,6 +279,9 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
             updateHoldingsAfterDelay();
             generateDiversificationPieChart();
             generateIsProfiting();
+            $rootScope.loaded = true;
+
+            console.log("Behind the Scenes: Updated again");
         };
 
         const updateHoldingsAfterDelay = function () {
@@ -293,33 +306,13 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
                     color: '#35b2c8'
                 }
             ];
-            console.log("generated diversification pie chart", $rootScope.portfolioDiversification);
         };
 
 
-        //fixme rename to isProfiting
         const generateIsProfiting = function () {
-            console.log($rootScope.totalValue, $rootScope.acquisitionCost);
-
-            $rootScope.profitting =
+            $rootScope.isProfiting =
                 $rootScope.totalValue > $rootScope.acquisitionCost;
         };
-
-        // const openCurrencyWebSocket = function() {
-        //     const ws = $websocket.$new('wss://streamer.cryptocompare.com');
-        //
-        //      ws.$on('$open', function() {
-        //         ws.$emit('hello', 'world');
-        //      })
-        //          .$on('incoming event', function(message) {
-        //              console.log(message);
-        //          })
-        // };
-        //
-        // openCurrencyWebSocket();
-
-        console.log($rootScope.holdings);
-
 
         $rootScope.convertHoldingsToPathVariables = function (currentHoldingsList) {
             let tickers = "";
@@ -470,13 +463,10 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', '
                                         * $rootScope.holdings.fiats[userFiatAcronyms[index]].totalQuantity;
 
 
-                                for (const index in userCryptoAcronyms) {
-                                    console.log(userCryptoAcronyms[index], $rootScope.holdings.cryptos);
-
+                                for (const index in userCryptoAcronyms)
                                     userCryptoValueNow += innerResponse.data[userCryptoAcronyms[index]] *
                                         +$rootScope.holdings.cryptos[userCryptoAcronyms[index]].totalQuantity;
 
-                                }
                             });
 
                         $http.get("https://min-api.cryptocompare.com/data/pricehistorical?fsym=USD&tsyms=BTC,JPY,EUR,GBP,CNY,CHF" +
@@ -507,7 +497,7 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', '
                                     });
 
                                 $scope.btcChange = ((btcValueNow / btcValueOneMonthAgo) * 100 - 100).toFixed(3);
-                                $scope.fiatIndexChange = ((fiatIndexValueNow / fiatIndexValueOneMonthAgo) * 100 - 100).toFixed(3);
+                                $scope.fiatIndexChange = ((fiatIndexValueNow / fiatIndexValueOneMonthAgo) * 100 - 100).toFixed(1);
                             });
                     });
 
@@ -516,7 +506,6 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', '
 
 
         $scope.calculateCryptoPerformance = function () {
-            console.log(userCryptoValueNow, userCryptoValueOneMonthAgo);
             if (userCryptoValueNow === 0 || userCryptoValueOneMonthAgo === 0)
                 $scope.performanceNotReadyPopUp("cryptocurrency");
             else
@@ -534,7 +523,7 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', '
             else
                 $scope.portfolioFiatChange =
                     ((userFiatValueNow / userFiatValueOneMonthAgo)
-                        * 100 - 100).toFixed(3);
+                        * 100 - 100).toFixed(1);
         };
 
         $scope.retrieveAndCalculateStockPerformance = function () {
@@ -548,9 +537,13 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', '
                         console.log(sectorPerformance);
 
                         $http.get('http://localhost:8080/stock/portfolio-stock-change-over-month')
-                            .then(function (responseTwo) {
+                            .then(function successCallback(responseTwo) {
                                 console.log(responseTwo);
                                 $scope.portfolioStockChange = responseTwo.data.toFixed(3);
+                            }, function () {
+                                toaster.pop('error', 'Issue with API',
+                                    "The AlphaVantage API used by Capitoline is currently experiencing " +
+                                    "issues returning  data need for your stock performance.")
                             });
 
 
@@ -569,7 +562,8 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', '
         };
 
         $scope.performanceNotReadyPopUp = function (holdingType) {
-            toaster.pop('info', "Cannot do that yet", "We might still be loading your " + holdingType + " data.");
+            toaster.pop('info', "Cannot do that yet", "We might still be loading your " + holdingType + " data, " +
+                "if not you can only view your " + holdingType + " analysis after adding some to your portfolio.");
 
             $scope.active = 0;
         };
@@ -624,7 +618,6 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', '
         };
 
         $rootScope.updateUser();
-        $rootScope.loaded = true;
     }]);
 
 app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'AlphaVantageKey', 'toaster',
@@ -633,11 +626,38 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
             return angular.equals(object, {});
         };
 
+        $rootScope.currentHoldingInfo = null;
+
+        $scope.viewHoldingInfo = function (acronym, holdingType) {
+            let currentHolding = null;
+
+            if (holdingType === "CRYPTO")
+                currentHolding = $rootScope.holdings.cryptos[acronym];
+            else if (holdingType === "STOCK")
+                currentHolding = $rootScope.holdings.stocks[acronym];
+            else
+                currentHolding = $rootScope.holdings.fiats[acronym];
+
+
+            console.log(currentHolding);
+
+            $rootScope.currentHoldingInfo = currentHolding;
+
+            $uibModal.open({
+                templateUrl: 'templates/home/popups/holding-info-popup.html',
+                controller: 'holdingInfoCtrl',
+                size: 'lg'
+            });
+
+
+        };
+
         $scope.addHolding = function () {
-            $rootScope.addHoldingModal = $uibModal.open({
+            $uibModal.open({
                 templateUrl: 'templates/home/popups/add-holding-popup.html',
-                controller: 'addHoldingCtrl'
-            })
+                controller: 'addHoldingCtrl',
+                size: 'md'
+            });
         };
 
         $scope.removeHolding = function (acronym, holdingType, amountToRemove) {
@@ -651,9 +671,14 @@ app.controller("holdingManagementCtrl", ['$scope', '$http', '$uibModal', '$rootS
         };
     }]);
 
+app.controller("holdingInfoCtrl", ['$scope', '$uibModalStack', '$rootScope', function ($scope, $uibModalStack, $rootScope) {
+    }]);
+
 app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', '$rootScope', 'toaster',
     function ($scope, $http, $uibModalStack, $rootScope, toaster) {
         $scope.holding = {};
+
+        $scope.holdingsLoaded = false;
 
         let newHolding = {
             email: $rootScope.user.email,
@@ -670,22 +695,21 @@ app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', '$rootSco
         };
 
         $scope.changeDatesAvailable = function (holdingType) {
-            if (holdingType === "STOCK") {
+            if (holdingType === "STOCK")
                 $scope.options = {
                     minDate: new Date(946684800000),
                     maxDate: new Date()
                 };
-            } else if (holdingType === "CRYPTO") {
+            else if (holdingType === "CRYPTO")
                 $scope.options = {
                     minDate: new Date(1230768000000),
                     maxDate: new Date()
                 };
-            } else {
+            else
                 $scope.options = {
                     minDate: new Date(1420070400000),
                     maxDate: new Date()
                 };
-            }
         };
 
 
@@ -695,26 +719,33 @@ app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', '$rootSco
 
         //save reloading every time
         if ($scope.holdingList.length === 0) {
+            $scope.holdingsLoaded = false;
+            console.log("Getting holdings");
+
+            //Callbacks needed to avoid concurrency exceptions
             $http.get(
                 "http://localhost:8080/crypto/list"
             ).then(function (response) {
                 $scope.holdingList = $scope.holdingList.concat(response.data);
-            });
-
-            $http.get(
-                "http://localhost:8080/fiat/list"
-            ).then(function (response) {
-                $scope.holdingList = $scope.holdingList.concat(response.data);
-            });
-
-            $http.get(
-                "http://localhost:8080/stock/list"
-            ).then(function (response) {
-                $scope.holdingList = $scope.holdingList.concat(response.data);
+                $http.get(
+                    "http://localhost:8080/fiat/list"
+                ).then(function (response) {
+                    $scope.holdingList = $scope.holdingList.concat(response.data);
+                    $http.get(
+                        "http://localhost:8080/stock/list"
+                    ).then(function (response) {
+                        $scope.holdingList = $scope.holdingList.concat(response.data);
+                        $scope.holdingsLoaded = true;
+                    });
+                });
             });
         }
 
         $scope.add = function () {
+            console.log("Behind the Scenes: Adding a new holding to the current user's portfolio, " +
+                "this will either be a completely new holding or it will append something called a transaction " +
+                "to an existing holding, updating its quantity and keeping track of its history.");
+
             newHolding = {
                 acronym: $scope.holding.acronym,
                 name: $scope.holding.name,
@@ -724,22 +755,22 @@ app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', '$rootSco
                 dateBought: ($scope.holding.dateBought) ? $scope.holding.dateBought * 1 : new Date() * 1
             };
 
-            console.log(newHolding);
-
-            toaster.pop('info', "Fetching History",
-                "We are currently fetching the history of this stock, on some occasions this may take a little while.");
+            $scope.addingHolding = true;
 
             $http({
                 method: 'PUT',
                 url: "http://localhost:8080/user/add-holding",
                 data: newHolding
-            }).then(function (response) {
+            }).then(function successCallback() {
                 if (newHolding.quantity === 0) toaster.pop('success', "Successfully Watched", "Began watching " + newHolding.name);
                 else toaster.pop('success', "Successfully Added", "Added " + newHolding.quantity + " instance of " + newHolding.name);
                 $rootScope.updateUser();
+                $scope.addingHolding = false;
                 $uibModalStack.dismissAll();
-            }, function (response) {
+            }, function errorCallback(response) {
+                console.log("test");
                 toaster.pop('error', "Failed to Add", response.data);
+                $scope.addingHolding = false;
             });
         };
     }]);

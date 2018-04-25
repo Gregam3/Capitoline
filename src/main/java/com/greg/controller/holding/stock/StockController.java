@@ -1,7 +1,7 @@
 package com.greg.controller.holding.stock;
 
 import com.greg.entity.holding.stock.Stock;
-import com.greg.service.stock.StockService;
+import com.greg.user.StockService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

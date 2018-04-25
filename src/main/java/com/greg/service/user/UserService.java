@@ -14,7 +14,7 @@ import com.greg.exceptions.InvalidRegisterCredentialsException;
 import com.greg.service.AbstractService;
 import com.greg.service.currency.CurrencyService;
 import com.greg.service.currency.fiat.FiatService;
-import com.greg.service.stock.StockService;
+import com.greg.user.StockService;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -208,20 +208,26 @@ public class UserService extends AbstractService<User> {
         return holdingsMap;
     }
 
-    public void removeItemsFromHolding(String acronym, HoldingType holdingType, double amountToRemove) throws IOException, UnirestException {
+    public void removeItemsFromHolding(String acronym, HoldingType holdingType, double amountToRemove) throws IOException, UnirestException, ParseException, InvalidHoldingException {
         for (UserHolding userHolding : currentUser.getHoldings()) {
             if (userHolding.getAcronym().equals(acronym) &&
                     userHolding.getHoldingType().equals(holdingType)) {
                 if (userHolding.getTotalQuantity() <= amountToRemove) {
-                    //UserHolding's orphan will be deleted automatically
+                    //Orphan will be deleted automatically
                     userHolding.setUser(null);
+                    for (Transaction transaction : userHolding.getTransactions())
+                        transaction.setUserHolding(null);
+
+
                     currentUser.getHoldings().remove(userHolding);
                     update(currentUser);
                     break;
                 } else {
                     Transaction transaction = new Transaction(
                             0 - amountToRemove,
-                            userHolding.getAcquisitionCost() / userHolding.getTotalQuantity(),
+                            (holdingType.equals(HoldingType.STOCK) ?
+                                    stockService.getCurrentStockPrice(acronym) :
+                                    currencyService.getCurrentPrice(acronym, "USD")),
                             new java.sql.Date(new Date().getTime())
                     );
 

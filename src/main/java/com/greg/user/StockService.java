@@ -1,4 +1,4 @@
-package com.greg.service.stock;
+package com.greg.user;
 
 import com.greg.dao.stock.StockDao;
 import com.greg.entity.holding.stock.Stock;
@@ -100,7 +100,7 @@ public class StockService extends AbstractService<Stock> {
         transactionQueue = getNextTrackedTransaction(transactionQueue);
 
         //If there are no non-watched transactions skip over this item
-        if(transactionQueue.size() < 1)
+        if (transactionQueue.size() < 1)
             return null;
 
         //Initialising local variables after we know that processing needs to take place
@@ -151,6 +151,39 @@ public class StockService extends AbstractService<Stock> {
         return queue;
     }
 
+//    private Map<AlphaVantageFetchInterval, Integer> getNumberOfFetchesPerPeriods(Date earliestDate) {
+//        Map<AlphaVantageFetchInterval, Integer> fetchesPerPeriod = new LinkedHashMap<>();
+//        fetchesPerPeriod.put(AlphaVantageFetchInterval.MONTH, 0);
+//        fetchesPerPeriod.put(AlphaVantageFetchInterval.WEEK, 0);
+//        fetchesPerPeriod.put(AlphaVantageFetchInterval.DAY, 0);
+//        int daysToEarliestDate =
+//                (int) ((earliestDate.getTime() - new Date().getTime()) / DateUtils.MILLIS_PER_DAY);
+//
+//        while (daysToEarliestDate > 0) {
+//            if (daysToEarliestDate > 365) {
+//                fetchesPerPeriod.put(
+//                        AlphaVantageFetchInterval.MONTH,
+//                        fetchesPerPeriod.get(AlphaVantageFetchInterval.MONTH)
+//                );
+//                daysToEarliestDate -= 30;
+//            } else if (daysToEarliestDate > 100) {
+//                fetchesPerPeriod.put(
+//                        AlphaVantageFetchInterval.WEEK,
+//                        fetchesPerPeriod.get(AlphaVantageFetchInterval.WEEK)
+//                );
+//                daysToEarliestDate -= 7;
+//            } else {
+//                fetchesPerPeriod.put(
+//                        AlphaVantageFetchInterval.DAY,
+//                        fetchesPerPeriod.get(AlphaVantageFetchInterval.DAY)
+//                );
+//                daysToEarliestDate--;
+//            }
+//        }
+//
+//        return fetchesPerPeriod;
+//    }
+
     //Stock markets close on weekends but in order for data to line up with other holdings data must be inserted on a day to day basis
     private Map<Date, Double> addWeekendsToStockHistory(Map<Date, Double> stockHistory, long earliestDateInRange) throws InvalidHoldingException {
         long currentUnixTime = new Date().getTime();
@@ -191,11 +224,11 @@ public class StockService extends AbstractService<Stock> {
             Date date = DateUtils.round(new Date(unixIterator), Calendar.DAY_OF_MONTH);
             Double currentValue = stockHistory.get(date);
 
-            if(lastValueDaysAway > 50)
+            if (lastValueDaysAway > 50)
                 //Passed in JSON format as the controller cannot return JSON/plain text
                 throw new InvalidHoldingException(
                         "{\"data\": \"The provider is missing a portion of their data for your stock(s), please try again after the date: "
-                    + new Date(unixIterator) +"\" }");
+                                + new Date(unixIterator) + "\" }");
 
             if (currentValue != null) {
                 lastValue = currentValue;
@@ -214,10 +247,6 @@ public class StockService extends AbstractService<Stock> {
     private double getClosestPopulatedValue(Map<Date, Double> stockHistory, long unixIterator, int recurseCount) throws InvalidHoldingException {
         recurseCount++;
         Double value = stockHistory.get(DateUtils.round(new Date(unixIterator), Calendar.DAY_OF_MONTH));
-
-//        if(recurseCount > 50)
-//            throw new InvalidHoldingException("The provider is missing a portion of their data, please try again after the date "
-//                    + new Date(unixIterator - DateUtils.MILLIS_PER_DAY * 50));
 
         if (value == null)
             return getClosestPopulatedValue(stockHistory, unixIterator - DateUtils.MILLIS_PER_DAY, recurseCount);

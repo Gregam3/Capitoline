@@ -6,31 +6,29 @@
     <div class="panel-heading">
         <h4>Crypto Performance <span class="fa fa-btc"></span></h4>
     </div>
-    <div class="panel-body">
-        <div class="row">
-            <div class="col-md-5" ng-show="portfolioCryptoChange !== 0">
-                <p style="font-size: 14px;">Over the month BitCoin was {{((btcChange > 0 ) ? "up" :
-                    "down")}} <b>{{btcChange}}%</b>
-                    relative to your Cryptocurrencies' prices which were {{((portfolioCryptoChange > 0 ) ?
-                    "up"
-                    :
-                    "down")}} <b>{{portfolioCryptoChange}}%</b> (a <b>{{(portfolioCryptoChange -
-                        btcChange).toFixed(3)}}%</b> difference)
-                </p>
-            </div>
-            <div class="col-md-5" ng-hide="portfolioCryptoChange !== 0">
-                <label ng-show="angular.equals(holdings.cryptos, {})">In order to see your Crypto performance you will
-                    need to add some Cryptocurrencies to your portfolio.</label>
-                <label ng-hide="angular.equals(holdings.cryptos, {})">In order to see your Crypto performance you will
-                    need to add a Cryptocurrency other than Bitcoin, as this is the benchmark used to measure
-                    performance.</label>
-            </div>
+    <div class="row">
+        <div class="col-md-5" ng-show="portfolioCryptoChange !== 0">
+            <p style="font-size: 14px;">Over the month BitCoin was {{((btcChange > 0 ) ? "up" :
+                "down")}} <b>{{btcChange}}%</b>
+                relative to your Cryptocurrencies' prices which were {{((portfolioCryptoChange > 0 ) ?
+                "up"
+                :
+                "down")}} <b>{{portfolioCryptoChange}}%</b> (a <b>{{(portfolioCryptoChange -
+                    btcChange).toFixed(3)}}%</b> difference)
+            </p>
+        </div>
+        <div class="col-md-5" ng-hide="portfolioCryptoChange !== 0">
+            <label ng-show="angular.equals(holdings.cryptos, {})">In order to see your Crypto performance you will
+                need to add some Cryptocurrencies to your portfolio.</label>
+            <label ng-hide="angular.equals(holdings.cryptos, {})">In order to see your Crypto performance you will
+                need to add a Cryptocurrency other than Bitcoin, as this is the benchmark used to measure
+                performance.</label>
+        </div>
 
-            <div class="col-md-7" style="text-align: center;">
-                <h4>Volatility</h4>
-                <pie-chart class="pie-chart-medium" data="volatility" options="pieOptions"
-                           style="height: 150px;"></pie-chart>
-            </div>
+        <div class="col-md-7" style="text-align: center;">
+            <h4>Volatility</h4>
+            <pie-chart class="pie-chart-medium" data="volatility" options="pieOptions"
+                       style="height: 150px;"></pie-chart>
         </div>
     </div>
 </div>

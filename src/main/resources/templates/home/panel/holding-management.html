@@ -27,23 +27,32 @@
                 <th class="fixed-column">Stock Name</th>
                 <th class="fixed-column">Quantity</th>
                 <th class="fixed-column">Price</th>
-                <th class="fixed-column">Total Holdings</th>
+                <th class="fixed-column">Total Value</th>
                 <th class="fixed-column">Total Change</th>
+                <th class="fixed-column">Info</th>
             </tr>
             </thead>
             <tbody>
             <tr ng-repeat="stock in holdings.stocks">
                 <td>{{stock.name}} ({{stock.acronym}})</td>
                 <td>{{(stock.totalQuantity !== 0 ) ? stock.totalQuantity.toFixed(2) : "Watch only"}}</td>
-                <td>{{userCurrency.symbol}}{{(stock.price * userCurrency.modifier).toFixed(4) | number}}</td>
-                <td>{{userCurrency.symbol}}{{(stock.totalValue * userCurrency.modifier).toFixed(4) | number}}</td>
+                <td>{{userCurrency.symbol}}{{(stock.price * userCurrency.modifier) | number}}</td>
+                <td>{{userCurrency.symbol}}{{(stock.totalValue * userCurrency.modifier) | number}}</td>
                 <td ng-class="{'holding-up': stock.totalValue > stock.acquisitionCost,
                 'holding-down': !(stock.totalValue > stock.acquisitionCost)}">
                     {{
                     (stock.totalValue !== 0) ?
-                    ((stock.totalValue > stock.acquisitionCost) ? "▲" : "▼") +
-                    ((stock.totalValue / stock.acquisitionCost) * 100 - 100).toFixed(2) + '%' : ''
+                    ((stock.totalValue > stock.acquisitionCost) ? "▲" : "▼") + userCurrency.symbol +
+                    (( 0 > (stock.totalValue - stock.acquisitionCost)) ?
+                    ((stock.totalValue - stock.acquisitionCost) * userCurrency.modifier).toFixed(2) * -1 : ((stock.totalValue - stock.acquisitionCost) * userCurrency.modifier).toFixed(2))
+                    + " (" +
+                    ((stock.totalValue / stock.acquisitionCost) * 100 - 100).toFixed(2) + '%)' : ""
                     }}
+                </td>
+                <td>
+                    <button ng-click="viewHoldingInfo(stock.acronym, 'STOCK')">
+                        <span class="fa fa-info-circle"></span>
+                    </button>
                 </td>
                 <td>
                     <div class="col-xs-6">
@@ -63,8 +72,9 @@
                 <th class="fixed-column">Crypto Name</th>
                 <th class="fixed-column">Quantity</th>
                 <th class="fixed-column">Price</th>
-                <th class="fixed-column">Total Holdings</th>
+                <th class="fixed-column">Total Value</th>
                 <th class="fixed-column">Total Change</th>
+                <th class="fixed-column">Info</th>
             </tr>
             </thead>
             <tbody>
@@ -73,16 +83,24 @@
                 <td>{{(crypto.totalQuantity !== 0 ) ? crypto.totalQuantity.toFixed(4) : "Watch only"}}</td>
                 <td>{{userCurrency.symbol}}{{(crypto.price * userCurrency.modifier).toFixed(4) | number}}</td>
                 <td>{{userCurrency.symbol}}{{((crypto.totalQuantity * crypto.price) *
-                    userCurrency.modifier).toFixed(4)
+                    userCurrency.modifier).toFixed(2)
                     | number}}
                 </td>
                 <td ng-class="{'holding-up': crypto.totalValue > crypto.acquisitionCost,
                 'holding-down': !(crypto.totalValue > crypto.acquisitionCost)}">
                     {{
                     (crypto.totalValue !== 0) ?
-                    ((crypto.totalValue > crypto.acquisitionCost) ? "▲" : "▼") +
-                    ((crypto.totalValue / crypto.acquisitionCost) * 100 - 100).toFixed(2) + '%' : ''
+                    ((crypto.totalValue > crypto.acquisitionCost) ? "▲" : "▼") + userCurrency.symbol +
+                    (( 0 > (crypto.totalValue - crypto.acquisitionCost)) ?
+                    ((crypto.totalValue - crypto.acquisitionCost) * userCurrency.modifier).toFixed(2) * -1 : ((crypto.totalValue - crypto.acquisitionCost) * userCurrency.modifier).toFixed(2))
+                    + " (" +
+                    ((crypto.totalValue / crypto.acquisitionCost) * 100 - 100).toFixed(2) + '%)' : ""
                     }}
+                </td>
+                <td>
+                    <button ng-click="viewHoldingInfo(crypto.acronym, 'CRYPTO')">
+                        <span class="fa fa-info-circle"></span>
+                    </button>
                 </td>
                 <td>
                     <div class="col-xs-6">
@@ -102,8 +120,9 @@
                 <th class="fixed-column">Currency Name</th>
                 <th class="fixed-column">Quantity</th>
                 <th class="fixed-column">Price</th>
-                <th class="fixed-column">Total Holdings</th>
+                <th class="fixed-column">Total Value</th>
                 <th class="fixed-column">Total Change</th>
+                <th class="fixed-column">Info</th>
             </tr>
             </thead>
             <tbody>
@@ -111,17 +130,23 @@
                 <td>{{fiat.acronym}} - {{fiat.name}}</td>
                 <td>{{(fiat.totalQuantity !== 0) ? fiat.totalQuantity.toFixed(2) : "Watch only"}}</td>
                 <td>{{userCurrency.symbol}}{{(fiat.price * userCurrency.modifier).toFixed(4) | number}}</td>
-                <td>{{userCurrency.symbol}}{{((fiat.totalQuantity * fiat.price) * userCurrency.modifier).toFixed(4)
-                    |
-                    number}}
+                <td>{{userCurrency.symbol}}{{((fiat.totalQuantity * fiat.price) * userCurrency.modifier).toFixed(4) | number}}
                 </td>
                 <td ng-class="{'holding-up': fiat.totalValue > fiat.acquisitionCost,
                 'holding-down': !(fiat.totalValue > fiat.acquisitionCost)}">
                     {{
                     (fiat.totalValue !== 0) ?
-                    ((fiat.totalValue > fiat.acquisitionCost) ? "▲" : "▼") +
-                    ((fiat.totalValue / fiat.acquisitionCost) * 100 - 100).toFixed(2) + '%' : ''
+                    ((fiat.totalValue > fiat.acquisitionCost) ? "▲" : "▼") + userCurrency.symbol +
+                    (( 0 > (fiat.totalValue - fiat.acquisitionCost)) ?
+                    ((fiat.totalValue - fiat.acquisitionCost) * userCurrency.modifier).toFixed(2) * -1 : ((fiat.totalValue - fiat.acquisitionCost) * userCurrency.modifier).toFixed(2))
+                    + " (" +
+                    ((fiat.totalValue / fiat.acquisitionCost) * 100 - 100).toFixed(2) + '%)' : ""
                     }}
+                </td>
+                <td>
+                    <button ng-click="viewHoldingInfo(fiat.acronym, 'FIAT')">
+                        <span class="fa fa-info-circle"></span>
+                    </button>
                 </td>
                 <td>
                     <div class="col-xs-6">

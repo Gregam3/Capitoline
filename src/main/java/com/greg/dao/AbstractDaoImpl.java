@@ -32,7 +32,6 @@ public abstract class AbstractDaoImpl<T> implements Dao<T> {
 
     @SuppressWarnings("unchecked")
     public T get(String id) {
-
         return (T) entityManager.find(currentClass, id);
     }
 
