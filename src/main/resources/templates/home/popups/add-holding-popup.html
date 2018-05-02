@@ -27,15 +27,15 @@
                 <div uib-datepicker ng-model="holding.dateBought" class="well well-sm"
                      datepicker-options="options" date-disabled="disabled(date, mode)"></div>
             </div>
-            <div class="col-xs-12">
-                <label>Remove value from current Holding? </label>
-                <input type="checkbox" ng-model="showHoldingToReduce"
-                       ng-change="setHoldingToReduceAsSelectedCurrency()"/>
-            </div>
-            <div class="col-xs-12" style="padding-bottom: 5px;">
-                <select ng-model="holdingToReduce" ng-show="showHoldingToReduce"
-                        ng-options="holding.name for holding in user.holdings | orderBy: 'name'"></select>
-            </div>
+            <!--<div class="col-xs-12">-->
+                <!--<label>Remove value from current Holding? </label>-->
+                <!--<input type="checkbox" ng-model="showHoldingToReduce"-->
+                       <!--ng-change="setHoldingToReduceAsSelectedCurrency()"/>-->
+            <!--</div>-->
+            <!--<div class="col-xs-12" style="padding-bottom: 5px;">-->
+                <!--<select ng-model="holdingToReduce" ng-show="showHoldingToReduce"-->
+                        <!--ng-options="holding.name for holding in user.holdings | orderBy: 'name'"></select>-->
+            <!--</div>-->
 
             <div class="col-xs-12">
                 <button ng-click="add()">

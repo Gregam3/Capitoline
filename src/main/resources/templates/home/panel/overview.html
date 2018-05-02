@@ -6,7 +6,7 @@
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <div class="huge">
-                    <b> {{userCurrency.symbol}}{{formatOverviewValues(totalValue * userCurrency.modifier)}}</b>
+                    <b> {{formatValues(totalValue)}}</b>
                 </div>
             </div>
             <div class="panel-footer">
@@ -18,7 +18,7 @@
         <div class="panel panel-info">
             <div class="panel-heading">
                 <div class="huge">
-                    <b>{{userCurrency.symbol}}{{formatOverviewValues(acquisitionCost * userCurrency.modifier)}}</b>
+                    <b>{{formatValues(acquisitionCost)}}</b>
                 </div>
             </div>
             <div class="panel-footer">
@@ -32,7 +32,7 @@
                 <div class="panel-heading">
                     <div class="huge">
                         {{(isProfiting) ? "▲" : "▼" }}
-                        <b>{{(((totalValue/acquisitionCost)*100) - 100).toFixed(2)}}%</b>
+                        <b>{{toPercentage(totalValue, acquisitionCost)}}</b>
                     </div>
                 </div>
                 <div class="panel-footer">

@@ -35,14 +35,4 @@ public class CryptoService {
         }
         return cryptos;
     }
-
-    public double getCryptoPrice(String acronym) throws UnirestException {
-        JSONObject response =
-                Unirest.get(CRYPTO_API_URL + "/data/price?fsym=" + acronym + "&tsyms=USD")
-                        .asJson()
-                        .getBody()
-                        .getObject();
-
-        return (response.length() == 1) ? response.getDouble("USD") : -1;
-    }
 }

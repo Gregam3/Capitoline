@@ -94,7 +94,10 @@ public class UserService extends AbstractService<User> {
                 break;
             case FIAT:
             case CRYPTO:
-                price = currencyService.getValueAtDate(acronym, date.getTime());
+                price = currencyService.getValueAtDate(
+                        acronym,
+                        date.getTime(),
+                        currentUser.getSettings().getUserCurrency().getAcronym());
         }
 
 
@@ -125,15 +128,16 @@ public class UserService extends AbstractService<User> {
             currentUser.setHoldings(userHoldings);
         }
 
-        JsonNode holdingToReduce = holdingNode.get("holdingToReduce");
+        JsonNode holdingToReduceNode = holdingNode.get("holdingToReduce");
 
-        if (holdingToReduce != null)
+        if (holdingToReduceNode != null && !holdingToReduceNode.isNull())
             removeValueFromOtherHolding(
                     indexOfHolding(
-                            holdingToReduce.get("acronym").asText(),
-                            HoldingType.valueOf(holdingToReduce.get("holdingType").asText())
+                            holdingToReduceNode.get("acronym").asText(),
+                            HoldingType.valueOf(holdingToReduceNode.get("holdingType").asText())
                     ),
-                    transaction.getQuantity() * transaction.getPrice()
+                    transaction.getQuantity() * transaction.getPrice(),
+                    transaction.getDate()
             );
 
 
@@ -142,26 +146,34 @@ public class UserService extends AbstractService<User> {
     }
 
     //If the user chooses to remove the value from another holding when buying this keeps track of it.
-    private void removeValueFromOtherHolding(int holdingIndexToReduce, double valueToReduce) throws UnirestException, IOException {
-        UserHolding holdingToReduce = currentUser.getHoldings().get(holdingIndexToReduce);
+    private void removeValueFromOtherHolding(int holdingIndexToReduce, double valueToReduce, Date date) throws Exception {
+        List<UserHolding> holdings = currentUser.getHoldings();
+        UserHolding holdingToReduce = holdings.get(holdingIndexToReduce);
         double price;
 
-        if (holdingToReduce.getHoldingType().equals(HoldingType.STOCK))
-            price = stockService.getCurrentStockPrice(holdingToReduce.getAcronym());
-        else
-            price = currencyService.getCurrentPrice(holdingToReduce.getAcronym(), "USD");
+        price = (holdingToReduce.getHoldingType().equals(HoldingType.STOCK)) ?
+                stockService.getStockPriceAtDate(holdingToReduce.getAcronym(), date.getTime()) :
+                currencyService.getValueAtDate(holdingToReduce.getAcronym(),
+                        date.getTime(),
+                        currentUser.getSettings().getUserCurrency().getAcronym());
 
 
         if (valueToReduce > (holdingToReduce.getTotalQuantity() * price)) {
-            currentUser.getHoldings().get(holdingIndexToReduce).setUser(null);
-            currentUser.getHoldings().remove(holdingIndexToReduce);
+            holdings.get(holdingIndexToReduce).setUser(null);
+            holdings.remove(holdingIndexToReduce);
+        } else {
+            Transaction transaction = new Transaction(
+                    (valueToReduce / price) * -1,
+                    price,
+                    new java.sql.Date(date.getTime())
+            );
+
+            holdingToReduce.addTransaction(transaction);
+
+            holdings.set(holdingIndexToReduce, holdingToReduce);
         }
 
-        holdingToReduce.setTotalQuantity(
-                holdingToReduce.getTotalQuantity() - (valueToReduce / price)
-        );
-
-        currentUser.getHoldings().set(holdingIndexToReduce, holdingToReduce);
+        currentUser.setHoldings(holdings);
         update(currentUser);
     }
 
@@ -211,7 +223,7 @@ public class UserService extends AbstractService<User> {
                             userCurrencyModifier
                     );
 
-                    if (currentDataHoldingMap == null)
+                    if (currentDataHoldingMap.keySet().size() == 0)
                         break;
 
                     stockGraphHoldingDataMap = mergeHoldingMap(stockGraphHoldingDataMap, currentDataHoldingMap);
@@ -272,13 +284,16 @@ public class UserService extends AbstractService<User> {
                             0 - amountToRemove,
                             (holdingType.equals(HoldingType.STOCK) ?
                                     stockService.getCurrentStockPrice(acronym) :
-                                    currencyService.getCurrentPrice(acronym, "USD")),
+                                    currencyService.getCurrentPrice(
+                                            acronym,
+                                            currentUser.getSettings().getUserCurrency().getAcronym())),
                             new java.sql.Date(new Date().getTime())
                     );
 
                     transaction.setUserHolding(userHolding);
                     userHolding.addTransaction(transaction);
 
+                    //Is this an issue? Not changing user directly.
                     update(currentUser);
                     break;
                 }
@@ -311,7 +326,9 @@ public class UserService extends AbstractService<User> {
         return list;
     }
 
-    public void updateSettings(JsonNode settingsNode) throws IOException {
+    public void updateSettings(JsonNode settingsNode) throws IOException, UnirestException {
+        String oldCurrencyAcronym = currentUser.getSettings().getUserCurrency().getAcronym();
+
         currentUser.setSettings(
                 new Settings(
                         fiatService.get(
@@ -323,6 +340,22 @@ public class UserService extends AbstractService<User> {
                         )
                 )
         );
+
+        List<UserHolding> userHoldings = currentUser.getHoldings();
+
+        double modifier = currencyService.getCurrentPrice(
+                oldCurrencyAcronym,
+                currentUser.getSettings().getUserCurrency().getAcronym()
+        );
+
+        for (UserHolding userHolding : userHoldings) {
+            userHolding.setAcquisitionCost(userHolding.getAcquisitionCost() * modifier);
+
+            for (Transaction transaction : userHolding.getTransactions())
+                transaction.setPrice(transaction.getPrice() * modifier);
+        }
+
+        currentUser.setHoldings(userHoldings);
 
         update(currentUser);
     }

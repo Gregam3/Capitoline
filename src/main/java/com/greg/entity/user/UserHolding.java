@@ -32,7 +32,6 @@ public class UserHolding {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transaction> transactions;
 
-    @Transient
     private Double totalQuantity;
 
     public UserHolding(String acronym, String name, HoldingType holdingType, Transaction transaction) throws IOException {
@@ -40,6 +39,7 @@ public class UserHolding {
         this.name = name;
         this.holdingType = holdingType;
         this.transactions = new ArrayList<>();
+        this.totalQuantity = 0.0;
         addTransaction(transaction);
         this.totalQuantity = getTotalQuantity();
         this.acquisitionCost =
@@ -118,16 +118,7 @@ public class UserHolding {
         this.transactions = transactions;
     }
 
-    @Transient
     public double getTotalQuantity() throws IOException {
-        double totalQuantity = 0;
-
-        if (transactions != null)
-            for (Transaction transaction : transactions)
-                totalQuantity += transaction.getQuantity();
-
-        this.totalQuantity = totalQuantity;
-
         return totalQuantity;
     }
 
@@ -135,11 +126,12 @@ public class UserHolding {
         if (newTransaction.getQuantity() > 0)
             acquisitionCost += newTransaction.getQuantity() * newTransaction.getPrice();
         else
-            acquisitionCost = acquisitionCost * ((newTransaction.getQuantity() / getTotalQuantity()) * -1);
+            acquisitionCost = acquisitionCost * (1 - ((newTransaction.getQuantity() / getTotalQuantity()) * -1));
 
+        totalQuantity += newTransaction.getQuantity();
         transactions.add(newTransaction);
-        Collections.sort(transactions);
 
+        Collections.sort(transactions);
     }
 
     void configureChildren() {

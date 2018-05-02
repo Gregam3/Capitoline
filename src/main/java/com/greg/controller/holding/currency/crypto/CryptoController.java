@@ -3,6 +3,7 @@ package com.greg.controller.holding.currency.crypto;
 import com.greg.entity.holding.crypto.Crypto;
 import com.greg.service.currency.CurrencyService;
 import com.greg.service.currency.crypto.CryptoService;
+import com.greg.service.user.UserService;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.log4j.Logger;
@@ -28,12 +29,15 @@ public class CryptoController {
 
     private final CryptoService cryptoService;
     private final CurrencyService currencyService;
+    private final UserService userService;
 
     @Autowired
     public CryptoController(CryptoService cryptoService,
-                            CurrencyService currencyService) {
+                            CurrencyService currencyService,
+                            UserService userService) {
         this.cryptoService = cryptoService;
         this.currencyService = currencyService;
+        this.userService = userService;
     }
 
 //    @GetMapping("/get/{cryptoId}/{userCurrency}")
@@ -50,7 +54,9 @@ public class CryptoController {
     @GetMapping("/get/BTC-benchmark")
     public ResponseEntity<?> getBTCBenchMark() throws UnirestException {
         try {
-            return new ResponseEntity<>(currencyService.getValueAtDate("BTC", new Date().getTime() - DateUtils.MILLIS_PER_DAY * 7), HttpStatus.OK);
+            return new ResponseEntity<>(currencyService.getValueAtDate("BTC",
+                    new Date().getTime() - DateUtils.MILLIS_PER_DAY * 7,
+                    userService.getCurrentUser().getSettings().getUserCurrency().getAcronym()), HttpStatus.OK);
         } catch (Exception e) {
             LOG.error(e);
             e.printStackTrace();

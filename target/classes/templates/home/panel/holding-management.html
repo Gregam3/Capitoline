@@ -42,11 +42,11 @@
                 'holding-down': !(stock.totalValue > stock.acquisitionCost)}">
                     {{
                     (stock.totalValue !== 0) ?
-                    ((stock.totalValue > stock.acquisitionCost) ? "▲" : "▼") + userCurrency.symbol +
-                    (( 0 > (stock.totalValue - stock.acquisitionCost)) ?
-                    ((stock.totalValue - stock.acquisitionCost) * userCurrency.modifier).toFixed(2) * -1 : ((stock.totalValue - stock.acquisitionCost) * userCurrency.modifier).toFixed(2))
-                    + " (" +
-                    ((stock.totalValue / stock.acquisitionCost) * 100 - 100).toFixed(2) + '%)' : ""
+                    ((stock.totalValue > stock.acquisitionCost) ? "▲" : "▼") +
+
+                    formatValues(stock.totalValue - stock.acquisitionCost)
+
+                    + " (" + toPercentage(stock.totalValue, stock.acquisitionCost) + ")" : ""
                     }}
                 </td>
                 <td>
@@ -80,21 +80,21 @@
             <tbody>
             <tr ng-repeat="crypto in holdings.cryptos">
                 <td>{{crypto.name}} ({{crypto.acronym}})</td>
-                <td>{{(crypto.totalQuantity !== 0 ) ? crypto.totalQuantity.toFixed(4) : "Watch only"}}</td>
-                <td>{{userCurrency.symbol}}{{(crypto.price * userCurrency.modifier).toFixed(4) | number}}</td>
-                <td>{{userCurrency.symbol}}{{((crypto.totalQuantity * crypto.price) *
-                    userCurrency.modifier).toFixed(2)
-                    | number}}
+                <td>{{(crypto.totalQuantity !== 0 ) ? crypto.totalQuantity.toFixed(6) : "Watch only"}}</td>
+                <td>{{userCurrency.symbol}}{{crypto.price.toFixed(6)}}</td>
+                <td>{{lessThanOne(crypto.totalQuantity * crypto.price) ? '&lt;' + userCurrency.symbol + '0.01' :
+                    userCurrency.symbol + (crypto.totalQuantity * crypto.price).toFixed(2)
+                    }}
                 </td>
                 <td ng-class="{'holding-up': crypto.totalValue > crypto.acquisitionCost,
                 'holding-down': !(crypto.totalValue > crypto.acquisitionCost)}">
                     {{
                     (crypto.totalValue !== 0) ?
-                    ((crypto.totalValue > crypto.acquisitionCost) ? "▲" : "▼") + userCurrency.symbol +
-                    (( 0 > (crypto.totalValue - crypto.acquisitionCost)) ?
-                    ((crypto.totalValue - crypto.acquisitionCost) * userCurrency.modifier).toFixed(2) * -1 : ((crypto.totalValue - crypto.acquisitionCost) * userCurrency.modifier).toFixed(2))
-                    + " (" +
-                    ((crypto.totalValue / crypto.acquisitionCost) * 100 - 100).toFixed(2) + '%)' : ""
+                    ((crypto.totalValue > crypto.acquisitionCost) ? "▲" : "▼") +
+
+                    formatValues(crypto.totalValue - crypto.acquisitionCost)
+
+                    + " (" + toPercentage(crypto.totalValue, crypto.acquisitionCost) + ")" : ""
                     }}
                 </td>
                 <td>
@@ -129,18 +129,19 @@
             <tr ng-repeat="fiat in holdings.fiats">
                 <td>{{fiat.acronym}} - {{fiat.name}}</td>
                 <td>{{(fiat.totalQuantity !== 0) ? fiat.totalQuantity.toFixed(2) : "Watch only"}}</td>
-                <td>{{userCurrency.symbol}}{{(fiat.price * userCurrency.modifier).toFixed(4) | number}}</td>
-                <td>{{userCurrency.symbol}}{{((fiat.totalQuantity * fiat.price) * userCurrency.modifier).toFixed(4) | number}}
+                <td>{{userCurrency.symbol}}{{fiat.price.toFixed(4) | number}}</td>
+                <td>{{userCurrency.symbol}}{{(fiat.totalQuantity * fiat.price).toFixed(2) |
+                    number}}
                 </td>
                 <td ng-class="{'holding-up': fiat.totalValue > fiat.acquisitionCost,
                 'holding-down': !(fiat.totalValue > fiat.acquisitionCost)}">
                     {{
                     (fiat.totalValue !== 0) ?
-                    ((fiat.totalValue > fiat.acquisitionCost) ? "▲" : "▼") + userCurrency.symbol +
-                    (( 0 > (fiat.totalValue - fiat.acquisitionCost)) ?
-                    ((fiat.totalValue - fiat.acquisitionCost) * userCurrency.modifier).toFixed(2) * -1 : ((fiat.totalValue - fiat.acquisitionCost) * userCurrency.modifier).toFixed(2))
-                    + " (" +
-                    ((fiat.totalValue / fiat.acquisitionCost) * 100 - 100).toFixed(2) + '%)' : ""
+                    ((fiat.totalValue > fiat.acquisitionCost) ? "▲" : "▼") +
+
+                    formatValues(fiat.totalValue - fiat.acquisitionCost)
+
+                    + " (" + toPercentage(fiat.totalValue, fiat.acquisitionCost) + ")" : ""
                     }}
                 </td>
                 <td>

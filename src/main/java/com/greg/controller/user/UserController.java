@@ -6,6 +6,7 @@ import com.greg.entity.holding.HoldingType;
 import com.greg.entity.user.User;
 import com.greg.service.user.UserService;
 import org.apache.log4j.Logger;
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -71,6 +72,12 @@ public class UserController {
 
             userService.addTransaction(holdingNode);
             return new ResponseEntity<>(HttpStatus.OK);
+
+        }catch (JSONException e) {
+            LOG.error(e.getMessage());
+            System.err.println(e);
+            return new ResponseEntity<>("Could not retrieve any data from AlphaVantage for that Stock Right now",
+                    HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             LOG.error(e.getMessage());
             System.err.println(e);
@@ -119,7 +126,7 @@ public class UserController {
     public ResponseEntity<String> updateSettings(@RequestBody JsonNode settingsNode) {
         try {
             userService.updateSettings(settingsNode);
-            return new ResponseEntity<>("test", HttpStatus.OK);
+            return new ResponseEntity<>("Settings updated", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("No currency selected", HttpStatus.BAD_REQUEST);
         }

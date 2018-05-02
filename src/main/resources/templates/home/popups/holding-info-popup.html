@@ -5,8 +5,8 @@
     </div>
     <div class="modal-body" id="modal-body">
         <h4>Total Acquisition Cost: {{
-            (currentHoldingInfo.acquisitionCost > 0) ? (userCurrency.symbol) + (currentHoldingInfo.acquisitionCost *
-            userCurrency.modifier).toFixed(2) :
+            (currentHoldingInfo.acquisitionCost > 0) ? (userCurrency.symbol) +
+            (currentHoldingInfo.acquisitionCost * tempModifier).toFixed(4) :
             'Cannot be fetched'}}</h4>
         <table st-table="rowCollection" class="table table-striped table-large-font">
             <thead>
@@ -24,12 +24,11 @@
                     (transaction.quantity === 0) ? "Watched" : "Sold"}}
                 </td>
                 <td>{{transaction.date}}</td>
-                <td>{{(transaction.quantity !== 0 ) ? transaction.quantity.toFixed(4) : "Watch only"}}</td>
-                <td>{{userCurrency.symbol}}{{(transaction.price * userCurrency.modifier).toFixed(4) | number}}</td>
+                <td>{{(transaction.quantity !== 0 ) ? transaction.quantity : "Watch only"}}</td>
+                <td>{{userCurrency.symbol}}{{(transaction.price * tempModifier)}}</td>
                 <td>{{userCurrency.symbol}}{{((transaction.quantity < 0) ? ((transaction.quantity * transaction.price) *
-                    userCurrency.modifier).toFixed(2) * -1 : (transaction.quantity * transaction.price) *
-                    userCurrency.modifier).toFixed(2)
-                    | number}}
+                    tempModifier).toFixed(2) * -1 : (transaction.quantity * transaction.price) * tempModifier).toFixed(2)
+                    }}
                 </td>
             </tr>
             </tbody>

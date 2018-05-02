@@ -66,8 +66,15 @@ public class StockService extends AbstractService<Stock> {
     }
 
     public double getStockPriceAtDate(String acronym, long unixDate) throws UnirestException, ParseException, InvalidHoldingException {
-        JSONObject historyJson = Unirest.get(TIME_SERIES_DAILY_URL_1 + acronym + TIME_SERIES_DAILY_URL_2)
-                .asJson().getBody().getObject().getJSONObject("Time Series (Daily)");
+        JSONObject response = Unirest.get(TIME_SERIES_DAILY_URL_1 + acronym + TIME_SERIES_DAILY_URL_2)
+                .asJson().getBody().getObject();
+
+        JSONObject historyJson;
+
+        if(response.length() > 0)
+            historyJson = response.getJSONObject("Time Series (Daily)");
+        else
+            throw new InvalidHoldingException("{\"data\": \"AlphaVantage could not retrieve history for that stock right now\"}");
 
         JSONArray stringDates = historyJson.names();
 
@@ -90,8 +97,17 @@ public class StockService extends AbstractService<Stock> {
 
 
     public Map<Date, Double> getStockHistory(UserHolding userHolding, double userCurrencyModifier) throws UnirestException, ParseException, InvalidHoldingException {
-        JSONObject historyJson = Unirest.get(TIME_SERIES_DAILY_URL_1 + userHolding.getAcronym() + TIME_SERIES_DAILY_URL_2)
-                .asJson().getBody().getObject().getJSONObject("Time Series (Daily)");
+        Map<Date, Double> stockHistory = new HashMap<>();
+
+        JSONObject response = Unirest.get(TIME_SERIES_DAILY_URL_1 + userHolding.getAcronym() + TIME_SERIES_DAILY_URL_2)
+                .asJson().getBody().getObject();
+
+        JSONObject historyJson;
+
+        if (response.length() > 0)
+            historyJson = response.getJSONObject("Time Series (Daily)");
+        else
+            return stockHistory;
 
         Queue<Transaction> transactionQueue = new PriorityQueue<>();
         transactionQueue.addAll(userHolding.getTransactions());
@@ -103,8 +119,7 @@ public class StockService extends AbstractService<Stock> {
         if (transactionQueue.size() < 1)
             return null;
 
-        //Initialising local variables after we know that processing needs to take place
-        Map<Date, Double> stockHistory = new HashMap<>();
+
 
         //Initialised with current time so when comparison is done later every date will be earlier, comparison referenced with *1.
         long earliestDateInRange = new Date().getTime();

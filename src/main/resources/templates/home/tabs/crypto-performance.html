@@ -17,7 +17,7 @@
                     btcChange).toFixed(3)}}%</b> difference)
             </p>
         </div>
-        <div class="col-md-5" ng-hide="portfolioCryptoChange !== 0">
+        <div class="col-md-12" ng-hide="portfolioCryptoChange !== 0">
             <label ng-show="angular.equals(holdings.cryptos, {})">In order to see your Crypto performance you will
                 need to add some Cryptocurrencies to your portfolio.</label>
             <label ng-hide="angular.equals(holdings.cryptos, {})">In order to see your Crypto performance you will
@@ -25,7 +25,7 @@
                 performance.</label>
         </div>
 
-        <div class="col-md-7" style="text-align: center;">
+        <div class="col-md-7" style="text-align: center;" ng-hide="portfolioCryptoChange === 0">
             <h4>Volatility</h4>
             <pie-chart class="pie-chart-medium" data="volatility" options="pieOptions"
                        style="height: 150px;"></pie-chart>
