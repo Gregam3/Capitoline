@@ -24,7 +24,6 @@ import java.util.*;
 public class CurrencyService {
     private final static String CURRENCY_BASE_URL = "https://min-api.cryptocompare.com/data/";
     private final static String HISTORY_FIRST_PART = CURRENCY_BASE_URL + "histoday?fsym=";
-    private final static String HISTORY_SECOND_PART = "&tsym=USD&limit=";
     private final static String PRICE_DAY = CURRENCY_BASE_URL + "pricehistorical?fsym=";
     private UserService userService;
 
@@ -33,9 +32,18 @@ public class CurrencyService {
         this.userService = userService;
     }
 
-    public Map<Date, Double> getCurrencyHistory(UserHolding userHolding, double userCurrencyModifier) throws UnirestException, IOException {
+    /**
+     * Fetches the currency history for a CryptoCurrency/Fiat
+     * @param userHolding The {@link com.greg.entity.holding.Holding}'s history to fetch
+     * @return A Map of Currency history with the key of Dates rounded to the nearest instance of 0:00am with their total value for that date as a boxed Double
+     * @throws UnirestException
+     * @throws IOException
+     */
+    public Map<Date, Double> getCurrencyHistory(UserHolding userHolding) throws UnirestException, IOException {
         JSONArray history =
-                Unirest.get(HISTORY_FIRST_PART + userHolding.getAcronym() + HISTORY_SECOND_PART + userHolding.getDistanceInDaysToEarliestTransactionDate())
+                Unirest.get(HISTORY_FIRST_PART + userHolding.getAcronym() + "&tsym=" +
+                        userService.getCurrentUser().getSettings().getUserCurrency().getAcronym() +
+                        "&limit=" + userHolding.getDistanceInDaysToEarliestTransactionDate())
                         .asJson()
                         .getBody()
                         .getObject()
@@ -76,13 +84,18 @@ public class CurrencyService {
             if (currentItemUnixDate.getTime() > currentTransaction.getDate().getTime())
                 graphHoldingDataMap.put(
                         currentItemUnixDate,
-                        (price * cumulativeQuantity) * userCurrencyModifier
+                        (price * cumulativeQuantity)
                 );
         }
 
         return graphHoldingDataMap;
-}
+    }
 
+    /**
+     * Formats the queue passing over "watch" {@link Transaction}s (where their quantity is 0)
+     * @param queue The queue to be searched
+     * @return The {@link Transaction} Queue after passing any 0 quantity {@link Transaction}s
+     */
     private Queue<Transaction> getNextTrackedTransaction(Queue<Transaction> queue) {
         while (queue.peek() != null && queue.peek().getQuantity() == 0)
             queue.poll();
@@ -90,7 +103,15 @@ public class CurrencyService {
         return queue;
     }
 
-    public Double getValueAtDate(String acronym, long unixDate, String currencyDesired) throws Exception {
+    /**
+     * Returns the currency value at a specified date
+     * @param acronym the currency to fetch
+     * @param unixDate the date to fetch the value from
+     * @param currencyDesired the currency to retrieve the value in
+     * @return The price value for the specified date
+     * @throws Exception
+     */
+    public double getValueAtDate(String acronym, long unixDate, String currencyDesired) throws Exception {
         JSONObject response =
                 (JSONObject) Unirest.get(PRICE_DAY + acronym + "&tsyms=" + currencyDesired
                         + "&ts=" + unixDate / 1000)
@@ -106,6 +127,13 @@ public class CurrencyService {
 
     }
 
+    /**
+     * Fetches most recent currency price
+     * @param acronym the currency to fetch
+     * @param currencyDesired the currency to retrieve the value in
+     * @return The price value for the specified date
+     * @throws UnirestException
+     */
     public double getCurrentPrice(String acronym, String currencyDesired) throws UnirestException {
         JSONObject response =
                 Unirest.get(CURRENCY_BASE_URL + "price?fsym=" + acronym + "&tsyms=" + currencyDesired)

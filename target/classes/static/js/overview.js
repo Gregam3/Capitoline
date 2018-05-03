@@ -134,11 +134,15 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
             return ((totalValue / acquisitionCost) * 100 - 100).toFixed(2) + '%';
         };
 
-        let shownWarning = false;
+
+        let stockShownWarning = false;
+        let currencyShownWarning = false;
 
         $rootScope.updateUser = function () {
             $rootScope.loaded = false;
-            shownWarning = false;
+
+            stockShownWarning = false;
+            currencyShownWarning = false;
 
             $rootScope.cryptoValue = 0;
             $rootScope.stockValue = 0;
@@ -152,12 +156,13 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
                     //     "after a user logs in it sets the server-side variable \"currentUser\" " +
                     //     "to their user data. This is also retrieved when a change is made to the user " +
                     //     "on the client-side. Their user data looks like the following: ", response.data);
+                    console.log(response.data);
+
                     $rootScope.user = response.data;
 
                     $rootScope.userCurrency.acronym = $rootScope.user.settings.userCurrency.acronym;
 
                     if ($rootScope.user.settings.userCurrency.acronym === "USD") {
-                        console.log("test");
                         $rootScope.userCurrency.modifier = 1.0;
                         $rootScope.userCurrency.symbol = '$';
                     } else {
@@ -222,7 +227,6 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
                     + $rootScope.convertHoldingsToPathVariables(tempHoldings.fiats)
                     + "&tsyms=" + $rootScope.userCurrency.acronym
                 ).then(function (response) {
-
                     let holding;
                     for (holding in tempHoldings.cryptos) {
                         tempHoldings.cryptos[holding].price =
@@ -238,6 +242,16 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
                     for (holding in tempHoldings.fiats) {
                         tempHoldings.fiats[holding].price =
                             (response.data[holding]) ? response.data[holding][$rootScope.userCurrency.acronym] : null;
+
+                        console.log(tempHoldings.fiats[holding]);
+
+                        if(!tempHoldings.fiats[holding].price && !currencyShownWarning) {
+                            console.log(tempHoldings.fiats, holding);
+                            console.log(tempHoldings.fiats[holding]);
+                            toaster.pop('warning', "Issue retrieving a Fiat currency",
+                                "The CryptoCompare API cannot fetch data for " +holding);
+                            currencyShownWarning = true;
+                        }
 
                         const currentValue =
                             tempHoldings.fiats[holding].price * tempHoldings.fiats[holding].totalQuantity;
@@ -278,7 +292,7 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
                             }
                         }
 
-                        if ((tempHoldings.stocks[holding].price == 0 || !tempHoldings.stocks[holding].price) && !shownWarning) {
+                        if ((tempHoldings.stocks[holding].price == 0 || !tempHoldings.stocks[holding].price) && !stockShownWarning) {
                             toaster.pop('warning', "Issue retrieving " + tempHoldings.stocks[holding].acronym,
                                 "The AlphaVantage API used in Capitoline is currently experiencing problems, this may influence your portfolio's accuracy.");
                             shownWarning = true;
@@ -287,7 +301,6 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
 
 
                 }, function errorCallback() {
-                    console.log("test");
                     $scope.stockCall = null;
 
                     toaster.pop('warning', "Issue retrieving " + tempHoldings.stocks[holding].acronym,
@@ -528,7 +541,7 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', '
                                     });
 
                                 $scope.btcChange = ((btcValueNow / btcValueOneMonthAgo) * 100 - 100).toFixed(3);
-                                $scope.fiatIndexChange = ((fiatIndexValueNow / fiatIndexValueOneMonthAgo) * 100 - 100).toFixed(1);
+                                $scope.fiatIndexChange = ((fiatIndexValueNow / fiatIndexValueOneMonthAgo) * 100 - 100).toFixed(2);
                             });
                     });
 
@@ -552,9 +565,11 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', '
             if (userFiatValueNow === 0 || userFiatValueOneMonthAgo === 0)
                 $scope.performanceNotReadyPopUp("fiat currency");
             else
+
+                console.log(userFiatValueNow, userFiatValueOneMonthAgo);
                 $scope.portfolioFiatChange =
                     ((userFiatValueNow / userFiatValueOneMonthAgo)
-                        * 100 - 100).toFixed(1);
+                        * 100 - 100).toFixed(2);
         };
 
         $scope.retrieveAndCalculateStockPerformance = function () {
@@ -823,7 +838,6 @@ app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', '$rootSco
                 $scope.addingHolding = false;
                 $uibModalStack.dismissAll();
             }, function errorCallback(response) {
-                console.log("test");
                 toaster.pop('error', "Failed to Add", response.data);
                 $scope.addingHolding = false;
             });

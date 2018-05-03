@@ -49,6 +49,9 @@ public class UserHolding {
     public UserHolding() {
     }
 
+    /**
+     * @return days between current date and earliest transaction
+     */
     @Transient
     @JsonIgnore
     public long getDistanceInDaysToEarliestTransactionDate() {
@@ -122,6 +125,11 @@ public class UserHolding {
         return totalQuantity;
     }
 
+    /**
+     * Adds {@link Transaction} and updates {@link UserHolding} values accordingly
+     * @param newTransaction the {@link Transaction} to add
+     * @throws IOException
+     */
     public void addTransaction(Transaction newTransaction) throws IOException {
         if (newTransaction.getQuantity() > 0)
             acquisitionCost += newTransaction.getQuantity() * newTransaction.getPrice();
@@ -134,6 +142,9 @@ public class UserHolding {
         Collections.sort(transactions);
     }
 
+    /**
+     * Sets all contained {@link Transaction}'s parents to this {@link UserHolding} in order for Hibernate to store them
+     */
     void configureChildren() {
         for (Transaction transaction : transactions) {
             transaction.setUserHolding(this);

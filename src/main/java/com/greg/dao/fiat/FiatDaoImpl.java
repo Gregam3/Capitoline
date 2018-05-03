@@ -4,7 +4,7 @@ import com.greg.dao.AbstractDaoImpl;
 import com.greg.entity.holding.fiat.Fiat;
 import org.springframework.stereotype.Repository;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**

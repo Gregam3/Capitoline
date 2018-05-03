@@ -3,6 +3,7 @@ package com.greg.user;
 import com.greg.dao.stock.StockDao;
 import com.greg.entity.holding.stock.Stock;
 import com.greg.entity.user.Transaction;
+import com.greg.entity.user.User;
 import com.greg.entity.user.UserHolding;
 import com.greg.exceptions.InvalidHoldingException;
 import com.greg.service.AbstractService;
@@ -42,21 +43,12 @@ public class StockService extends AbstractService<Stock> {
         this.userService = userService;
     }
 
-//    public String clearStocksWithoutData() throws UnirestException {
-//        List<Stock> list = list();
-//
-//        StringBuilder stringBuilder = new StringBuilder();
-//
-//        for (Stock stock : list) {
-//            System.out.println(stock.getAcronym());
-//            if (getCurrentStockPrice(stock.getAcronym()) == 0) {
-//                stringBuilder.append(stock.getAcronym());
-//            }
-//        }
-//
-//        return stringBuilder.toString();
-//    }
-
+    /**
+     * Fetches the stock price based off the lastest value of its corresponding market
+     * @param acronym the value to fetch
+     * @return the value in double form
+     * @throws UnirestException
+     */
     public double getCurrentStockPrice(String acronym) throws UnirestException {
         //Get Response
         JSONObject object = Unirest.get(BATCH_QUOTE_URL + acronym + API_KEY).asJson().getBody().getObject();
@@ -65,11 +57,22 @@ public class StockService extends AbstractService<Stock> {
         return ((JSONObject) (((JSONArray) object.get("Stock Quotes")).get(0))).getDouble("2. price");
     }
 
+    /**
+     * Returns stock price at a date specified
+     * @param acronym the stock price to fetch
+     * @param unixDate the date to fetch the stock at in unix time, will round to nearest date
+     * @return The price for that date
+     * @throws UnirestException
+     * @throws ParseException
+     * @throws InvalidHoldingException
+     */
     public double getStockPriceAtDate(String acronym, long unixDate) throws UnirestException, ParseException, InvalidHoldingException {
         JSONObject response = Unirest.get(TIME_SERIES_DAILY_URL_1 + acronym + TIME_SERIES_DAILY_URL_2)
                 .asJson().getBody().getObject();
 
         JSONObject historyJson;
+
+        Date dateToFetch = DateUtils.round(new Date(unixDate), Calendar.DAY_OF_MONTH);
 
         if(response.length() > 0)
             historyJson = response.getJSONObject("Time Series (Daily)");
@@ -81,12 +84,13 @@ public class StockService extends AbstractService<Stock> {
         Long earliestDate = new Date().getTime();
 
         for (int i = 0; i < stringDates.length(); i++) {
-            long currentIndexUnixTime = dateFormatter.parse(stringDates.get(i).toString()).getTime();
+            long currentIndexUnixTime = DateUtils.round(
+                    dateFormatter.parse(stringDates.get(i).toString()).getTime(), Calendar.DAY_OF_MONTH).getTime();
 
             if (earliestDate > currentIndexUnixTime)
                 earliestDate = currentIndexUnixTime;
 
-            if (currentIndexUnixTime == unixDate)
+            if (currentIndexUnixTime == dateToFetch.getTime())
                 return historyJson.getJSONObject(stringDates.get(i).toString()).getDouble("4. close");
 
         }
@@ -95,7 +99,15 @@ public class StockService extends AbstractService<Stock> {
         );
     }
 
-
+    /**
+     * Fetches, parses and returns the history of a stock
+     * @param userHolding The {@link UserHolding} to fetch, uses List of {@link Transaction}s to accurately generate data
+     * @param userCurrencyModifier The current exchange rate between the {@link User}  currency and USD as AlphaVantage only offers USD data
+     * @return A Map of Stock history with the key of Dates rounded to the nearest instance of 0:00am with their total value for that date as a boxed Double
+     * @throws UnirestException
+     * @throws ParseException
+     * @throws InvalidHoldingException
+     */
     public Map<Date, Double> getStockHistory(UserHolding userHolding, double userCurrencyModifier) throws UnirestException, ParseException, InvalidHoldingException {
         Map<Date, Double> stockHistory = new HashMap<>();
 
@@ -159,6 +171,11 @@ public class StockService extends AbstractService<Stock> {
         return addMissingDates(stockHistory, earliestDateInRange);
     }
 
+    /**
+     * Formats the queue passing over "watch" {@link Transaction}s (where their quantity is 0)
+     * @param queue The queue to be searched
+     * @return The {@link Transaction} Queue after passing any 0 quantity {@link Transaction}s
+     */
     private Queue<Transaction> getNextTrackedTransaction(Queue<Transaction> queue) {
         while (queue.peek() != null && queue.peek().getQuantity() == 0)
             queue.poll();
@@ -166,40 +183,7 @@ public class StockService extends AbstractService<Stock> {
         return queue;
     }
 
-//    private Map<AlphaVantageFetchInterval, Integer> getNumberOfFetchesPerPeriods(Date earliestDate) {
-//        Map<AlphaVantageFetchInterval, Integer> fetchesPerPeriod = new LinkedHashMap<>();
-//        fetchesPerPeriod.put(AlphaVantageFetchInterval.MONTH, 0);
-//        fetchesPerPeriod.put(AlphaVantageFetchInterval.WEEK, 0);
-//        fetchesPerPeriod.put(AlphaVantageFetchInterval.DAY, 0);
-//        int daysToEarliestDate =
-//                (int) ((earliestDate.getTime() - new Date().getTime()) / DateUtils.MILLIS_PER_DAY);
-//
-//        while (daysToEarliestDate > 0) {
-//            if (daysToEarliestDate > 365) {
-//                fetchesPerPeriod.put(
-//                        AlphaVantageFetchInterval.MONTH,
-//                        fetchesPerPeriod.get(AlphaVantageFetchInterval.MONTH)
-//                );
-//                daysToEarliestDate -= 30;
-//            } else if (daysToEarliestDate > 100) {
-//                fetchesPerPeriod.put(
-//                        AlphaVantageFetchInterval.WEEK,
-//                        fetchesPerPeriod.get(AlphaVantageFetchInterval.WEEK)
-//                );
-//                daysToEarliestDate -= 7;
-//            } else {
-//                fetchesPerPeriod.put(
-//                        AlphaVantageFetchInterval.DAY,
-//                        fetchesPerPeriod.get(AlphaVantageFetchInterval.DAY)
-//                );
-//                daysToEarliestDate--;
-//            }
-//        }
-//
-//        return fetchesPerPeriod;
-//    }
-
-    //Stock markets close on weekends but in order for data to line up with other holdings data must be inserted on a day to day basis
+    @Deprecated
     private Map<Date, Double> addWeekendsToStockHistory(Map<Date, Double> stockHistory, long earliestDateInRange) throws InvalidHoldingException {
         long currentUnixTime = new Date().getTime();
 
@@ -210,7 +194,7 @@ public class StockService extends AbstractService<Stock> {
              unixIterator < currentUnixTime;
             //Iterate by week rather than by day to speed up processing
              unixIterator += DateUtils.MILLIS_PER_DAY * 7) {
-            double valueBeforeWeekend = getClosestPopulatedValue(stockHistory, unixIterator + DateUtils.MILLIS_PER_DAY * baseMultiplier, 1);
+            double valueBeforeWeekend = getClosestPopulatedValue(stockHistory, unixIterator + DateUtils.MILLIS_PER_DAY * baseMultiplier);
 
             //Add saturday value
             stockHistory.put(
@@ -227,6 +211,13 @@ public class StockService extends AbstractService<Stock> {
         return stockHistory;
     }
 
+    /**
+     * Adds any dates missing in history to StockHistory, used as stock market closes on weekends and holidays.
+     * @param stockHistory The stock history to populate
+     * @param earliestDateInRange The first date in the StockHistory requested to be returned
+     * @return Populated stockHistory
+     * @throws InvalidHoldingException
+     */
     private Map<Date, Double> addMissingDates(Map<Date, Double> stockHistory, long earliestDateInRange) throws InvalidHoldingException {
         long currentUnixTime = new Date().getTime();
         double lastValue = 0;
@@ -257,18 +248,30 @@ public class StockService extends AbstractService<Stock> {
         return stockHistory;
     }
 
-    //If the date on the friday cannot be retrieved then it will recurse backwards until it finds the next closest value.
-    // Max recursion 20.
-    private double getClosestPopulatedValue(Map<Date, Double> stockHistory, long unixIterator, int recurseCount) throws InvalidHoldingException {
-        recurseCount++;
+    /**
+     * Recurses through stockHistory and provides closest past non-zero value
+     * @param stockHistory The stockHistory to be searched
+     * @param unixIterator The time to start searching
+     * @return
+     * @throws InvalidHoldingException
+     */
+    private double getClosestPopulatedValue(Map<Date, Double> stockHistory, long unixIterator) throws InvalidHoldingException {
         Double value = stockHistory.get(DateUtils.round(new Date(unixIterator), Calendar.DAY_OF_MONTH));
 
         if (value == null)
-            return getClosestPopulatedValue(stockHistory, unixIterator - DateUtils.MILLIS_PER_DAY, recurseCount);
+            return getClosestPopulatedValue(stockHistory, unixIterator - DateUtils.MILLIS_PER_DAY);
 
         return value;
     }
 
+    /**
+     * Used to fetch {@link User} {@link Stock} performance
+     * @return the percentage change of the {@link User} {@link Stock} portfolio over the last month
+     * @throws ParseException
+     * @throws InvalidHoldingException
+     * @throws UnirestException
+     * @throws IOException
+     */
     public double getAverageMonthlyChange() throws ParseException, InvalidHoldingException, UnirestException, IOException {
         double valueOneMonthAgo = 0;
         double valueToday = 0;

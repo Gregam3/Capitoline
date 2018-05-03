@@ -114,7 +114,7 @@ public class UserController {
             if (amountToRemove == null || amountToRemove <= 0)
                 return new ResponseEntity<>("Amount to remove must be greater than 0.", HttpStatus.BAD_REQUEST);
 
-            userService.removeItemsFromHolding(acronym, HoldingType.valueOf(holdingType), amountToRemove);
+            userService.reduceHoldingQuantity(acronym, HoldingType.valueOf(holdingType), amountToRemove);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();

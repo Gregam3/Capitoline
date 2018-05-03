@@ -54,6 +54,15 @@ public class UserService extends AbstractService<User> {
         this.setDao(userDao);
     }
 
+
+    /**
+     * Upon first log in by a user this method is used to set the user to return data for, the "currentUser"
+     * @param email The login attempts email
+     * @param password The login attempts password
+     * @return the user object who just made the attempt to login
+     * @throws IOException
+     * @throws InvalidAccessAttemptException If password is invalid
+     */
     public User getUserSecure(String email, String password) throws IOException, InvalidAccessAttemptException {
         currentUser = userDao.get(email);
         if (currentUser == null)
@@ -67,11 +76,21 @@ public class UserService extends AbstractService<User> {
         return currentUser;
     }
 
+    /**
+     * The get method in the {@link AbstractService} class is not secure so @Override has been implemented
+     * so when it is called an exception will be thrown.
+     */
     @Override
     public User get(String email) {
         throw new AssertionError("getUserSecure() method should be used instead.");
     }
 
+    /**
+     * Appends {@link Transaction} to old holdings/adds new holding with a new {@link Transaction}. Handles both adding an removing holdings and updates
+     * any necessary values in said holding such as acquisitionCost.
+     * @param holdingNode The node sent from the JS front-end containing an "acronym", "holdingType","quantity","name" (optional) and "dateBought"
+     * @throws Exception
+     */
     public void addTransaction(JsonNode holdingNode) throws Exception {
         double price = 0;
         String acronym = holdingNode.get("acronym").asText();
@@ -146,6 +165,15 @@ public class UserService extends AbstractService<User> {
     }
 
     //If the user chooses to remove the value from another holding when buying this keeps track of it.
+
+    /**
+     * If the {@link User} chooses to bought a holding at the expense of another this method is used
+     * Not stable enough for 1.3, will be used in future.
+     * @param holdingIndexToReduce The index of the {@link UserHolding} List found in {@link User}
+     * @param valueToReduce how much to reduce the old value by
+     * @param date the date in which the {@link Transaction} takes place
+     * @throws Exception
+     */
     private void removeValueFromOtherHolding(int holdingIndexToReduce, double valueToReduce, Date date) throws Exception {
         List<UserHolding> holdings = currentUser.getHoldings();
         UserHolding holdingToReduce = holdings.get(holdingIndexToReduce);
@@ -177,6 +205,12 @@ public class UserService extends AbstractService<User> {
         update(currentUser);
     }
 
+    /**
+     * If a {@link UserHolding} is included in the {@link User}'s list will return its index
+     * @param acronym The acronym of the {@link UserHolding} to find
+     * @param holdingType The holdingType of the {@link UserHolding} to find
+     * @return the index of the {@link UserHolding} or -1 if not found
+     */
     private int indexOfHolding(String acronym, HoldingType holdingType) {
         List<UserHolding> userHoldings = currentUser.getHoldings();
         for (int i = 0; i < userHoldings.size(); i++)
@@ -186,6 +220,14 @@ public class UserService extends AbstractService<User> {
         return -1;
     }
 
+    /**
+     * Fetches {@link GraphHoldingData} for each holding in the {@link UserHolding} List in {@link User}
+     * @return A map containing "total","stock","crypto" and "fiat". Each of these keys contains a value of a List of {@link GraphHoldingData}
+     * @throws UnirestException
+     * @throws IOException
+     * @throws ParseException
+     * @throws InvalidHoldingException
+     */
     public Map<String, List<GraphHoldingData>> getGraphHoldingData() throws UnirestException, IOException, ParseException, InvalidHoldingException {
         //Map used as only one instance of a day should be in each map
         Map<Date, Double> graphHoldingDataMap = new HashMap<>();
@@ -204,8 +246,7 @@ public class UserService extends AbstractService<User> {
                 case CRYPTO:
                 case FIAT:
                     currentDataHoldingMap = currencyService.getCurrencyHistory(
-                            userHolding,
-                            userCurrencyModifier
+                            userHolding
                     );
 
                     if (currentDataHoldingMap == null)
@@ -265,7 +306,17 @@ public class UserService extends AbstractService<User> {
         return holdingsMap;
     }
 
-    public void removeItemsFromHolding(String acronym, HoldingType holdingType, double amountToRemove) throws IOException, UnirestException, ParseException, InvalidHoldingException {
+    /**
+     * Reduces the {@link UserHolding} quantity, if quantity to remove is greater than total quantity, method removes {@link UserHolding} entirely
+     * @param acronym The acronym of the {@link UserHolding} to remove
+     * @param holdingType the holdingType of the {@link UserHolding} to remove
+     * @param amountToRemove the amount to remove from the {@link UserHolding}
+     * @throws IOException
+     * @throws UnirestException
+     * @throws ParseException
+     * @throws InvalidHoldingException
+     */
+    public void reduceHoldingQuantity(String acronym, HoldingType holdingType, double amountToRemove) throws IOException, UnirestException, ParseException, InvalidHoldingException {
         for (UserHolding userHolding : currentUser.getHoldings()) {
             if (userHolding.getAcronym().equals(acronym) &&
                     userHolding.getHoldingType().equals(holdingType)) {
@@ -301,6 +352,12 @@ public class UserService extends AbstractService<User> {
         }
     }
 
+    /**
+     * Merges two maps into one, used to merge {@link UserHolding} histories
+     * @param map1 the larger map
+     * @param map2 the smaller map
+     * @return An amalgam Map of map1 and map2 with a key of Date and a value of Double
+     */
     private Map<Date, Double> mergeHoldingMap(Map<Date, Double> map1, Map<Date, Double> map2) {
         for (Map.Entry<Date, Double> day : map2.entrySet()) {
             if (map1.containsKey(day.getKey()))
@@ -312,6 +369,11 @@ public class UserService extends AbstractService<User> {
         return map1;
     }
 
+    /**
+     * Converts the Maps generated by getGraphHoldingData() into Lists of {@link GraphHoldingData}
+     * @param mapToConvert the map to convert to a list
+     * @return
+     */
     private List<GraphHoldingData> convertHoldingDataMapToList(Map<Date, Double> mapToConvert) {
         List<GraphHoldingData> list = new ArrayList<>();
 
@@ -326,6 +388,12 @@ public class UserService extends AbstractService<User> {
         return list;
     }
 
+    /**
+     * Changes {@link User} settings to values sent in http post, currently only used to change currency
+     * @param settingsNode The new values, values necessary to change currency "currency" and "acronym"
+     * @throws IOException
+     * @throws UnirestException
+     */
     public void updateSettings(JsonNode settingsNode) throws IOException, UnirestException {
         String oldCurrencyAcronym = currentUser.getSettings().getUserCurrency().getAcronym();
 
@@ -360,6 +428,9 @@ public class UserService extends AbstractService<User> {
         update(currentUser);
     }
 
+    /**
+     * @return the user for the session set by getUserSecure()
+     */
     public User getCurrentUser() {
         return currentUser;
     }

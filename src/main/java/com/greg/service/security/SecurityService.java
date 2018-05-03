@@ -26,6 +26,13 @@ public class SecurityService {
         this.userService = userService;
     }
 
+    /**
+     * Validates the log in attempt
+     * @param loginAttemptNode node containing "email" and "password" data for log in attempt
+     * @return was login successful
+     * @throws IOException
+     * @throws InvalidAccessAttemptException
+     */
     public boolean validateLogin(JsonNode loginAttemptNode) throws IOException, InvalidAccessAttemptException {
         JsonNode email = loginAttemptNode.get("email");
         JsonNode password = loginAttemptNode.get("password");
@@ -36,6 +43,13 @@ public class SecurityService {
         return userService.getUserSecure(email.asText(), password.asText()) != null;
     }
 
+    /**
+     * Validates register attempt
+     * @param registerNode node containing "email", "password" and maybe "name". Data needed for register attempt
+     * @throws InvalidRegisterCredentialsException
+     * @throws IOException
+     * @throws InvalidAccessAttemptException
+     */
     public void register(JsonNode registerNode) throws InvalidRegisterCredentialsException, IOException, InvalidAccessAttemptException {
         JsonNode emailNode = registerNode.get("email");
         JsonNode nameNode = registerNode.get("name");

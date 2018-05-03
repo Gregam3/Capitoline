@@ -4,7 +4,7 @@
 //import com.greg.entity.user.UserHolding;
 //import org.springframework.stereotype.Repository;
 //
-//import javax.transaction.Transactional;
+//import org.springframework.transaction.annotation.Transactional;
 //import java.util.List;
 //
 ///**
