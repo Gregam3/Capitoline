@@ -81,4 +81,11 @@ public class SecurityService {
                 password
         );
     }
+
+    /**
+     * Sets the current user in {@link UserService} to null
+     */
+    public void logOut() {
+        userService.clearCurrentUser();
+    }
 }

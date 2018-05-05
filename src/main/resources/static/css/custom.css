@@ -41,6 +41,10 @@
     transform: translateX(-50%) translateY(-50%);
 }
 
+.login {
+    font-size:14px;
+}
+
 
 .login-text {
     color: white;
@@ -52,4 +56,8 @@
 
 .modal-md {
     width: 400px;
+}
+
+#toast-container {
+    font-size: 14px;
 }

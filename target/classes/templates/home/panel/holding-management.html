@@ -25,9 +25,9 @@
             <thead>
             <tr>
                 <th class="fixed-column">Stock Name</th>
-                <th class="fixed-column">Quantity</th>
-                <th class="fixed-column">Price</th>
-                <th class="fixed-column">Total Value</th>
+                <th class="fixed-column hidden-xs">Quantity</th>
+                <th class="fixed-column hidden-xs">Price</th>
+                <th class="fixed-column">Total Holdings</th>
                 <th class="fixed-column">Total Change</th>
                 <th class="fixed-column">Info</th>
             </tr>
@@ -35,8 +35,8 @@
             <tbody>
             <tr ng-repeat="stock in holdings.stocks">
                 <td>{{stock.name}} ({{stock.acronym}})</td>
-                <td>{{(stock.totalQuantity !== 0 ) ? stock.totalQuantity.toFixed(2) : "Watch only"}}</td>
-                <td>{{userCurrency.symbol}}{{(stock.price * userCurrency.modifier) | number}}</td>
+                <td class="hidden-xs">{{(stock.totalQuantity !== 0 ) ? stock.totalQuantity.toFixed(2) : "Watch only"}}</td>
+                <td class="hidden-xs">{{userCurrency.symbol}}{{(stock.price * userCurrency.modifier) | number}}</td>
                 <td>{{userCurrency.symbol}}{{(stock.totalValue * userCurrency.modifier) | number}}</td>
                 <td ng-class="{'holding-up': stock.totalValue > stock.acquisitionCost,
                 'holding-down': !(stock.totalValue > stock.acquisitionCost)}">
@@ -46,7 +46,7 @@
 
                     formatValues(stock.totalValue - stock.acquisitionCost)
 
-                    + " (" + toPercentage(stock.totalValue, stock.acquisitionCost) + ")" : ""
+                    + " (" + toPercentage(stock.totalValue, stock.acquisitionCost, true) + ")" : ""
                     }}
                 </td>
                 <td>
@@ -70,9 +70,9 @@
             <thead>
             <tr>
                 <th class="fixed-column">Crypto Name</th>
-                <th class="fixed-column">Quantity</th>
-                <th class="fixed-column">Price</th>
-                <th class="fixed-column">Total Value</th>
+                <th class="fixed-column hidden-xs">Quantity</th>
+                <th class="fixed-column hidden-xs">Price</th>
+                <th class="fixed-column">Total Holdings</th>
                 <th class="fixed-column">Total Change</th>
                 <th class="fixed-column">Info</th>
             </tr>
@@ -80,8 +80,8 @@
             <tbody>
             <tr ng-repeat="crypto in holdings.cryptos">
                 <td>{{crypto.name}} ({{crypto.acronym}})</td>
-                <td>{{(crypto.totalQuantity !== 0 ) ? crypto.totalQuantity.toFixed(6) : "Watch only"}}</td>
-                <td>{{userCurrency.symbol}}{{crypto.price.toFixed(6)}}</td>
+                <td class="hidden-xs">{{(crypto.totalQuantity !== 0 ) ? crypto.totalQuantity.toFixed(6) : "Watch only"}}</td>
+                <td class="hidden-xs">{{userCurrency.symbol}}{{crypto.price.toFixed(6)}}</td>
                 <td>{{lessThanOne(crypto.totalQuantity * crypto.price) ? '&lt;' + userCurrency.symbol + '0.01' :
                     userCurrency.symbol + (crypto.totalQuantity * crypto.price).toFixed(2)
                     }}
@@ -94,7 +94,7 @@
 
                     formatValues(crypto.totalValue - crypto.acquisitionCost)
 
-                    + " (" + toPercentage(crypto.totalValue, crypto.acquisitionCost) + ")" : ""
+                    + " (" + toPercentage(crypto.totalValue, crypto.acquisitionCost, true) + ")" : ""
                     }}
                 </td>
                 <td>
@@ -118,9 +118,9 @@
             <thead>
             <tr>
                 <th class="fixed-column">Currency Name</th>
-                <th class="fixed-column">Quantity</th>
-                <th class="fixed-column">Price</th>
-                <th class="fixed-column">Total Value</th>
+                <th class="fixed-column hidden-xs">Quantity</th>
+                <th class="fixed-column hidden-xs">Price</th>
+                <th class="fixed-column">Total Holdings</th>
                 <th class="fixed-column">Total Change</th>
                 <th class="fixed-column">Info</th>
             </tr>
@@ -128,8 +128,8 @@
             <tbody>
             <tr ng-repeat="fiat in holdings.fiats">
                 <td>{{fiat.acronym}} - {{fiat.name}}</td>
-                <td>{{(fiat.totalQuantity !== 0) ? fiat.totalQuantity.toFixed(2) : "Watch only"}}</td>
-                <td>{{userCurrency.symbol}}{{fiat.price.toFixed(4) | number}}</td>
+                <td class="hidden-xs">{{(fiat.totalQuantity !== 0) ? fiat.totalQuantity.toFixed(2) : "Watch only"}}</td>
+                <td class="hidden-xs">{{userCurrency.symbol}}{{fiat.price.toFixed(4) | number}}</td>
                 <td>{{userCurrency.symbol}}{{(fiat.totalQuantity * fiat.price).toFixed(2) |
                     number}}
                 </td>
@@ -141,7 +141,7 @@
 
                     formatValues(fiat.totalValue - fiat.acquisitionCost)
 
-                    + " (" + toPercentage(fiat.totalValue, fiat.acquisitionCost) + ")" : ""
+                    + " (" + toPercentage(fiat.totalValue, fiat.acquisitionCost, true) + ")" : ""
                     }}
                 </td>
                 <td>

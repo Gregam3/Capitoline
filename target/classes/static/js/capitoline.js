@@ -130,8 +130,10 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
             return $rootScope.userCurrency.symbol + value.toFixed(2);
         };
 
-        $rootScope.toPercentage = function (totalValue, acquisitionCost) {
-            return ((totalValue / acquisitionCost) * 100 - 100).toFixed(2) + '%';
+        $rootScope.toPercentage = function (totalValue, acquisitionCost, negativeAllowed) {
+            if(negativeAllowed)
+                return ((totalValue / acquisitionCost) * 100 - 100).toFixed(2) + '%';
+            else return (((totalValue / acquisitionCost) * 100 - 100) * - 1).toFixed(2) + '%';
         };
 
 
@@ -242,8 +244,6 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
                     for (holding in tempHoldings.fiats) {
                         tempHoldings.fiats[holding].price =
                             (response.data[holding]) ? response.data[holding][$rootScope.userCurrency.acronym] : null;
-
-                        console.log(tempHoldings.fiats[holding]);
 
                         if(!tempHoldings.fiats[holding].price && !currencyShownWarning) {
                             console.log(tempHoldings.fiats, holding);
@@ -589,7 +589,7 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', '
                             }, function () {
                                 toaster.pop('error', 'Issue with API',
                                     "The AlphaVantage API used by Capitoline is currently experiencing " +
-                                    "issues returning  data need for your stock performance.")
+                                    "issues returning  data needed for your stock performance.")
                             });
 
 
@@ -844,8 +844,8 @@ app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', '$rootSco
         };
     }]);
 
-app.controller("settingsCtrl", ['$scope', '$http', '$uibModalStack', 'toaster', '$rootScope',
-    function ($scope, $http, $uibModalStack, toaster, $rootScope) {
+app.controller("settingsCtrl", ['$scope', '$http', '$uibModalStack', 'toaster', '$rootScope', '$window',
+    function ($scope, $http, $uibModalStack, toaster, $rootScope, $window) {
         $scope.userSettings = {
             email: null,
             settings: {
@@ -868,7 +868,7 @@ app.controller("settingsCtrl", ['$scope', '$http', '$uibModalStack', 'toaster', 
                 method: 'PUT',
                 url: "http://localhost:8080/user/update/settings",
                 data: $scope.userSettings
-            }).then(function successCallback(response) {
+            }).then(function successCallback() {
                 toaster.pop('success', "Successfully changed currency",
                     "Currency changed to " + $scope.userSettings.settings.currency.name);
                 $rootScope.updateUser();
@@ -877,5 +877,17 @@ app.controller("settingsCtrl", ['$scope', '$http', '$uibModalStack', 'toaster', 
                 console.log(response);
                 toaster.pop('error', "Failed to Change currency", response.data);
             });
+        };
+
+        $scope.logOut = function () {
+            $http({
+                method: 'POST',
+                url: "http://localhost:8080/security/logout/",
+                data: $scope.loginDetails
+            }).then(function successCallback() {
+                toaster.pop('success', "Logged Out", "");
+
+                $window.location.reload();
+            })
         };
     }]);

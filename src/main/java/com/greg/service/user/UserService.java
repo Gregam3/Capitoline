@@ -14,7 +14,7 @@ import com.greg.exceptions.InvalidRegisterCredentialsException;
 import com.greg.service.AbstractService;
 import com.greg.service.currency.CurrencyService;
 import com.greg.service.currency.fiat.FiatService;
-import com.greg.user.StockService;
+import com.greg.service.StockService;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -218,6 +218,13 @@ public class UserService extends AbstractService<User> {
                     userHoldings.get(i).getHoldingType().equals(holdingType))
                 return i;
         return -1;
+    }
+
+    /**
+     * Sets current user to null
+     */
+    public void clearCurrentUser() {
+        currentUser = null;
     }
 
     /**

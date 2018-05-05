@@ -35,33 +35,37 @@
     <script src="/angular/toaster.js"></script>
     <script src="/angular/LineChart.js"></script>
     <script src="/angular/pie-chart.min.js"></script>
-    <script type="text/javascript" src="/static/js/overview.js"></script>
+    <script type="text/javascript" src="/static/js/capitoline.js"></script>
 </head>
 <body>
 <div id="page-wrapper" ng-app="capitoline">
     <div>
         <div ng-controller="settingsCtrl">
-            <nav class="navbar navbar-default navbar-fixed-top"
+            <nav class="navbar navbar-default navbar-fixed-top "
                  role="navigation" style="margin-bottom:0">
-                <div class="row">
-                    <div class="col-md-5 hidden-xs">
+                <div class="row nav-bar-brand">
+                    <div class="col-md-4 hidden-sm hidden-xs">
                         <a class="navbar-brand"><span class="fa fa-university"></span> Capitoline - A Portfolio
                             Tracker</a>
                     </div>
-                    <div class="col-md-4 hidden-xs">
-                        <a class="navbar-brand" ng-show="user.name">{{user.name}}'s Portfolio </a>
-                    </div>
-                    <div class="col-md-3 navbar-brand">
+                    <div class="col-sm-5 hidden-xs navbar-brand">
                         <div class="col-xs-8" style="color: black">
                             Swap Currency
                         </div>
-                        <div class="col-xs-4">
+                        <div class="col-sm-2">
                             <select ng-model="userSettings.settings.currency"
                                     ng-options="currency.acronym for currency in currencies"
                                     ng-change="save()">
                             </select>
                         </div>
                     </div>
+                    <div class="col-md-3 col-xs-12">
+                        <div class="navbar-brand" style="color:black;"
+                            ng-show="user.name">{{user.name}}'s Portfolio
+                            <button ng-click="logOut()" style="width: 85px;">Log Out</button>
+                        </div>
+                    </div>
+
                 </div>
             </nav>
         </div>

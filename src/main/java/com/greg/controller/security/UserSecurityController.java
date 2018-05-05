@@ -54,4 +54,17 @@ public class UserSecurityController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PostMapping(value = "logout", produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> logOut() throws JsonProcessingException {
+        try {
+            securityService.logOut();
+            return new ResponseEntity<>("Logged out", HttpStatus.OK);
+        } catch (Exception e) {
+            LOG.error(e.getMessage());
+            System.err.println(e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }

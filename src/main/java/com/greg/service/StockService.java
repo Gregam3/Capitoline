@@ -1,4 +1,4 @@
-package com.greg.user;
+package com.greg.service;
 
 import com.greg.dao.stock.StockDao;
 import com.greg.entity.holding.stock.Stock;
@@ -6,7 +6,6 @@ import com.greg.entity.user.Transaction;
 import com.greg.entity.user.User;
 import com.greg.entity.user.UserHolding;
 import com.greg.exceptions.InvalidHoldingException;
-import com.greg.service.AbstractService;
 import com.greg.service.user.UserService;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -45,6 +44,7 @@ public class StockService extends AbstractService<Stock> {
 
     /**
      * Fetches the stock price based off the lastest value of its corresponding market
+     *
      * @param acronym the value to fetch
      * @return the value in double form
      * @throws UnirestException
@@ -59,7 +59,8 @@ public class StockService extends AbstractService<Stock> {
 
     /**
      * Returns stock price at a date specified
-     * @param acronym the stock price to fetch
+     *
+     * @param acronym  the stock price to fetch
      * @param unixDate the date to fetch the stock at in unix time, will round to nearest date
      * @return The price for that date
      * @throws UnirestException
@@ -72,9 +73,9 @@ public class StockService extends AbstractService<Stock> {
 
         JSONObject historyJson;
 
-        Date dateToFetch = DateUtils.round(new Date(unixDate), Calendar.DAY_OF_MONTH);
+        Date dateToFetch = new Date(unixDate);
 
-        if(response.length() > 0)
+        if (response.length() > 0)
             historyJson = response.getJSONObject("Time Series (Daily)");
         else
             throw new InvalidHoldingException("{\"data\": \"AlphaVantage could not retrieve history for that stock right now\"}");
@@ -84,8 +85,8 @@ public class StockService extends AbstractService<Stock> {
         Long earliestDate = new Date().getTime();
 
         for (int i = 0; i < stringDates.length(); i++) {
-            long currentIndexUnixTime = DateUtils.round(
-                    dateFormatter.parse(stringDates.get(i).toString()).getTime(), Calendar.DAY_OF_MONTH).getTime();
+            long currentIndexUnixTime =
+                    dateFormatter.parse(stringDates.get(i).toString()).getTime();
 
             if (earliestDate > currentIndexUnixTime)
                 earliestDate = currentIndexUnixTime;
@@ -101,7 +102,8 @@ public class StockService extends AbstractService<Stock> {
 
     /**
      * Fetches, parses and returns the history of a stock
-     * @param userHolding The {@link UserHolding} to fetch, uses List of {@link Transaction}s to accurately generate data
+     *
+     * @param userHolding          The {@link UserHolding} to fetch, uses List of {@link Transaction}s to accurately generate data
      * @param userCurrencyModifier The current exchange rate between the {@link User}  currency and USD as AlphaVantage only offers USD data
      * @return A Map of Stock history with the key of Dates rounded to the nearest instance of 0:00am with their total value for that date as a boxed Double
      * @throws UnirestException
@@ -130,7 +132,6 @@ public class StockService extends AbstractService<Stock> {
         //If there are no non-watched transactions skip over this item
         if (transactionQueue.size() < 1)
             return null;
-
 
 
         //Initialised with current time so when comparison is done later every date will be earlier, comparison referenced with *1.
@@ -173,6 +174,7 @@ public class StockService extends AbstractService<Stock> {
 
     /**
      * Formats the queue passing over "watch" {@link Transaction}s (where their quantity is 0)
+     *
      * @param queue The queue to be searched
      * @return The {@link Transaction} Queue after passing any 0 quantity {@link Transaction}s
      */
@@ -213,7 +215,8 @@ public class StockService extends AbstractService<Stock> {
 
     /**
      * Adds any dates missing in history to StockHistory, used as stock market closes on weekends and holidays.
-     * @param stockHistory The stock history to populate
+     *
+     * @param stockHistory        The stock history to populate
      * @param earliestDateInRange The first date in the StockHistory requested to be returned
      * @return Populated stockHistory
      * @throws InvalidHoldingException
@@ -250,6 +253,7 @@ public class StockService extends AbstractService<Stock> {
 
     /**
      * Recurses through stockHistory and provides closest past non-zero value
+     *
      * @param stockHistory The stockHistory to be searched
      * @param unixIterator The time to start searching
      * @return
@@ -266,6 +270,7 @@ public class StockService extends AbstractService<Stock> {
 
     /**
      * Used to fetch {@link User} {@link Stock} performance
+     *
      * @return the percentage change of the {@link User} {@link Stock} portfolio over the last month
      * @throws ParseException
      * @throws InvalidHoldingException

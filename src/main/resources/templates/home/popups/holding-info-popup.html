@@ -4,7 +4,7 @@
             <span class="fa fa-info-circle"></span></h3>
     </div>
     <div class="modal-body" id="modal-body">
-        <h4>Total Acquisition Cost: {{
+        <h4>Acquisition Cost for Current Holdings: {{
             (currentHoldingInfo.acquisitionCost > 0) ? (userCurrency.symbol) +
             (currentHoldingInfo.acquisitionCost * tempModifier).toFixed(4) :
             'Cannot be fetched'}}</h4>
@@ -25,7 +25,7 @@
                 </td>
                 <td>{{transaction.date}}</td>
                 <td>{{(transaction.quantity !== 0 ) ? transaction.quantity : "Watch only"}}</td>
-                <td>{{userCurrency.symbol}}{{(transaction.price * tempModifier)}}</td>
+                <td>{{userCurrency.symbol}}{{(transaction.price * tempModifier).toFixed(4)}}</td>
                 <td>{{userCurrency.symbol}}{{((transaction.quantity < 0) ? ((transaction.quantity * transaction.price) *
                     tempModifier).toFixed(2) * -1 : (transaction.quantity * transaction.price) * tempModifier).toFixed(2)
                     }}
