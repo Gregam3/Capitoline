@@ -130,10 +130,8 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
             return $rootScope.userCurrency.symbol + value.toFixed(2);
         };
 
-        $rootScope.toPercentage = function (totalValue, acquisitionCost, negativeAllowed) {
-            if(negativeAllowed)
-                return ((totalValue / acquisitionCost) * 100 - 100).toFixed(2) + '%';
-            else return (((totalValue / acquisitionCost) * 100 - 100) * - 1).toFixed(2) + '%';
+        $rootScope.toPercentage = function (totalValue, acquisitionCost) {
+            return ((totalValue / acquisitionCost) * 100 - 100).toFixed(2) + '%';
         };
 
 
@@ -245,11 +243,11 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
                         tempHoldings.fiats[holding].price =
                             (response.data[holding]) ? response.data[holding][$rootScope.userCurrency.acronym] : null;
 
-                        if(!tempHoldings.fiats[holding].price && !currencyShownWarning) {
+                        if (!tempHoldings.fiats[holding].price && !currencyShownWarning) {
                             console.log(tempHoldings.fiats, holding);
                             console.log(tempHoldings.fiats[holding]);
                             toaster.pop('warning', "Issue retrieving a Fiat currency",
-                                "The CryptoCompare API cannot fetch data for " +holding);
+                                "The CryptoCompare API cannot fetch data for " + holding);
                             currencyShownWarning = true;
                         }
 
@@ -567,9 +565,9 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', '
             else
 
                 console.log(userFiatValueNow, userFiatValueOneMonthAgo);
-                $scope.portfolioFiatChange =
-                    ((userFiatValueNow / userFiatValueOneMonthAgo)
-                        * 100 - 100).toFixed(2);
+            $scope.portfolioFiatChange =
+                ((userFiatValueNow / userFiatValueOneMonthAgo)
+                    * 100 - 100).toFixed(2);
         };
 
         $scope.retrieveAndCalculateStockPerformance = function () {

@@ -11,7 +11,7 @@
             </div>
             <div class="col-xs-2">
                 <label>
-                    <button ng-click="addHolding()">
+                    <button ng-click="addHolding()" style="font-size:14px;">
                         Add Holding <span class="fa fa-plus"></span>
                     </button>
                 </label>
@@ -46,7 +46,7 @@
 
                     formatValues(stock.totalValue - stock.acquisitionCost)
 
-                    + " (" + toPercentage(stock.totalValue, stock.acquisitionCost, true) + ")" : ""
+                    + " (" + toPercentage(stock.totalValue, stock.acquisitionCost) + ")" : ""
                     }}
                 </td>
                 <td>
@@ -94,7 +94,7 @@
 
                     formatValues(crypto.totalValue - crypto.acquisitionCost)
 
-                    + " (" + toPercentage(crypto.totalValue, crypto.acquisitionCost, true) + ")" : ""
+                    + " (" + toPercentage(crypto.totalValue, crypto.acquisitionCost) + ")" : ""
                     }}
                 </td>
                 <td>
@@ -141,7 +141,7 @@
 
                     formatValues(fiat.totalValue - fiat.acquisitionCost)
 
-                    + " (" + toPercentage(fiat.totalValue, fiat.acquisitionCost, true) + ")" : ""
+                    + " (" + toPercentage(fiat.totalValue, fiat.acquisitionCost) + ")" : ""
                     }}
                 </td>
                 <td>

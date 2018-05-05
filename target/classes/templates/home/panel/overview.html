@@ -26,13 +26,14 @@
             </div>
         </div>
     </div>
+    
     <div class="col-md-4 col-sm-12">
         <div class="panel">
             <div ng-class="{'panel-success': isProfiting, 'panel-danger': !isProfiting}">
                 <div class="panel-heading">
                     <div class="huge">
                         {{(isProfiting) ? "▲" : "▼" }}
-                        <b>{{(toPercentage(totalValue, acquisitionCost, false))}}</b>
+                        <b>{{(toPercentage(totalValue, acquisitionCost))}}</b>
                     </div>
                 </div>
                 <div class="panel-footer">
