@@ -480,7 +480,6 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', '
         let userFiatValueOneMonthAgo = 0;
         $scope.aggregateSectorChange = 0;
 
-
         $rootScope.generatePerformance = function () {
 
             console.log("Behind the Scenes: Fetching and calculating performance values");
