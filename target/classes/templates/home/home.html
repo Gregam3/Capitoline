@@ -48,18 +48,18 @@
                         <a class="navbar-brand"><span class="fa fa-university"></span> Capitoline - A Portfolio
                             Tracker</a>
                     </div>
-                    <div class="col-sm-5 hidden-xs navbar-brand">
-                        <div class="col-xs-8" style="color: black">
+                    <div class="col-md-4 col-sm-6 hidden-xs navbar-brand">
+                        <div class="col-xs-7" style="color: black">
                             Swap Currency
                         </div>
-                        <div class="col-sm-2">
+                        <div class="col-xs-5">
                             <select ng-model="userSettings.settings.currency"
                                     ng-options="currency.acronym for currency in currencies"
                                     ng-change="save()">
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-3 col-xs-12">
+                    <div class="col-md-4 col-sm-6 col-xs-12">
                         <div class="navbar-brand" style="color:black;"
                             ng-show="user.name">{{user.name}}'s Portfolio
                             <button ng-click="logOut()" style="width: 85px;">Log Out</button>

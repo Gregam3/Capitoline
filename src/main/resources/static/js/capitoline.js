@@ -1,5 +1,13 @@
 var app = angular.module("capitoline", ['ui.bootstrap', 'smart-table', 'n3-line-chart', 'n3-pie-chart', 'toaster']);
 
+app.config(['$qProvider', function ($qProvider) {
+    $qProvider.errorOnUnhandledRejections(false);
+}]);
+
+app.config(function ($logProvider) {
+    $logProvider.debugEnabled(false);
+});
+
 app.run(function ($rootScope) {
     $rootScope.totalValue = 0;
     $rootScope.acquisitionCost = 0;
@@ -91,10 +99,10 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
             $http.get(
                 'http://localhost:8080/user/get/holding-graph-data/'
             ).then(function successCallback(response) {
-                // console.log("Behind the Scenes: Based on the user's current holdings and the date(s) they were added, the back-end " +
-                //     "fetches and parses this into a format able to be displayed on a graph. Some data takes far longer than " +
-                //     "others based on whether or not the holding is a stock (more parsing necessary) and based on how much history " +
-                //     "needs to be fetched", $rootScope.historicalPortfolio);
+                console.log("Behind the Scenes: Based on the user's current holdings and the date(s) they were added, the back-end " +
+                    "fetches and parses this into a format able to be displayed on a graph. Some data takes far longer than " +
+                    "others based on whether or not the holding is a stock (more parsing necessary) and based on how much history " +
+                    "needs to be fetched", $rootScope.historicalPortfolio);
 
                 $rootScope.historicalPortfolio.total = response.data.total;
                 $rootScope.historicalPortfolio.crypto = response.data.crypto;
@@ -103,6 +111,8 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
 
                 $rootScope.historicalPortfolioStatus =
                     ($scope.historicalPortfolio.total.length > 10) ? "loaded" : "too recent";
+
+                console.log($rootScope.historicalPortfolio);
 
             }, function errorCallback(response) {
                 console.log(response);
@@ -152,10 +162,10 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
 
             $http.get('http://localhost:8080/user/get')
                 .then(function (response) {
-                    // console.log("Behind the Scenes: Capitoline has fetched user data based on the login, " +
-                    //     "after a user logs in it sets the server-side variable \"currentUser\" " +
-                    //     "to their user data. This is also retrieved when a change is made to the user " +
-                    //     "on the client-side. Their user data looks like the following: ", response.data);
+                    console.log("Behind the Scenes: Capitoline has fetched user data based on the login, " +
+                        "after a user logs in it sets the server-side variable \"currentUser\" " +
+                        "to their user data. This is also retrieved when a change is made to the user " +
+                        "on the client-side. Their user data looks like the following: ", response.data);
                     console.log(response.data);
 
                     $rootScope.user = response.data;
@@ -203,8 +213,8 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
                 });
         };
 
-        // console.log("Behind the Scenes: Updated user prices and anything reliant on them, Capitoline updates its data every 10 seconds." +
-        //     " the data retrieved from the APIs updates roughly ever 30 seconds.");
+        console.log("Behind the Scenes: Updated user prices and anything reliant on them, Capitoline updates its data every 10 seconds." +
+            " the data retrieved from the APIs updates roughly ever 30 seconds.");
 
         //Arbitrary value over 10000
 
@@ -458,23 +468,34 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', '
 
         let userCryptoValueNow = 0;
         let userCryptoValueOneMonthAgo = 0;
-        $scope.portfolioCryptoChange = 0;
-        $scope.volatility = [];
+
 
         //Fiat
         let fiatIndexValueNow = 0;
         let fiatIndexValueOneMonthAgo = 0;
         $scope.fiatIndexChange = 0;
 
+
         let userFiatValueNow = 0;
         let userFiatValueOneMonthAgo = 0;
-        $scope.portfolioFiatChange = 0;
-
-        //Stock
         $scope.aggregateSectorChange = 0;
-        $scope.portfolioStockChange = 0;
+
 
         $rootScope.generatePerformance = function () {
+
+            console.log("Behind the Scenes: Fetching and calculating performance values");
+            //Stock
+            $scope.portfolioStockChange = 0;
+
+            userFiatValueNow = 0;
+            userFiatValueOneMonthAgo = 0;
+            $scope.portfolioFiatChange = 0;
+
+            userCryptoValueNow = 0;
+            userCryptoValueOneMonthAgo = 0;
+            $scope.portfolioCryptoChange = 0;
+            $scope.volatility = [];
+
             let currencyPathVariables = "";
 
             const cryptosPathVariable = $rootScope.convertHoldingsToPathVariables($rootScope.holdings.cryptos);
@@ -548,32 +569,25 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', '
 
 
         $scope.calculateCryptoPerformance = function () {
-            if (userCryptoValueNow === 0 || userCryptoValueOneMonthAgo === 0)
-                $scope.performanceNotReadyPopUp("cryptocurrency");
-            else
-                $scope.portfolioCryptoChange =
-                    ((userCryptoValueNow / userCryptoValueOneMonthAgo)
-                        * 100 - 100).toFixed(3);
+            $scope.portfolioCryptoChange =
+                ((userCryptoValueNow / userCryptoValueOneMonthAgo)
+                    * 100 - 100).toFixed(3);
 
             $scope.generateCryptoVolatilityPieChart();
         };
 
         $scope.calculateFiatPerformance = function () {
             console.log(userFiatValueNow, userFiatValueOneMonthAgo);
-            if (userFiatValueNow === 0 || userFiatValueOneMonthAgo === 0)
-                $scope.performanceNotReadyPopUp("fiat currency");
-            else
-
-                console.log(userFiatValueNow, userFiatValueOneMonthAgo);
             $scope.portfolioFiatChange =
                 ((userFiatValueNow / userFiatValueOneMonthAgo)
                     * 100 - 100).toFixed(2);
         };
 
+        $scope.stockPerformanceLoading = false;
+
         $scope.retrieveAndCalculateStockPerformance = function () {
-            if ($rootScope.historicalPortfolio.stock.length === 0)
-                $scope.performanceNotReadyPopUp("stock");
-            else {
+            if ($scope.portfolioStockChange === 0 && $rootScope.historicalPortfolio.stock.length > 0) {
+                $scope.stockPerformanceLoading = true;
                 $http.get('https://www.alphavantage.co/query?function=SECTOR&apikey=' + AlphaVantageKey)
                     .then(function (response) {
                         const sectorPerformance = response.data["Rank D: 1 Month Performance"];
@@ -584,6 +598,8 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', '
                             .then(function successCallback(responseTwo) {
                                 console.log(responseTwo);
                                 $scope.portfolioStockChange = responseTwo.data.toFixed(3);
+
+                                $scope.stockPerformanceLoading = false;
                             }, function () {
                                 toaster.pop('error', 'Issue with API',
                                     "The AlphaVantage API used by Capitoline is currently experiencing " +
@@ -602,7 +618,17 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', '
                                 sectorPerformance["Industrials"].substr(0, sectorPerformance["Industrials"].length - 1) * 1 +
                                 sectorPerformance["Financials"].substr(0, sectorPerformance["Financials"].length - 1) * 1) / 8).toFixed(3);
                     });
+
+
             }
+        };
+
+        $scope.displayNoStocksAddedMessage = function () {
+            return $scope.portfolioStockChange === 0 && !$scope.stockPerformanceLoading;
+        };
+
+        $scope.showFiatPerformance = function () {
+            return $scope.portfolioFiatChange !== 0  && !isNaN($scope.portfolioFiatChange);
         };
 
         $scope.performanceNotReadyPopUp = function (holdingType) {
@@ -809,9 +835,9 @@ app.controller("addHoldingCtrl", ['$scope', '$http', '$uibModalStack', '$rootSco
         }
 
         $scope.add = function () {
-            // console.log("Behind the Scenes: Adding a new holding to the current user's portfolio, " +
-            //     "this will either be a completely new holding or it will append something called a transaction " +
-            //     "to an existing holding, updating its quantity and keeping track of its history.");
+            console.log("Behind the Scenes: Adding a new holding to the current user's portfolio, " +
+                "this will either be a completely new holding or it will append something called a transaction " +
+                "to an existing holding, updating its quantity and keeping track of its history.");
 
             newHolding = {
                 acronym: $scope.holding.acronym,

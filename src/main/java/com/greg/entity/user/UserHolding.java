@@ -57,8 +57,7 @@ public class UserHolding {
     public long getDistanceInDaysToEarliestTransactionDate() {
         Queue<Transaction> transactionStack = new PriorityQueue<>();
         transactionStack.addAll(getTransactions());
-        return (new Date().getTime() - transactionStack.poll().getDate().getTime() / DateUtils.MILLIS_PER_DAY);
-
+        return (new Date().getTime() - transactionStack.peek().getDate().getTime()) / DateUtils.MILLIS_PER_DAY;
     }
 
     public Double getAcquisitionCost() {

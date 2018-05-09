@@ -20,6 +20,7 @@
 
     <properties>
         <java.version>1.8</java.version>
+        <start-class>com.greg.Application</start-class>
     </properties>
 
     <dependencies>
@@ -41,10 +42,10 @@
             <artifactId>spring-boot-starter-data-jpa</artifactId>
             <version>1.5.10.RELEASE</version>
             <!--<exclusions>-->
-                <!--<exclusion>-->
-                    <!--<artifactId>hibernate-entitymanager</artifactId>-->
-                    <!--<groupId>org.hibernate</groupId>-->
-                <!--</exclusion>-->
+            <!--<exclusion>-->
+            <!--<artifactId>hibernate-entitymanager</artifactId>-->
+            <!--<groupId>org.hibernate</groupId>-->
+            <!--</exclusion>-->
             <!--</exclusions>-->
         </dependency>
 
@@ -101,7 +102,28 @@
                     <additionalparam>-Xdoclint:none</additionalparam>
                     <failOnError>false</failOnError>
                 </configuration>
+
             </plugin>
         </plugins>
+        <resources>
+            <!-- regular resource processsing for everything except logback.xml -->
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>logback.xml</exclude>
+                </excludes>
+            </resource>
+            <!-- resource processsing with a different output directory
+                 for logback.xml -->
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>logback.xml</include>
+                </includes>
+                <!-- relative to target/classes
+                     i.e. ${project.build.outputDirectory} -->
+                <targetPath>..</targetPath>
+            </resource>
+        </resources>
     </build>
 </project>

@@ -4,7 +4,7 @@
 
 <div th:fragment="crypto-performance">
     <div class="panel-heading">
-        <h4>Crypto Performance <span class="fa fa-btc"></span></h4>
+        <h4>Cryptocurrency <span class="fa fa-btc"></span></h4>
     </div>
     <div class="row">
         <div class="col-md-5" ng-show="portfolioCryptoChange !== 0">
@@ -26,7 +26,7 @@
         </div>
 
         <div class="col-md-7" style="text-align: center;" ng-hide="portfolioCryptoChange === 0">
-            <h4>Volatility</h4>
+            <h4>30 day Volatility</h4>
             <pie-chart class="pie-chart-medium" data="volatility" options="pieOptions"
                        style="height: 150px;"></pie-chart>
         </div>

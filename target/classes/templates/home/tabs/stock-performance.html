@@ -4,7 +4,7 @@
 
 <div th:fragment="stock-performance">
     <div class="panel-heading">
-        <h4>Stock Performance <span class="fa fa-newspaper-o"></span></h4>
+        <h4>Stock Benchmark <span class="fa fa-newspaper-o"></span></h4>
     </div>
     <div class="row">
         <div class="col-xs-12" ng-show="portfolioStockChange !== 0">
@@ -19,12 +19,13 @@
                 "down")}} <b>{{portfolioStockChange}}%</b> (a <b>{{(portfolioStockChange -
                     btcChange).toFixed(3)}}%</b> difference)
             </p>
-            <div class="huge " ng-hide="portfolioStockChange !== 0" style="text-align: center;">
-                <span class="fa fa-circle-o-notch fa-spin"></span> Loading
-            </div>
         </div>
-        <div class="col-xs-12" ng-hide="portfolioStockChange !== 0">
-            <label>In order to see your stock performance you will need to add some stocks to your portfolio.</label>
+        <div class="col-xs-12" ng-show="displayNoStocksAddedMessage()">
+            <label>In order to see your stock performance you will need to add some stocks to your
+                portfolio.</label>
+        </div>
+        <div class="huge center" ng-show="stockPerformanceLoading">
+            <span class="fa fa-circle-o-notch fa-spin"></span> Loading
         </div>
     </div>
 </div>

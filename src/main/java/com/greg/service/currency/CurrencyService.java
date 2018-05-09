@@ -34,20 +34,25 @@ public class CurrencyService {
 
     /**
      * Fetches the currency history for a CryptoCurrency/Fiat
+     *
      * @param userHolding The {@link com.greg.entity.holding.Holding}'s history to fetch
      * @return A Map of Currency history with the key of Dates rounded to the nearest instance of 0:00am with their total value for that date as a boxed Double
      * @throws UnirestException
      * @throws IOException
      */
     public Map<Date, Double> getCurrencyHistory(UserHolding userHolding) throws UnirestException, IOException {
-        JSONArray history =
-                Unirest.get(HISTORY_FIRST_PART + userHolding.getAcronym() + "&tsym=" +
-                        userService.getCurrentUser().getSettings().getUserCurrency().getAcronym() +
-                        "&limit=" + userHolding.getDistanceInDaysToEarliestTransactionDate())
-                        .asJson()
-                        .getBody()
-                        .getObject()
-                        .getJSONArray("Data");
+
+        if (userHolding.getAcronym().equals(userService.getCurrentUser().getSettings().getUserCurrency().getAcronym()))
+            return populateSameCurrency(userHolding.getTotalQuantity(), userHolding.getDistanceInDaysToEarliestTransactionDate());
+
+
+        JSONArray history = Unirest.get(HISTORY_FIRST_PART + userHolding.getAcronym() + "&tsym=" +
+                userService.getCurrentUser().getSettings().getUserCurrency().getAcronym() +
+                "&limit=" + userHolding.getDistanceInDaysToEarliestTransactionDate())
+                .asJson()
+                .getBody()
+                .getObject()
+                .getJSONArray("Data");
 
         Queue<Transaction> transactionQueue = new PriorityQueue<>();
         transactionQueue.addAll(userHolding.getTransactions());
@@ -93,6 +98,7 @@ public class CurrencyService {
 
     /**
      * Formats the queue passing over "watch" {@link Transaction}s (where their quantity is 0)
+     *
      * @param queue The queue to be searched
      * @return The {@link Transaction} Queue after passing any 0 quantity {@link Transaction}s
      */
@@ -105,8 +111,9 @@ public class CurrencyService {
 
     /**
      * Returns the currency value at a specified date
-     * @param acronym the currency to fetch
-     * @param unixDate the date to fetch the value from
+     *
+     * @param acronym         the currency to fetch
+     * @param unixDate        the date to fetch the value from
      * @param currencyDesired the currency to retrieve the value in
      * @return The price value for the specified date
      * @throws Exception
@@ -129,7 +136,8 @@ public class CurrencyService {
 
     /**
      * Fetches most recent currency price
-     * @param acronym the currency to fetch
+     *
+     * @param acronym         the currency to fetch
      * @param currencyDesired the currency to retrieve the value in
      * @return The price value for the specified date
      * @throws UnirestException
@@ -144,24 +152,34 @@ public class CurrencyService {
         return (response.length() == 1) ? response.getDouble(currencyDesired) : -1;
     }
 
-//    private Map<Date, Double> convertUsd(double quantity) throws UnirestException {
-//        Map<Date, Double> graphHoldingDataMap = new HashMap<>();
-//
-//        //fixme work around for dollar value
-//        JSONArray history = Unirest.get(HISTORY_FIRST_PART + "EUR" + HISTORY_SECOND_PART)
-//                .asJson().getBody().getObject().getJSONArray("Data");
-//
-//        for (int i = 0; i < history.length(); i++) {
-//            JSONObject day = history.getJSONObject(i);
-//            Date unixIteratorAsDate = DateUtils.round(new Date(day.getLong("time") * 1000), Calendar.DAY_OF_MONTH);
-//
-//            graphHoldingDataMap.put(
-//                    unixIteratorAsDate,
-//                    quantity
-//            );
-//        }
-//        return graphHoldingDataMap;
-//    }
+    private Map<Date, Double> populateSameCurrency(double quantity, long distanceToFirstDate) throws UnirestException {
+        Map<Date, Double> graphHoldingDataMap = new HashMap<>();
+
+        //fixme work around to populate data where currency to be retrieved is the same as currency to be retrieved in
+        JSONArray history = Unirest.get(HISTORY_FIRST_PART + "USD&tsym=BTC" +
+                "&limit=" + distanceToFirstDate)
+                .asJson().getBody().getObject().getJSONArray("Data");
+
+
+        Date unixIteratorAsDate = new Date();
+        for (int i = 0; i < history.length(); i++) {
+            JSONObject day = history.getJSONObject(i);
+            unixIteratorAsDate = DateUtils.round(new Date(day.getLong("time") * 1000), Calendar.DAY_OF_MONTH);
+
+            graphHoldingDataMap.put(
+                    unixIteratorAsDate,
+                    quantity
+            );
+        }
+        //n3 chart library will not display data on graph if all values are the same, as such this small inaccuracy is permitted to
+        //display the whole series, a better solution should be found in the future possibly a new library.
+        graphHoldingDataMap.put(
+                unixIteratorAsDate,
+                quantity * 1.0000000000001
+        );
+
+        return graphHoldingDataMap;
+    }
 
 //    public Map<String, Double> getBatchPricesForUser() throws UnirestException {
 //        Map<String, Double> prices = new HashMap<>();
