@@ -1,6 +1,7 @@
 node_modules
 .idea/inspectionProfiles/
 src/WebContent/
+/JavaDocs/
 src/test/
 target/generated-sources/
 target/generated-test-sources/
