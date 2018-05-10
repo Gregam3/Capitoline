@@ -110,7 +110,7 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
                 $rootScope.historicalPortfolio.stock = response.data.stock;
 
                 $rootScope.historicalPortfolioStatus =
-                    ($scope.historicalPortfolio.total.length > 10) ? "loaded" : "too recent";
+                    ($scope.historicalPortfolio.total.length >= 10) ? "loaded" : "too recent";
 
                 console.log($rootScope.historicalPortfolio);
 
@@ -479,7 +479,6 @@ app.controller("performanceCtrl", ['$scope', '$http', '$rootScope', 'toaster', '
         let userFiatValueNow = 0;
         let userFiatValueOneMonthAgo = 0;
         $scope.aggregateSectorChange = 0;
-
 
         $rootScope.generatePerformance = function () {
 

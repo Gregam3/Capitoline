@@ -110,7 +110,7 @@ app.controller("homeCtrl", ['$scope', '$http', '$uibModal', '$rootScope', 'Alpha
                 $rootScope.historicalPortfolio.stock = response.data.stock;
 
                 $rootScope.historicalPortfolioStatus =
-                    ($scope.historicalPortfolio.total.length > 10) ? "loaded" : "too recent";
+                    ($scope.historicalPortfolio.total.length >= 10) ? "loaded" : "too recent";
 
                 console.log($rootScope.historicalPortfolio);
 

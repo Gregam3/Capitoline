@@ -61,7 +61,7 @@
                     </div>
                     <div class="col-md-4 col-sm-6 col-xs-12">
                         <div class="navbar-brand" style="color:black;"
-                            ng-show="user.name">{{user.name}}'s Portfolio
+                             ng-show="user.name">{{user.name}}'s Portfolio
                             <button ng-click="logOut()" style="width: 85px;">Log Out</button>
                         </div>
                     </div>
@@ -83,7 +83,7 @@
             </div>
 
             <div ng-controller="performanceCtrl">
-                <div class="row" ng-if="totalValue > 0">
+                <div class="row" ng-if="totalValue > 0" style="padding-left: 18px; padding-right: 18px;">
                     <div class="col-lg-9">
                         <div th:replace="/home/panel/total-value-line-chart :: total-value-line-chart"></div>
                     </div>
@@ -137,8 +137,10 @@
                 </div>
             </div>
         </div>
-        <div ng-if="loaded">
-            <div th:replace="/home/panel/holding-management :: holding-management"></div>
+        <div style="padding-left: 18px; padding-right: 18px;">
+            <div ng-if="loaded">
+                <div th:replace="/home/panel/holding-management :: holding-management"></div>
+            </div>
         </div>
     </div>
     <div ng-if="!loaded" class="huge center">
