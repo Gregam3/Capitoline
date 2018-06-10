@@ -9,172 +9,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3dec054c-de66-4947-9717-84ac9ee916a5" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/allclasses-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/allclasses-noframe.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/Application.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/configuration/MvcConfiguration.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/configuration/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/configuration/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/configuration/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/controller/PageController.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/controller/holding/currency/CurrencyController.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/controller/holding/currency/crypto/CryptoController.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/controller/holding/currency/crypto/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/controller/holding/currency/crypto/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/controller/holding/currency/crypto/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/controller/holding/currency/fiat/FiatController.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/controller/holding/currency/fiat/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/controller/holding/currency/fiat/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/controller/holding/currency/fiat/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/controller/holding/currency/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/controller/holding/currency/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/controller/holding/currency/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/controller/holding/stock/StockController.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/controller/holding/stock/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/controller/holding/stock/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/controller/holding/stock/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/controller/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/controller/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/controller/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/controller/security/UserSecurityController.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/controller/security/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/controller/security/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/controller/security/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/controller/user/UserController.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/controller/user/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/controller/user/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/controller/user/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/dao/AbstractDaoImpl.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/dao/Dao.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/dao/fiat/FiatDao.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/dao/fiat/FiatDaoImpl.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/dao/fiat/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/dao/fiat/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/dao/fiat/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/dao/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/dao/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/dao/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/dao/stock/StockDao.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/dao/stock/StockDaoImpl.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/dao/stock/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/dao/stock/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/dao/stock/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/dao/user/UserDao.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/dao/user/UserDaoImpl.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/dao/user/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/dao/user/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/dao/user/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/entity/GraphHoldingData.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/entity/holding/Holding.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/entity/holding/HoldingType.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/entity/holding/crypto/Crypto.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/entity/holding/crypto/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/entity/holding/crypto/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/entity/holding/crypto/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/entity/holding/fiat/Fiat.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/entity/holding/fiat/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/entity/holding/fiat/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/entity/holding/fiat/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/entity/holding/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/entity/holding/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/entity/holding/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/entity/holding/stock/Stock.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/entity/holding/stock/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/entity/holding/stock/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/entity/holding/stock/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/entity/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/entity/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/entity/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/entity/settings/Settings.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/entity/settings/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/entity/settings/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/entity/user/HoldingId.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/entity/user/Transaction.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/entity/user/User.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/entity/user/UserHolding.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/entity/user/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/entity/user/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/entity/user/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/exceptions/InvalidAccessAttemptException.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/exceptions/InvalidHoldingException.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/exceptions/InvalidRegisterCredentialsException.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/exceptions/InvalidSettingsException.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/exceptions/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/exceptions/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/exceptions/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/service/AbstractService.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/service/currency/CurrencyService.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/service/currency/crypto/CryptoService.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/service/currency/crypto/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/service/currency/crypto/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/service/currency/crypto/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/service/currency/fiat/FiatService.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/service/currency/fiat/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/service/currency/fiat/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/service/currency/fiat/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/service/currency/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/service/currency/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/service/currency/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/service/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/service/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/service/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/service/security/SecurityService.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/service/security/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/service/security/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/service/security/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/service/user/UserService.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/service/user/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/service/user/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/service/user/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/user/AlphaVantageFetchInterval.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/user/StockService.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/user/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/user/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/user/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/utils/JSONUtils.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/utils/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/utils/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/com/greg/utils/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/constant-values.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/deprecated-list.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/help-doc.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/index-files/index-1.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/index-files/index-10.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/index-files/index-11.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/index-files/index-12.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/index-files/index-13.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/index-files/index-14.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/index-files/index-15.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/index-files/index-16.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/index-files/index-17.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/index-files/index-18.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/index-files/index-19.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/index-files/index-2.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/index-files/index-20.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/index-files/index-21.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/index-files/index-22.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/index-files/index-3.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/index-files/index-4.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/index-files/index-5.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/index-files/index-6.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/index-files/index-7.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/index-files/index-8.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/index-files/index-9.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/index.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/overview-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/overview-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/overview-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/package-list" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/script.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/serialized-form.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/JavaDocs/stylesheet.css" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/static/js/capitoline.js" afterPath="$PROJECT_DIR$/src/main/resources/static/js/capitoline.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/templates/home/home.html" afterPath="$PROJECT_DIR$/src/main/resources/templates/home/home.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/static/js/capitoline.js" afterPath="$PROJECT_DIR$/target/classes/static/js/capitoline.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/greg/service/StockService.java" afterPath="$PROJECT_DIR$/src/main/java/com/greg/service/StockService.java" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -233,23 +69,43 @@
       <file leaf-file-name="capitoline.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/resources/static/js/capitoline.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="329">
-              <caret line="75" column="65" lean-forward="false" selection-start-line="75" selection-start-column="65" selection-end-line="75" selection-end-column="65" />
+            <state relative-caret-position="9979">
+              <caret line="587" column="103" lean-forward="false" selection-start-line="587" selection-start-column="103" selection-end-line="587" selection-end-column="103" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="home.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="StockService.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/service/StockService.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="374">
+              <caret line="159" column="89" lean-forward="false" selection-start-line="159" selection-start-column="89" selection-end-line="159" selection-end-column="89" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="home.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/resources/templates/home/home.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="449">
-              <caret line="131" column="82" lean-forward="false" selection-start-line="131" selection-start-column="82" selection-end-line="131" selection-end-column="82" />
+            <state relative-caret-position="1479">
+              <caret line="87" column="91" lean-forward="false" selection-start-line="87" selection-start-column="91" selection-end-line="87" selection-end-column="91" />
               <folding>
                 <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#0;n#div#1;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#2;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="total-value-line-chart.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/resources/templates/home/panel/total-value-line-chart.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="221">
+              <caret line="13" column="24" lean-forward="false" selection-start-line="13" selection-start-column="24" selection-end-line="13" selection-end-column="24" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -301,28 +157,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pom.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="357">
-              <caret line="21" column="40" lean-forward="false" selection-start-line="21" selection-start-column="40" selection-end-line="21" selection-end-column="40" />
-              <folding>
-                <marker date="1525861763443" expanded="true" signature="4504:4505" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="application.properties" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/resources/application.properties">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="34">
-              <caret line="2" column="67" lean-forward="false" selection-start-line="2" selection-start-column="67" selection-end-line="2" selection-end-column="67" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="console.sql" pinned="false" current-in-tab="false">
         <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/76d5aecf-dc69-4b4e-860f-7012e46142d8/console.sql">
           <provider selected="true" editor-type-id="text-editor">
@@ -361,9 +195,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>getTran</find>
-      <find>data need</find>
-      <find>hidde</find>
       <find>round</find>
       <find>#toast</find>
       <find>capitoline.</find>
@@ -391,6 +222,9 @@
       <find>volatil</find>
       <find>10 day</find>
       <find>historicalPortfolioStatus</find>
+      <find>navbar-default</find>
+      <find>panel</find>
+      <find>sector</find>
     </findStrings>
     <replaceStrings>
       <replace>/</replace>
@@ -464,7 +298,6 @@
         <option value="$PROJECT_DIR$/src/main/java/com/greg/dao/userholding/UserHoldingDaoImpl.java" />
         <option value="$PROJECT_DIR$/src/main/resources/static/js/overview.js" />
         <option value="$PROJECT_DIR$/src/main/java/com/greg/user/StockService.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/greg/service/StockService.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/greg/controller/security/UserSecurityController.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/greg/service/security/SecurityService.java" />
         <option value="$PROJECT_DIR$/src/main/resources/templates/home/popups/add-holding-popup.html" />
@@ -485,8 +318,9 @@
         <option value="$PROJECT_DIR$/src/main/resources/templates/home/tabs/stock-performance.html" />
         <option value="$PROJECT_DIR$/src/main/resources/templates/home/tabs/fiat-performance.html" />
         <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/src/main/resources/static/js/capitoline.js" />
         <option value="$PROJECT_DIR$/src/main/resources/templates/home/home.html" />
+        <option value="$PROJECT_DIR$/src/main/resources/static/js/capitoline.js" />
+        <option value="$PROJECT_DIR$/src/main/java/com/greg/service/StockService.java" />
       </list>
     </option>
   </component>
@@ -523,8 +357,8 @@
     <handled-path value="$PROJECT_DIR$/node_modules" />
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="64" />
-    <option name="y" value="-8" />
+    <option name="x" value="520" />
+    <option name="y" value="-12" />
     <option name="width" value="1936" />
     <option name="height" value="1096" />
   </component>
@@ -990,6 +824,18 @@
       <workItem from="1525861949641" duration="995000" />
       <workItem from="1525903143596" duration="152000" />
       <workItem from="1525941025379" duration="620000" />
+      <workItem from="1525963913790" duration="101000" />
+      <workItem from="1526476724874" duration="97000" />
+      <workItem from="1527078938077" duration="670000" />
+      <workItem from="1527258815175" duration="236000" />
+      <workItem from="1527510076903" duration="608000" />
+      <workItem from="1527519492377" duration="689000" />
+      <workItem from="1527594688419" duration="2001000" />
+      <workItem from="1527600023788" duration="115000" />
+      <workItem from="1527622600642" duration="15000" />
+      <workItem from="1527664926756" duration="3078000" />
+      <workItem from="1527678425009" duration="83000" />
+      <workItem from="1528361992009" duration="897000" />
     </task>
     <servers />
   </component>
@@ -1023,7 +869,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="988768000" />
+    <option name="totallyTimeSpent" value="997358000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
@@ -1048,10 +894,9 @@
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26458332" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Spring" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32708332" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32666665" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32604167" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.36100388" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Bean Validation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3291506" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3238889" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Google Cloud Storage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32932165" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="true" content_ui="tabs" />
@@ -1062,6 +907,7 @@
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32944608" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Database Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.30625" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3238889" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1115,7 +961,7 @@
           <option name="timeStamp" value="10" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="542" />
+      <option name="time" value="543" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -1135,13 +981,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
           <caret line="19" column="74" lean-forward="false" selection-start-line="19" selection-start-column="74" selection-end-line="19" selection-end-column="74" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/templates/home/panel/total-value-line-chart.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="27" column="14" lean-forward="true" selection-start-line="27" selection-start-column="14" selection-end-line="27" selection-end-column="14" />
         </state>
       </provider>
     </entry>
@@ -1452,13 +1291,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/service/StockService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="66" column="29" lean-forward="true" selection-start-line="66" selection-start-column="29" selection-end-line="66" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/static/js/login.js" />
     <entry file="file://$PROJECT_DIR$/src/main/resources/templates/home/popups/add-holding-popup.html">
       <provider selected="true" editor-type-id="text-editor">
@@ -1562,9 +1394,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="357">
           <caret line="21" column="40" lean-forward="false" selection-start-line="21" selection-start-column="40" selection-end-line="21" selection-end-column="40" />
-          <folding>
-            <marker date="1525861763443" expanded="true" signature="4504:4505" ph="..." />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1572,7 +1401,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
           <caret line="2" column="67" lean-forward="false" selection-start-line="2" selection-start-column="67" selection-end-line="2" selection-end-column="67" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1635,27 +1463,42 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="136">
           <caret line="8" column="0" lean-forward="false" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/templates/home/home.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1479">
+          <caret line="87" column="91" lean-forward="false" selection-start-line="87" selection-start-column="91" selection-end-line="87" selection-end-column="91" />
+          <folding>
+            <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#1;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#2;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/templates/home/panel/total-value-line-chart.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="13" column="24" lean-forward="false" selection-start-line="13" selection-start-column="24" selection-end-line="13" selection-end-column="24" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/static/js/capitoline.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="329">
-          <caret line="75" column="65" lean-forward="false" selection-start-line="75" selection-start-column="65" selection-end-line="75" selection-end-column="65" />
+        <state relative-caret-position="9979">
+          <caret line="587" column="103" lean-forward="false" selection-start-line="587" selection-start-column="103" selection-end-line="587" selection-end-column="103" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/templates/home/home.html">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/greg/service/StockService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="449">
-          <caret line="131" column="82" lean-forward="false" selection-start-line="131" selection-start-column="82" selection-end-line="131" selection-end-column="82" />
-          <folding>
-            <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#div#1;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#2;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
+        <state relative-caret-position="374">
+          <caret line="159" column="89" lean-forward="false" selection-start-line="159" selection-start-column="89" selection-end-line="159" selection-end-column="89" />
+          <folding />
         </state>
       </provider>
     </entry>

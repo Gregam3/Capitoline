@@ -158,7 +158,6 @@ public class StockService extends AbstractService<Stock> {
             }
 
             if (currentItemUnixDate.getTime() > currentTransaction.getDate().getTime()) {
-                // *1 Necessary for populating weekend data
                 if (currentItemUnixDate.getTime() < earliestDateInRange)
                     earliestDateInRange = currentItemUnixDate.getTime();
 
