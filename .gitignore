@@ -5,3 +5,8 @@ src/WebContent/
 src/test/
 target/**
 *.iml
+src/main/resources/static/css/**
+src/main/resources/static/scss/**
+src/main/resources/static/less/**
+src/main/resources/static/fonts/**
+src/main/resources/angular/**
